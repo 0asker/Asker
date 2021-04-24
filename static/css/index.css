@@ -1,0 +1,43 @@
+.card {
+    margin-bottom: 2px;
+}
+
+#tabs li {
+	cursor: pointer;
+}
+
+.response-form input {
+	display: none;
+}
+
+#p_questions {
+	width: 50%;
+	margin: auto;
+}
+
+#n_questions {
+	width: 50%;
+	margin: auto;
+}
+
+#tabs {
+	width: 50%;
+	margin: 1% auto;
+}
+
+/* Para smartphones: */
+@media (min-width: 320px) and (max-width: 480px) {
+	#p_questions {
+		width: 98%;
+		margin: auto;
+	}
+
+	#n_questions {
+		width: 98%;
+		margin: auto;
+	}
+
+	#tabs {
+		width: 100%;
+	}
+}

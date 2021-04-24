@@ -1,0 +1,48 @@
+.heart-comment {
+	display: inline;
+}
+
+.icon {
+	cursor: pointer;
+}
+
+main {
+	width: 50%;
+	margin: auto;
+}
+
+.card {
+	margin: 1%;
+}
+
+#options-dropdown {
+	float: right;
+}
+
+#edit-response-form {
+	display: none;
+}
+
+.recommended {
+	width: 50%;
+	margin: auto;
+}
+
+.recommended h3 {
+	text-align: center;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+	main {
+		width: 98%;
+	}
+	
+	.recommended {
+		width: 100%;
+	}
+	
+	.r-question {
+		width: 95%;
+		margin: auto;
+	}
+}

