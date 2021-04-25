@@ -56,7 +56,7 @@ def index(request):
 		if not is_a_valid_response(text):
 			return HttpResponse('Proibido.')
 
-		r = Response.objects.create(question=q, creator=UserProfile.objects.get(user=request.user), text=text)
+		r = Response.objects.create(question=q, creator=UserProfile.objects.get(user=request.user), text=bs(text, 'lxml').text)
 		q.total_responses += 1
 
 		u_p = UserProfile.objects.get(user=request.user)
@@ -151,7 +151,7 @@ def question(request, question_id):
 		if not is_a_valid_response(text):
 			return HttpResponse('Proibido.')
 
-		r = Response.objects.create(question=q, creator=UserProfile.objects.get(user=request.user), text=text)
+		r = Response.objects.create(question=q, creator=UserProfile.objects.get(user=request.user), text=bs(text, 'lxml').text)
 
 		''' Upload de imagens: '''
 		form = UploadFileForm(request.POST, request.FILES)
@@ -560,7 +560,7 @@ def edit_response(request):
 	id=request.POST.get('response_id')
 
 	r = Response.objects.get(creator=UserProfile.objects.get(user=request.user), id=id)
-	r.text = request.POST.get('response')
+	r.text = bs(request.POST.get('response'), 'lxml').text
 	r.save()
 
 	return redirect('/question/' + str(r.question.id))
