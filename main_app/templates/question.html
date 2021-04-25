@@ -131,7 +131,7 @@ $(function() {
 						<img class="responder-profile-pic-popover" data-triger="hover" data-content="<img src='{{ response.creator.avatar.url }}' width='50px'><b> {{ response.creator.user.username }}</b><br><span>Pontos: {{ response.creator.points }}</span><p>{{ response.creator.bio }}</p>" data-placement="top" width="45px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}"> <span>{{ response.creator.user.username }}</span>
 					</a>
 					<div class="card-body">
-						<p id="response-{{ response.id }}">{{ response.text|cut_description|safe }}</p>
+						<p id="response-{{ response.id }}">{{ response.text|cut_description|safe|linebreaksbr }}</p>
 						
 						{% if response.image %}
 							<hr>
