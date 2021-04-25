@@ -148,17 +148,22 @@
 								<form id="form-{{ question.id }}" class="response-form" method="post" action="/">
 									{% csrf_token %}
 									<input name="question_id" type="hidden" value="{{ question.id }}">
+									{% if question.creator.user.username|blocked:user.username == 'Bloqueado' %}
+									<textarea disabled="true" name="text" maxlength="5000" class="form-control" placeholder="Você está impossibilitado(a) de responder esta pergunta." onclick="return show_form_buttons(this.parentElement)"></textarea>
+									<input disabled="true" class="btn btn-outline-primary form-button" type="submit" value="Enviar">
+									<input disabled="true" class="btn btn-outline-primary form-button" type="submit" value="Cancelar" onclick="return hide_form_buttons(this.parentElement)">
+									{% else %}
 									<textarea name="text" maxlength="5000" class="form-control" placeholder="Escreva sua resposta aqui" onclick="return show_form_buttons(this.parentElement)"></textarea>
 									<input class="btn btn-outline-primary form-button" type="submit" value="Enviar">
 									<input class="btn btn-outline-primary form-button" type="submit" value="Cancelar" onclick="return hide_form_buttons(this.parentElement)">
+									{% endif %}
 									<img style="display: none" id="modal-{{ question.id }}" src="/static/images/loading.gif" width="5%;">
 								</form>
 								<script>
 									$("#form-{{ question.id }}").submit(function() {
 										if('{{ question.creator.user.username|blocked:user.username }}' == 'Bloqueado') {
 											textarea = document.getElementById('form-{{ question.id }}').getElementsByTagName('textarea')[0]
-											textarea.classList.add('is-invalid')
-											alert('Você está impossibilidado de responder as perguntas deste usuário.')
+											alert(textarea)
 											return false
 										}
 
