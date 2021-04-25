@@ -413,7 +413,7 @@ def ask(request):
 	Teste de banimento.
 	'''
 	if Ban.objects.filter(ip=str(get_client_ip(request))).exists():
-		return HttpResponse(Ban.objects.get(ip=client_ip).message)
+		return HttpResponse(Ban.objects.get(ip=get_client_ip(request)).message)
 
 	'''
 	Controle de spam
