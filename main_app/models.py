@@ -46,6 +46,12 @@ class Question(models.Model):
 	def __str__(self):
 	    return self.text
 
+	def get_youtube_video(self):
+		vid_index = self.description.find('youtube.com/watch?v=')+len('youtube.com/watch?v=')
+		if vid_index == -1 or len(self.description) < vid_index+11:
+			return None
+		return(self.description[vid_index:vid_index + 11])
+
 	def cut_description(self):
 		d = self.description[:300]
 
@@ -63,6 +69,12 @@ class Response(models.Model):
 	likes = models.ManyToManyField(User)
 	total_likes = models.IntegerField(default=0)
 	image = models.ImageField(null=True, blank=True)
+
+	def get_youtube_video(self):
+		vid_index = self.text.find('youtube.com/watch?v=')+len('youtube.com/watch?v=')
+		if vid_index == -1 or len(self.text) < vid_index+11:
+			return None
+		return(self.text[vid_index:vid_index + 11])
 
 	def __str__(self):
 	    return self.text

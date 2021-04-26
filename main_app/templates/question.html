@@ -56,6 +56,27 @@ $(function() {
 				display: block;
 				margin: auto;
 			}
+			.vid-container {
+				height: 20vw;
+				max-height: 300px;
+			}
+			.yt-vid {
+    			position: relative;
+    			width: 60%;
+    			height: 100%;
+				display: block;
+			}
+		@media (min-width: 320px) and (max-width: 480px) {
+			.vid-container {
+				height: 50vw;
+				max-height: 300px;
+			}
+			.yt-vid {
+    			position: relative;
+    			width: 90%;
+    			height: 100%;
+				display: block;
+			}
 		</style>
 	</head>
 	<body>
@@ -107,6 +128,14 @@ $(function() {
 					<hr>
 					<p>{{ question.description|cut_description|safe|linebreaksbr }}</p>
 					{% endif %}
+
+					{% if question.get_youtube_video %}
+					<div class="vid-container">
+						<iframe src="https://www.youtube.com/embed/{{ question.get_youtube_video }}?rel=0" class="yt-vid" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+					</div>
+					<br>
+					{% endif %}
+
 					{% if question.image %}
 					<center>
 						<hr>
@@ -132,6 +161,13 @@ $(function() {
 					</a>
 					<div class="card-body">
 						<p id="response-{{ response.id }}">{{ response.text|cut_description|safe|linebreaksbr }}</p>
+
+						{% if response.get_youtube_video %}
+							<div class="vid-container">
+								<iframe src="https://www.youtube.com/embed/{{ response.get_youtube_video }}?rel=0" class="yt-vid" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
+							</div>
+							<br>
+						{% endif %}
 						
 						{% if response.image %}
 							<hr>
