@@ -47,9 +47,10 @@ class Question(models.Model):
 	    return self.text
 
 	def get_youtube_video(self):
-		vid_index = self.description.find('youtube.com/watch?v=')+len('youtube.com/watch?v=')
+		vid_index = self.description.find('youtube.com/watch?v=')
 		if vid_index == -1 or len(self.description) < vid_index+11:
 			return None
+		vid_index += len('youtube.com/watch?v=')
 		return(self.description[vid_index:vid_index + 11])
 
 	def cut_description(self):
@@ -71,9 +72,10 @@ class Response(models.Model):
 	image = models.ImageField(null=True, blank=True)
 
 	def get_youtube_video(self):
-		vid_index = self.text.find('youtube.com/watch?v=')+len('youtube.com/watch?v=')
+		vid_index = self.text.find('youtube.com/watch?v=')
 		if vid_index == -1 or len(self.text) < vid_index+11:
 			return None
+		vid_index += len('youtube.com/watch?v=')
 		return(self.text[vid_index:vid_index + 11])
 
 	def __str__(self):
