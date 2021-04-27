@@ -337,7 +337,7 @@ def signup(request):
 
 		new_user_profile = UserProfile.objects.create(user=u)
 		new_user_profile.ip = get_client_ip(request)
-		new_user_profile.active = False
+		new_user_profile.active = True
 		new_user_profile.verification_code = RANDOM_CODE
 		new_user_profile.save()
 
@@ -795,12 +795,12 @@ def is_a_valid_comment(text):
 Recompensa por adicionar o site aos favoritos.
 '''
 def increasePoints(request):
-	
+
 	user_profile = UserProfile.objects.get(user=request.user)
-	
+
 	if user_profile.message == 'ok': # caso o usuário já tenha ganhado os 100 pontos por adicionar o site aos favoritos.
 		return HttpResponse('OK')
-	
+
 	user_profile.total_points += 100
 	user_profile.message = 'ok' # 'ok' em message: significa que o usuário já ganhou a recompensa por adicionar o site aos favoritos.
 	user_profile.save()
