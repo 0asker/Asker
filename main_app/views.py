@@ -789,3 +789,19 @@ def is_a_valid_comment(text):
 	if len(text) > 300:
 		return False
 	return True
+
+
+'''
+Recompensa por adicionar o site aos favoritos.
+'''
+def increasePoints(request):
+	
+	user_profile = UserProfile.objects.get(user=request.user)
+	
+	if user_profile.message == 'ok': # caso o usuário já tenha ganhado os 100 pontos por adicionar o site aos favoritos.
+		return HttpResponse('OK')
+	
+	user_profile.total_points += 100
+	user_profile.message = 'ok' # 'ok' em message: significa que o usuário já ganhou a recompensa por adicionar o site aos favoritos.
+	user_profile.save()
+	return HttpResponse('OK')

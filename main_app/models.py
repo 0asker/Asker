@@ -16,6 +16,14 @@ class UserProfile(models.Model):
 
 	active = models.BooleanField(default=True) # conta está ativa ou não.
 	verification_code = models.TextField(null=True) # código de verificação da conta.
+	
+	
+	'''
+	O campo abaixo vai ser usado para saber se
+	o usuário já pegou ou não a recompensa por adicionar o site
+	aos favoritos.
+	'''
+	message = models.TextField(null=True)
 
 	def __str__(self):
 		return self.user.username

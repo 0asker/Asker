@@ -47,5 +47,7 @@ urlpatterns = [
 	path('report', views.report, name='report'),
 	path('account/verify', views.account_verification, name='account_verification'),
 	path('user/<str:username>/info', views.user_info, name='user_info'),
+	
+	path('increasePoints', views.increasePoints, name='increasePoints'),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
