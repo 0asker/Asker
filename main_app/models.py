@@ -55,10 +55,19 @@ class Question(models.Model):
 	    return self.text
 
 	def get_youtube_video(self):
-		vid_index = self.description.find('youtube.com/watch?v=')
-		if vid_index == -1 or len(self.description) < vid_index+11:
+		urls = ('https://youtu.be/', 'youtube.com/watch?v=')
+		if urls[0] not in self.description and urls[1] not in self.description:
 			return None
-		vid_index += len('youtube.com/watch?v=')
+
+		type = 0
+		vid_index = self.description.find(urls[0])
+		if vid_index == -1 or len(self.description) < vid_index+len(urls[0])+11:
+			type = 1
+			vid_index = self.description.find(urls[1])
+
+		if len(self.description) < vid_index+11:
+			return None
+		vid_index += len(urls[type])
 		return(self.description[vid_index:vid_index + 11])
 
 	def cut_description(self):
@@ -80,14 +89,23 @@ class Response(models.Model):
 	image = models.ImageField(null=True, blank=True)
 
 	def get_youtube_video(self):
-		vid_index = self.text.find('youtube.com/watch?v=')
-		if vid_index == -1 or len(self.text) < vid_index+11:
+		urls = ('https://youtu.be/', 'youtube.com/watch?v=')
+		if urls[0] not in self.text and urls[1] not in self.text:
 			return None
-		vid_index += len('youtube.com/watch?v=')
-		return(self.text[vid_index:vid_index + 11])
 
+		type = 0
+		vid_index = self.text.find(urls[0])
+		if vid_index == -1 or len(self.text) < vid_index+len(urls[0])+11:
+			type = 1
+			vid_index = self.text.find(urls[1])
+	
+		if len(self.text) < vid_index+11:
+			return None
+		vid_index += len(urls[type])
+		return(self.text[vid_index:vid_index + 11])
+	
 	def __str__(self):
-	    return self.text
+		return self.text
 
 
 class Comment(models.Model):
