@@ -21,6 +21,8 @@ from hashlib import sha256
 
 import random, string
 
+import io
+from PIL import Image, ImageFile, UnidentifiedImageError
 
 def replace_url_to_link(value):
     urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)", re.MULTILINE|re.UNICODE)
@@ -379,6 +381,7 @@ def profile(request, username):
 		context['responses'] = Paginator(Response.objects.filter(creator=UserProfile.objects.get(user=request.user)).order_by('-pub_date'), 10).page(r_page).object_list
 
 	if request.method == 'POST':
+		# TODO: acho que isso não é mais necessário, já que agora existe outra url pra editar o perfil?
 
 		new_bio = request.POST.get('bio', None)
 
@@ -387,23 +390,6 @@ def profile(request, username):
 			u.bio = new_bio
 			u.save()
 			return redirect('/user/' + username)
-
-		form = UploadFileForm(request.POST, request.FILES)
-		if form.is_valid():
-			f = request.FILES['file']
-
-			file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-			file_name += str(f)
-
-			with open('django_project/media/avatars/' + file_name, 'wb+') as destination:
-				for chunk in f.chunks():
-					destination.write(chunk)
-
-			u = UserProfile.objects.get(user=request.user)
-			u.avatar = 'avatars/' + file_name
-			u.save()
-
-			return redirect('/user/' + request.user.username)
 
 	return render(request, 'profile.html', context)
 
@@ -673,9 +659,26 @@ def edit_profile(request, username):
 				file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 				file_name += str(f)
 
-				with open('django_project/media/avatars/' + file_name, 'wb+') as destination:
-					for chunk in f.chunks():
-						destination.write(chunk)
+				img = b''
+				for chunk in f.chunks():
+					img += chunk
+
+				ImageFile.LOAD_TRUNCATED_IMAGES = True
+				max_size = (192, 192)
+				try:
+					im = Image.open(io.BytesIO(img))
+					if im.format in ('GIF', 'WEBP'):
+						# TODO: implementar compressao em imgs animadas tambem
+						with open('django_project/media/avatars/' + file_name, 'wb+') as destination:
+							destination.write(img)
+					else:
+						im.thumbnail(max_size)
+						im.save('django_project/media/avatars/' + file_name)
+				except UnidentifiedImageError:
+					import traceback
+					traceback.print_exc()
+					return redirect('/user/' + request.user.username + '/edit')  # TODO: Mostrar um erro de arquivo invalido!
+
 				u = UserProfile.objects.get(user=request.user)
 				u.avatar = 'avatars/' + file_name
 				u.save()
