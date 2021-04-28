@@ -675,8 +675,6 @@ def edit_profile(request, username):
 						im.thumbnail(max_size)
 						im.save('django_project/media/avatars/' + file_name)
 				except UnidentifiedImageError:
-					import traceback
-					traceback.print_exc()
 					return redirect('/user/' + request.user.username + '/edit')  # TODO: Mostrar um erro de arquivo invalido!
 
 				u = UserProfile.objects.get(user=request.user)
