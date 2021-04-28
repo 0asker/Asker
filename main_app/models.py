@@ -3,91 +3,111 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
-	ip = models.TextField(null=True)
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	avatar = models.ImageField(default='avatars/default-avatar.png', blank=True)
-	bio = models.TextField(max_length=400, blank=True)
-	total_points = models.IntegerField(null=True, default=0, blank=True)
-	total_views = models.IntegerField(default=0, blank=True) # total de visualizações desde o dia: 16/04/2021
+    ip = models.TextField(null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(default='avatars/default-avatar.png', blank=True)
+    bio = models.TextField(max_length=400, blank=True)
+    total_points = models.IntegerField(null=True, default=0, blank=True)
+    total_views = models.IntegerField(default=0, blank=True) # total de visualizações desde o dia: 16/04/2021
 
-	rank = models.IntegerField(default=-1, null=True, blank=True)
+    rank = models.IntegerField(default=-1, null=True, blank=True)
 
-	blocked_users = models.ManyToManyField(User, related_name='blocked_by', blank=True) # usuários bloqueados pelo UserProfile.user atual.
+    blocked_users = models.ManyToManyField(User, related_name='blocked_by', blank=True) # usuários bloqueados pelo UserProfile.user atual.
 
-	active = models.BooleanField(default=True) # conta está ativa ou não.
-	verification_code = models.TextField(null=True) # código de verificação da conta.
-	
-	
-	'''
-	O campo abaixo vai ser usado para saber se
-	o usuário já pegou ou não a recompensa por adicionar o site
-	aos favoritos.
-	'''
-	message = models.TextField(null=True)
+    active = models.BooleanField(default=True) # conta está ativa ou não.
+    verification_code = models.TextField(null=True) # código de verificação da conta.
 
-	def __str__(self):
-		return self.user.username
 
-	def total_questions(self):
-		return Question.objects.filter(creator=self).count()
+    '''
+    O campo abaixo vai ser usado para saber se
+    o usuário já pegou ou não a recompensa por adicionar o site
+    aos favoritos.
+    '''
+    message = models.TextField(null=True)
 
-	def total_responses(self):
-		return Response.objects.filter(creator=self).count()
+    def __str__(self):
+        return self.user.username
 
-	def points(self):
-		total = self.total_responses() * 2
-		total += self.total_questions()
-		return total
+    def total_questions(self):
+        return Question.objects.filter(creator=self).count()
+
+    def total_responses(self):
+        return Response.objects.filter(creator=self).count()
+
+    def points(self):
+        total = self.total_responses() * 2
+        total += self.total_questions()
+        return total
 
 
 class Question(models.Model):
-	creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-	text = models.TextField()
-	pub_date = models.DateTimeField(default=timezone.now)
-	image = models.ImageField(null=True, blank=True)
-	description = models.TextField(null=True)
-	total_likes = models.IntegerField(default=0, null=True)
-	total_responses = models.IntegerField(default=0)
-	reports = models.IntegerField(default=0)
-	reporters = models.ManyToManyField(User)
+    creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    text = models.TextField()
+    pub_date = models.DateTimeField(default=timezone.now)
+    image = models.ImageField(null=True, blank=True)
+    description = models.TextField(null=True)
+    total_likes = models.IntegerField(default=0, null=True)
+    total_responses = models.IntegerField(default=0)
+    reports = models.IntegerField(default=0)
+    reporters = models.ManyToManyField(User)
 
-	def __str__(self):
-	    return self.text
+    def __str__(self):
+        return self.text
 
-	def get_youtube_video(self):
-		vid_index = self.description.find('youtube.com/watch?v=')
-		if vid_index == -1 or len(self.description) < vid_index+11:
-			return None
-		vid_index += len('youtube.com/watch?v=')
-		return(self.description[vid_index:vid_index + 11])
+    def get_youtube_video(self):
+        urls = ('https://youtu.be/', 'youtube.com/watch?v=')
+        if urls[0] not in self.description and urls[1] not in self.description:
+            return None
 
-	def cut_description(self):
-		d = self.description[:300]
+        type = 0
+        vid_index = self.description.find(urls[0])
+        print('\t', len(self.description), vid_index+len(urls[0])+11)
+        if vid_index == -1 or len(self.description) < vid_index+len(urls[0])+11:
+            type = 1
+            vid_index = self.description.find(urls[1])
 
-		if len(d) == 300 and len(self.description) > 300:
-			d += '<span style="color: #007bff; cursor: pointer;" onclick="show_more(this)">...Mostrar mais</span><span style="display: none;">{}</span> <span style="color: #007bff; cursor: pointer; display: none;" onclick="show_less(this)">Mostrar menos</span>'.format(self.description[300:])
+        if len(self.description) < vid_index+11:
+            return None
+        vid_index += len(urls[type])
+        return(self.description[vid_index:vid_index + 11])
 
-		return d
+    def cut_description(self):
+        d = self.description[:300]
+
+        if len(d) == 300 and len(self.description) > 300:
+            d += '<span style="color: #007bff; cursor: pointer;" onclick="show_more(this)">...Mostrar mais</span><span style="display: none;">{}</span> <span style="color: #007bff; cursor: pointer; display: none;" onclick="show_less(this)">Mostrar menos</span>'.format(self.description[300:])
+
+        return d
 
 
 class Response(models.Model):
-	question = models.ForeignKey(Question, on_delete=models.CASCADE)
-	creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-	text = models.TextField()
-	pub_date = models.DateTimeField(default=timezone.now)
-	likes = models.ManyToManyField(User)
-	total_likes = models.IntegerField(default=0)
-	image = models.ImageField(null=True, blank=True)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    text = models.TextField()
+    pub_date = models.DateTimeField(default=timezone.now)
+    likes = models.ManyToManyField(User)
+    total_likes = models.IntegerField(default=0)
+    image = models.ImageField(null=True, blank=True)
 
-	def get_youtube_video(self):
-		vid_index = self.text.find('youtube.com/watch?v=')
-		if vid_index == -1 or len(self.text) < vid_index+11:
-			return None
-		vid_index += len('youtube.com/watch?v=')
-		return(self.text[vid_index:vid_index + 11])
+    def get_youtube_video(self):
+        urls = ('https://youtu.be/', 'youtube.com/watch?v=')
+        if urls[0] not in self.text and urls[1] not in self.text:
+            return None
 
-	def __str__(self):
-	    return self.text
+        type = 0
+        vid_index = self.text.find(urls[0])
+        print('\t', len(self.text), vid_index+len(urls[0])+11)
+        if vid_index == -1 or len(self.text) < vid_index+len(urls[0])+11:
+            type = 1
+            vid_index = self.text.find(urls[1])
+
+        if len(self.text) < vid_index+11:
+            return None
+        vid_index += len(urls[type])
+        return(self.text[vid_index:vid_index + 11])
+
+    def __str__(self):
+        return self.text
 
 
 class Comment(models.Model):
@@ -95,30 +115,30 @@ class Comment(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     pub_date = models.DateTimeField(default=timezone.now)
-    
+
     def __str__(self):
         return self.text
 
 
 class Notification(models.Model):
-	receiver = models.ForeignKey(User, on_delete=models.CASCADE)
-	type = models.TextField() # tipos: question-answered, like-in-response, comment-in-response
-	text = models.TextField(null=True)
-	creation_date = models.DateTimeField(default=timezone.now)
-	
-	# os campos abaixo são usados caso a notificação seja do tipo like-in-response.
-	liker = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='l') # quem deu o like
-	response = models.ForeignKey(Response, on_delete=models.CASCADE, null=True, related_name='r') # qual é a resposta
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
+    type = models.TextField() # tipos: question-answered, like-in-response, comment-in-response
+    text = models.TextField(null=True)
+    creation_date = models.DateTimeField(default=timezone.now)
 
-	def set_text(self, answer_id, comment_id=None):
-		if self.type == 'like-in-response':
-			self.text = '<p>Você recebeu um ❤️ na sua resposta <a href="/question/{}">"{}"</a></p>'.format(Response.objects.get(id=answer_id).question.id, Response.objects.get(id=answer_id).text)
-		if self.type == 'question-answered':
-		    response = Response.objects.get(id=answer_id)
-		    self.text = '<p><a href="/user/{}">{}</a> respondeu sua pergunta <a href="/question/{}">"{}"</a></p>'.format(response.creator.user.username, response.creator.user.username, response.question.id, response.question.text)
-		if self.type == 'comment-in-response':
-			comment = Comment.objects.get(response=Response.objects.get(id=answer_id), id=comment_id)
-			self.text = '<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text)
+    # os campos abaixo são usados caso a notificação seja do tipo like-in-response.
+    liker = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='l') # quem deu o like
+    response = models.ForeignKey(Response, on_delete=models.CASCADE, null=True, related_name='r') # qual é a resposta
+
+    def set_text(self, answer_id, comment_id=None):
+        if self.type == 'like-in-response':
+            self.text = '<p>Você recebeu um ❤️ na sua resposta <a href="/question/{}">"{}"</a></p>'.format(Response.objects.get(id=answer_id).question.id, Response.objects.get(id=answer_id).text)
+        if self.type == 'question-answered':
+            response = Response.objects.get(id=answer_id)
+            self.text = '<p><a href="/user/{}">{}</a> respondeu sua pergunta <a href="/question/{}">"{}"</a></p>'.format(response.creator.user.username, response.creator.user.username, response.question.id, response.question.text)
+        if self.type == 'comment-in-response':
+            comment = Comment.objects.get(response=Response.objects.get(id=answer_id), id=comment_id)
+            self.text = '<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text)
 
 
 class Report(models.Model):
