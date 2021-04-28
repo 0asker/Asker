@@ -104,8 +104,8 @@ class Response(models.Model):
 		vid_index += len(urls[type])
 		return(self.text[vid_index:vid_index + 11])
 	
-		def __str__(self):
-		    return self.text
+	def __str__(self):
+		return self.text
 
 
 class Comment(models.Model):
