@@ -219,14 +219,21 @@ def like(request):
     if r.creator.blocked_users.filter(username=request.user.username).exists():
         return HttpResponse('OK')
 
+    q = r.question
     if r.likes.filter(username=request.user.username).exists():
         r.likes.remove(request.user)
-        r.total_likes -= 1
+        r.total_likes = r.likes.count()
         r.save()
+        # diminui total de likes da pergunta:
+        q.total_likes -= 1
+        q.save()
     else:
         r.likes.add(request.user)
-        r.total_likes += 1
+        r.total_likes = r.likes.count()
         r.save()
+        # aumenta total de likes da pergunta:
+        q.total_likes += 1
+        q.save()
 
         if not Notification.objects.filter(type='like-in-response', liker=request.user, response=r).exists():
             # cria uma notificação para o like (quem recebeu o like será notificado):
@@ -234,13 +241,8 @@ def like(request):
                                             type='like-in-response',
                                             liker=request.user,
                                             response=r)
-        n.set_text(answer_id)
-        n.save()
-
-        # aumenta total de likes da pergunta:
-        q = r.question
-        q.total_likes += 1
-        q.save()
+            n.set_text(answer_id)
+            n.save()
 
     return HttpResponse('OK')
 

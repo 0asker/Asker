@@ -51,9 +51,6 @@ class Question(models.Model):
 	reports = models.IntegerField(default=0)
 	reporters = models.ManyToManyField(User)
 
-	def __str__(self):
-	    return self.text
-
 	def get_youtube_video(self):
 		urls = ('https://youtu.be/', 'youtube.com/watch?v=')
 		if urls[0] not in self.description and urls[1] not in self.description:
@@ -77,6 +74,9 @@ class Question(models.Model):
 			d += '<span style="color: #007bff; cursor: pointer;" onclick="show_more(this)">...Mostrar mais</span><span style="display: none;">{}</span> <span style="color: #007bff; cursor: pointer; display: none;" onclick="show_less(this)">Mostrar menos</span>'.format(self.description[300:])
 
 		return d
+
+	def __str__(self):
+	    return self.text
 
 
 class Response(models.Model):
