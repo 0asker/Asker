@@ -54,7 +54,7 @@ def index(request):
 
 		q = Question.objects.get(id=request.POST.get('question_id'))
 
-		text = request.POST.get('text')
+		text = request.POST.get('text').replace('\r\n\r\n', '\n\n')
 		if not is_a_valid_response(text):
 			return HttpResponse('Proibido.')
 
@@ -149,7 +149,7 @@ def question(request, question_id):
 		if Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=q).exists():
 			return HttpResponse('OK')
 
-		text = request.POST.get('response')
+		text = request.POST.get('response').replace('\r\n\r\n', '\n\n')
 		if not is_a_valid_response(text):
 			return HttpResponse('Proibido.')
 
@@ -548,7 +548,7 @@ def edit_response(request):
 	id=request.POST.get('response_id')
 
 	r = Response.objects.get(creator=UserProfile.objects.get(user=request.user), id=id)
-	r.text = bs(request.POST.get('response'), 'lxml').text
+	r.text = bs(request.POST.get('response').replace('\r\n\r\n', '\n\n'), 'lxml').text
 	r.save()
 
 	return redirect('/question/' + str(r.question.id))
