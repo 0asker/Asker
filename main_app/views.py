@@ -31,6 +31,25 @@ def replace_url_to_link(value):
     value = urls.sub(r'<a href="mailto:\1">\1</a>', value)
     return value
 
+def save_img_file(post_file, file_path, max_size):
+	img_data = b''
+	for chunk in post_file.chunks():
+		img_data += chunk
+
+	ImageFile.LOAD_TRUNCATED_IMAGES = True
+	try:
+		im = Image.open(io.BytesIO(img_data))
+		if im.format in ('GIF', 'WEBP'):
+			# TODO: implementar compressao em imgs animadas tambem
+			with open(file_path, 'wb+') as destination:
+				destination.write(img_data)
+		else:
+			im.thumbnail(max_size)
+			im.save(file_path, im.format)
+	except UnidentifiedImageError:
+		return False
+	return True
+
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -162,10 +181,11 @@ def question(request, question_id):
 
 			file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 			file_name += str(f)
-			# em produção: with open('django_project/media/responses/' + file_name, 'wb+') as destination:
-			with open('django_project/media/responses/' + file_name, 'wb+') as destination:
-				for chunk in f.chunks():
-					destination.write(chunk)
+
+			success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
+			if success: # TODO: mensagem caso não dê certo
+				r.image = 'responses/' + file_name
+
 			r.image = 'responses/' + file_name
 			r.save()
 
@@ -435,11 +455,11 @@ def ask(request):
 
 			file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 			file_name += str(f)
-			# em produção: with open('django_project/media/questions/' + file_name, 'wb+') as destination:
-			with open('django_project/media/questions/' + file_name, 'wb+') as destination:
-				for chunk in f.chunks():
-					destination.write(chunk)
-			q.image = 'questions/' + file_name
+
+			success = save_img_file(f, 'django_project/media/questions/' + file_name, (850, 850))
+			if success: # TODO: mensagem caso não dê certo
+				q.image = 'questions/' + file_name
+
 			q.save()
 
 		u = UserProfile.objects.get(user=request.user)
@@ -661,22 +681,8 @@ def edit_profile(request, username):
 				file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 				file_name += str(f)
 
-				img = b''
-				for chunk in f.chunks():
-					img += chunk
-
-				ImageFile.LOAD_TRUNCATED_IMAGES = True
-				max_size = (192, 192)
-				try:
-					im = Image.open(io.BytesIO(img))
-					if im.format in ('GIF', 'WEBP'):
-						# TODO: implementar compressao em imgs animadas tambem
-						with open('django_project/media/avatars/' + file_name, 'wb+') as destination:
-							destination.write(img)
-					else:
-						im.thumbnail(max_size)
-						im.save('django_project/media/avatars/' + file_name)
-				except UnidentifiedImageError:
+				success = save_img_file(f, 'django_project/media/avatars/' + file_name, (192, 192))
+				if not success:
 					return redirect('/user/' + request.user.username + '/edit')  # TODO: Mostrar um erro de arquivo invalido!
 
 				u = UserProfile.objects.get(user=request.user)
