@@ -186,7 +186,6 @@ def question(request, question_id):
 			if success: # TODO: mensagem caso não dê certo
 				r.image = 'responses/' + file_name
 
-			r.image = 'responses/' + file_name
 			r.save()
 
 		u = UserProfile.objects.get(user=request.user)
