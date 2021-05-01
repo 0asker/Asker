@@ -27,7 +27,7 @@ $(function() {
 
 		new_user_response = document.getElementById('response-form').response.value
 
-		new_innerHTML = '<li class="list-group-item"><a style="text-decoration: none; color: black;" href="/user/{{ user.username }}"><img src="{{ user_p.avatar.url }}" width="45px" alt="{{ user.username }}"> <span>{{ user.username }}</span></a><div class="card-body"><p>'+new_user_response+'</p></p>'
+		new_innerHTML = '<li class="list-group-item"><div class="card-body"><div class="poster-container"><a class="poster-info" href="/user/{{ user.username }}"><div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" width="45px" src="{{ user_p.avatar.url }}" alt="{{ user.username }}"></div><div class="poster-text-container"><div><span>{{ user.username }}</span></div></div></div></a><p>' + new_user_response + '</p></p>'
 
 		if (data['has_image']) {
 			url = data['image_url']
@@ -78,16 +78,22 @@ $(function() {
 			.list-group-item:focus, .list-group-item:hover {
 				/*Corrige BS*/
 				z-index: 0;
+				text-decoration: none;
 			}
-			.responder-info {
+			.poster-info {
   				display: flex;
 				text-decoration: none;
 				color: black;
+				font-size: 80%;
 			}
-			.responder-container {
+			.poster-info:hover {
+				text-decoration: none;
+				color: black;
+			}
+			.poster-container {
 				margin-bottom: 15px;
 			}
-			.responder-profile-pic-container, .responder-text-container {
+			.poster-profile-pic-container, .poster-text-container {
   				display: flex;
   				align-items: center;
   				padding-right: 6px;
@@ -152,10 +158,14 @@ $(function() {
 
 		<main>
 			<div class="card">
-				<a style="text-decoration: none; color: black;" href="/user/{{ question.creator.user.username }}">
-					<img id="profile-pic-popover" data-triger="hover" data-content="<img src='{{ question.creator.avatar.url }}' width='50px'><b> {{ question.creator.user.username }}</b><br><span>Pontos: {{ question.creator.points }}</span><p>{{ question.creator.bio }}</p>" data-placement="top" width="45px" src="{{ question.creator.avatar.url }}" alt="{{ question.creator.user.username }}"> <span>{{ question.creator.user.username }}</span>
-				</a>
 				<div class="card-body">
+					<div class="poster-container">
+					<a class="poster-info" href="/user/{{ response.creator.user.username }}">
+						<div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" data-triger="hover" data-content="<img src='{{ question.creator.avatar.url }}' width='50px'><b> {{ question.creator.user.username }}</b><br><span>Pontos: {{ question.creator.points }}</span><p>{{ question.creator.bio }}</p>" data-placement="top" width="45px" src="{{ question.creator.avatar.url }}" alt="{{ question.creator.user.username }}"></div>
+						<div class="poster-text-container"><div><span>{{ question.creator.user.username }}</span><br><span class="response-pub-date"> {{ question.get_naturaltime }}</span></div></div>
+					</a>
+					</div>
+
 					<h3>{{ question.text }}</h3>
 					{% if question.description != '' %}
 					<hr>
@@ -194,10 +204,10 @@ $(function() {
 				{% for response in responses %}
 				<li class="list-group-item">
 					<div class="card-body">
-						<div class="responder-container">
-						<a class="responder-info" href="/user/{{ response.creator.user.username }}">
-							<div class="responder-profile-pic-container"><img class="responder-profile-pic-popover" data-triger="hover" data-content="<img src='{{ response.creator.avatar.url }}' width='50px'><b> {{ response.creator.user.username }}</b><br><span>Pontos: {{ response.creator.points }}</span><p>{{ response.creator.bio }}</p>" data-placement="top" width="45px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}"></div>
-							<div class="responder-text-container"><div><span>{{ response.creator.user.username }}</span><br><span class="response-pub-date"> {{ response.get_naturaltime }}</span></div></div>
+						<div class="poster-container">
+						<a class="poster-info" href="/user/{{ response.creator.user.username }}">
+							<div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" data-triger="hover" data-content="<img src='{{ response.creator.avatar.url }}' width='50px'><b> {{ response.creator.user.username }}</b><br><span>Pontos: {{ response.creator.points }}</span><p>{{ response.creator.bio }}</p>" data-placement="top" width="45px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}"></div>
+							<div class="poster-text-container"><div><span>{{ response.creator.user.username }}</span><br><span class="response-pub-date"> {{ response.get_naturaltime }}</span></div></div>
 
 						</a>
 						</div>
