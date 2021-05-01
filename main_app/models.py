@@ -1,6 +1,17 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.contrib.humanize.templatetags.humanize import naturaltime
+
+def correct_naturaltime(naturaltime_str):
+	# Enquanto a tradução do humanize estiver sem espaços..
+	print(naturaltime_str)
+	corrections = {"atrás": " atrás", "ano": " ano", "mês": " mês", "mes": " mes", "semana": " semana", "dia": " dia", "hora": " hora", "minuto": " minuto"}
+	for substr in corrections:
+		if substr in naturaltime_str:
+			naturaltime_str = naturaltime_str.replace(substr, corrections[substr])
+	return naturaltime_str
+
 
 class UserProfile(models.Model):
 	ip = models.TextField(null=True)
@@ -51,6 +62,9 @@ class Question(models.Model):
 	reports = models.IntegerField(default=0)
 	reporters = models.ManyToManyField(User)
 
+	def get_naturaltime(self):
+		return correct_naturaltime(naturaltime(self.pub_date))
+
 	def get_youtube_video(self):
 		urls = ('https://youtu.be/', 'youtube.com/watch?v=')
 		if urls[0] not in self.description and urls[1] not in self.description:
@@ -87,6 +101,9 @@ class Response(models.Model):
 	likes = models.ManyToManyField(User)
 	total_likes = models.IntegerField(default=0)
 	image = models.ImageField(null=True, blank=True)
+
+	def get_naturaltime(self):
+		return correct_naturaltime(naturaltime(self.pub_date))
 
 	def get_youtube_video(self):
 		urls = ('https://youtu.be/', 'youtube.com/watch?v=')
