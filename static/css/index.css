@@ -21,8 +21,9 @@
 }
 
 #tabs {
-	width: 50%;
+	width: 48%;
 	margin: 1% auto;
+	margin-bottom: -1px;
 }
 
 /* Para smartphones: */

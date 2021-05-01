@@ -5,7 +5,6 @@ from django.contrib.humanize.templatetags.humanize import naturaltime
 
 def correct_naturaltime(naturaltime_str):
 	# Enquanto a tradução do humanize estiver sem espaços..
-	print(naturaltime_str)
 	corrections = {"atrás": " atrás", "ano": " ano", "mês": " mês", "mes": " mes", "semana": " semana", "dia": " dia", "hora": " hora", "minuto": " minuto"}
 	for substr in corrections:
 		if substr in naturaltime_str:

@@ -81,6 +81,10 @@
 	#alert-elements {
 		display: none;
 	}
+	.list-group-item {
+		padding-left: 0px;
+		padding-right: 0px;
+	}
 
 	@media (min-width: 320px) and (max-width: 480px) {
 		#alert {
@@ -133,11 +137,10 @@
 			</li>
 		</ul>
 
-			<section id="n_questions">
-				<div class="infinite-container">
+			<section class="card" id="n_questions">
+				<ul class="list-group list-group-flush infinite-container">
 					{% for question in questions %}
-					<div class="infinite-item">
-						<div class="card">
+					<li class="list-group-item infinite-item">
 							<div class="card-body">
 								<a href="/question/{{ question.id }}">
 									<b>{{ question.text }}</b>
@@ -147,7 +150,7 @@
 			{{ question.description|cut_description|safe|linebreaksbr }}
 									{% endif %}
 								</p>
-								<small>{{ question.id|total_answers }} respostas <b>&middot;</b> <span class="text-muted">{{ question.pub_date|naturaltime }}</span></small>
+								<small>{{ question.id|total_answers }} respostas <b>&middot;</b> <span class="text-muted">{{ question.get_naturaltime }}</span></small>
 							{% if user.is_authenticated %}
 								{% if user_p.active %}
 								{% if user.username|answered:question.id %}
@@ -195,20 +198,20 @@
 							<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.</p>
 							{% endif %}
 							</div>
-						</div>
-					</div>
+					</li>
 					{% endfor %}
-				</div>
+				</ul>
 
   {% if questions.has_next %}
     <a class="btn btn-primary infinite-more-link" href="/news?page={{ questions.next_page_number }}">Próxima página</a>
   {% endif %}
 			</section>
 
-			<section id="p_questions">
+			<section class="card" id="p_questions">
+				<ul class="list-group list-group-flush infinite-container">
 
 				{% for question in popular_questions %}
-				<div class="card">
+				<li class="list-group-item">
 					<div class="card-body">
 						<a href="/question/{{ question.id }}">
 							<b>{{ question.text }}</b>
@@ -229,7 +232,7 @@
 					<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.</p>
 					{% endif %}
 					</div>
-				</div>
+				</li>
 				{% endfor %}
 				<h5>Fim! <a href="/news">Clique aqui</a> para ver as novas perguntas.</h5>
 			</section>
