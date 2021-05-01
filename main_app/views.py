@@ -546,9 +546,10 @@ def comment(request):
 	'''
 	Cria a notificação do novo comentário:
 	'''
-	n = Notification.objects.create(receiver=r.creator.user, type='comment-in-response')
-	n.set_text(r.id, comment_id=c.id)
-	n.save()
+	if request.user != r.creator.user:
+		n = Notification.objects.create(receiver=r.creator.user, type='comment-in-response')
+		n.set_text(r.id, comment_id=c.id)
+		n.save()
 
 	return redirect('/question/' + str(c.response.question.id))
 
