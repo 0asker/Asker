@@ -27,7 +27,7 @@ $(function() {
 
 		new_user_response = document.getElementById('response-form').response.value
 
-		new_innerHTML = '<li class="list-group-item"><a style="text-decoration: none; color: black;" href="/user/{{ user.username }}"><img src="{{ user_p.avatar.url }}" width="45px" alt="{{ user.username }}"> <span>{{ user.username }}</span></a><div class="card-body"><p>'+new_user_response+'</p></p>'
+		new_innerHTML = '<li class="list-group-item"><div class="card-body"><div class="poster-container"><a class="poster-info" href="/user/{{ user.username }}"><div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" width="45px" src="{{ user_p.avatar.url }}" alt="{{ user.username }}"></div><div class="poster-text-container"><div><span>{{ user.username }}</span></div></div></div></a><p>' + new_user_response + '</p></p>'
 
 		if (data['has_image']) {
 			url = data['image_url']
