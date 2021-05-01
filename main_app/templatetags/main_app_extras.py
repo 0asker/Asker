@@ -58,9 +58,10 @@ def last_response_pub_date(question_id):
 @register.filter(name='last_response')
 def last_response(question_id):
 	from django.contrib.humanize.templatetags.humanize import naturaltime
+	from ..models import correct_naturaltime
 	try:
 		r = Response.objects.filter(question=Question.objects.get(id=question_id)).order_by('-pub_date')
-		return 'respondida {} por <a href="/user/{}">{}</a>'.format(naturaltime(r[0].pub_date), r[0].creator.user.username, r[0].creator.user.username)
+		return 'respondida {} por <a href="/user/{}">{}</a>'.format(correct_naturaltime(naturaltime(r[0].pub_date)), r[0].creator.user.username, r[0].creator.user.username)
 	except:
 		return ''
 
