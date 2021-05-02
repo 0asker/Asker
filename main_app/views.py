@@ -814,3 +814,46 @@ def increasePoints(request):
 	user_profile.message = 'ok' # 'ok' em message: significa que o usuário já ganhou a recompensa por adicionar o site aos favoritos.
 	user_profile.save()
 	return HttpResponse('OK')
+
+
+def reset_password(request):
+	
+	if request.method == 'POST':
+		user = User.objects.get(email=request.POST.get('email'))
+		user.set_password(request.POST.get('password1'))
+		user.save()
+		
+		return HttpResponse('''<!doctype html>
+		<html>
+		<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		</head>
+		<body>
+		<p>Senha alterada com sucesso. <a href="/signin">Clique aqui</a> para fazer login.</p>
+		</body>
+		</html>
+		''')
+	
+	if request.GET.get('type', None) == 'email-verification':
+		'''
+		Para alterar senha:
+		é gerado novo código de verificação aleatório para a conta;
+		é enviado um email para a conta com três parâmetros GET: parâmetro type = get-form, parâmetro verification-code = novo código de verificação e parâmetro username = username;
+		se o código de verificação estiver correto é enviado o formulário para troca de senha, se não, é enviado um erro.
+		'''
+		u_p = UserProfile.objects.get(user=User.objects.get(email=request.GET.get('email')))
+		u_p.verification_code = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
+		u_p.save()
+		
+		send_mail('Asker: trocar senha', 'Para alterar sua senha do Asker, use o link: https://asker.pythonanywhere.com/reset-password?type=get-form&username={}&code={}\nEntre em contato por este email caso ocorra algum erro.'.format(u_p.user.username, u_p.verification_code), EMAIL_HOST_USER, [u_p.user.email], fail_silently=False)
+		
+		return HttpResponse('Email de verificação enviado. Por favor, verifique seus emails, caso não encontre, verifique a pasta de spam.')
+	elif request.GET.get('type', None) == 'get-form':
+		u_p = UserProfile.objects.get(user=User.objects.get(username=request.GET.get('username')))
+		
+		if u_p.verification_code == request.GET.get('code'):
+			return render(request, 'change-password.html', {'email': u_p.user.email})
+		return HttpResponse('Ocorreu um erro, por favor, tente novamente. Caso o erro persista, <a href="mailto:minha.ccontta@gmail.com">nos envie um email</a>.')
+	
+	return render(request, 'reset-password-1-part.html')

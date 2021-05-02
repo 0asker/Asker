@@ -48,6 +48,8 @@ urlpatterns = [
 	path('account/verify', views.account_verification, name='account_verification'),
 	path('user/<str:username>/info', views.user_info, name='user_info'),
 	
+	path('reset-password', views.reset_password, name='reset_password'),
+	
 	path('increasePoints', views.increasePoints, name='increasePoints'),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
