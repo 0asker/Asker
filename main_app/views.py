@@ -386,20 +386,19 @@ Obrigado e bem vindo(a)!
 
 
 def profile(request, username):
+	u = UserProfile.objects.get(user=User.objects.get(username=username))
 	if request.user.username != username and request.user.username != 'Erick':
-		u = UserProfile.objects.get(user=User.objects.get(username=username))
 		u.total_views += 1
 		u.save()
 
-	context = {'user_p': UserProfile.objects.get(user=User.objects.get(username=username)),
-			   'change_profile_picture_form': UploadFileForm()}
+	context = {'user_p': u, 'change_profile_picture_form': UploadFileForm()}
 
-	if request.user.username == username:
+	if request.user.username == username or not u.hide_activity:
 		q_page = request.GET.get('q-page', 1)
 		r_page = request.GET.get('r-page', 1)
 
-		context['questions'] = Paginator(Question.objects.filter(creator=UserProfile.objects.get(user=request.user)).order_by('-pub_date'), 10).page(q_page).object_list
-		context['responses'] = Paginator(Response.objects.filter(creator=UserProfile.objects.get(user=request.user)).order_by('-pub_date'), 10).page(r_page).object_list
+		context['questions'] = Paginator(Question.objects.filter(creator=u).order_by('-pub_date'), 10).page(q_page).object_list
+		context['responses'] = Paginator(Response.objects.filter(creator=u).order_by('-pub_date'), 10).page(r_page).object_list
 
 	if request.method == 'POST':
 		# TODO: acho que isso não é mais necessário, já que agora existe outra url pra editar o perfil?
@@ -723,6 +722,14 @@ def edit_profile(request, username):
 			user.save()
 			login(request, user)
 			return redirect('/user/' + user.username)
+		if request.POST.get('type') == 'privacy':
+			u = UserProfile.objects.get(user=request.user)
+			if request.POST.get('hide-activity') is not None:
+				u.hide_activity = True
+			else:
+				u.hide_activity = False
+			u.save()
+			return redirect('/user/' + username)
 
 	return render(request, 'edit-profile.html', {'user_p': UserProfile.objects.get(user=User.objects.get(username=username))})
 

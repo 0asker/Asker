@@ -55,10 +55,24 @@
 
 			<div class="form-row">
 				<div class="col-md-4 mb-3">
-					<input placeholder="" class="btn btn-primary" type="submit">
+					<input value="Alterar nome" placeholder="" class="btn btn-primary" type="submit">
 				</div>
 			</div>
 		</form>
+
+		<hr>
+		<h2>Privacidade</h2>
+		<form method="post">
+			<input type="hidden" name="type" value="privacy">
+			{% csrf_token %}
+			{% if user_p.hide_activity %}
+				<input type="checkbox" name="hide-activity" id="hide-activity" checked> <label for="hide-activity"> Esconder perguntas e respostas do meu perfil</label><br>
+			{% else %}
+				<input type="checkbox" name="hide-activity" id="hide-activity"> <label for="hide-activity"> Esconder perguntas e respostas do meu perfil</label><br>
+			{% endif %}
+			<input class="btn btn-primary" type="submit" value="Alterar privacidade">
+		</form>
+
 		{% if user.username == user_p.user.username %}
 		<hr>
 		<p>Seu email: {{ user.email }}</p>

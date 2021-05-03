@@ -26,7 +26,8 @@ class UserProfile(models.Model):
 
 	active = models.BooleanField(default=True) # conta está ativa ou não.
 	verification_code = models.TextField(null=True) # código de verificação da conta.
-	
+
+	hide_activity = models.BooleanField(default=True)
 	
 	'''
 	O campo abaixo vai ser usado para saber se
