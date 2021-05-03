@@ -28,9 +28,13 @@ function like(likeElement, response_id) {
 	})
 }
 
+
+
 function show_comments(commentsDiv, response_id, commentsIcon, csrf_token, user_logged, question_id) {
-	
-	commentsSection = commentsDiv.getElementsByClassName('comments')[0]
+
+	commentsSection = commentsDiv.getElementsByClassName("comments")[0]
+	commentsUl = commentsDiv.getElementsByClassName("comments-ul")[0]
+	commentsSection.style.display = "block";
 	
 	if (commentsSection.getElementsByTagName('form')[0] != undefined) {
 		commentsSection.getElementsByTagName('form')[0].remove()
@@ -44,27 +48,27 @@ function show_comments(commentsDiv, response_id, commentsIcon, csrf_token, user_
 		url: '/comments',
 		data: {
 			id: response_id,
-			page: commentsSection.id,
+			page: commentsUl.id,
 		},
 		complete: function(data) {
 			data = JSON.parse(data.responseText)
 			$.each(data.comments, function(index, value) {
 				if(user_logged != value.username) {
-					commentsSection.innerHTML += '<div class="c"><hr><a style="text-decoration: none; color: black;" href="/user/'+value.username+'"><img src="'+value.avatar+'" width="40px"> <span>'+value.username+'</span></a><p>'+value.text+'</p><hr></div>'
+					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a></div><p>'+value.text+'</p></div></li>'
 				} else {
-					commentsSection.innerHTML += '<div class="c"><hr><a style="text-decoration: none; color: black;" href="/user/'+value.username+'"><img src="'+value.avatar+'" width="40px"> <span>'+value.username+'</span></a> <img onclick="delete_comment('+value.comment_id+'); this.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png"> <p>'+value.text+'</p><hr></div>'
+					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a><img onclick="delete_comment('+value.comment_id+'); this.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png"></div><p>'+value.text+'</p></div></li>'
 				}
 			})
 			
 			if(data.has_next) {
-				commentsSection.id = Number(commentsSection.id) + 1
+				commentsUl.id = Number(commentsUl.id) + 1
 				
 				/* Adiciona elemento para clicar e carregar mais comentários */
-				commentsSection.innerHTML += `<p class="load-more" onclick="show_comments(this.parentElement.parentElement, ${response_id}, this.parentElement.getElementsByTagName('img')[0], '${csrf_token}', '`+user_logged+`', `+question_id+`)">Carregar mais</p>`
+				commentsSection.innerHTML += `<p class="btn btn-outline-primary load-more" onclick="show_comments(this.parentElement.parentElement, ${response_id}, this.parentElement.getElementsByTagName('img')[0], '${csrf_token}', '`+user_logged+`', `+question_id+`)">Carregar mais</p>`
 			}
 			
 			/* Adiciona o formulário para comentar */
-			commentsSection.innerHTML += '<form class="form-inline" method="post" action="/comment"><input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'"><input type="hidden" name="response_id" value="'+response_id+'">  <input type="hidden" name="question_id" value="'+question_id+'">  <textarea maxlength="300" class="form-control" name="text" placeholder="Escreva seu comentário"></textarea><input class="btn btn-outline-primary" type="submit" value="Pronto" onclick="this.style.display=`none`"></form>'
+			commentsSection.innerHTML += '<form class="form-inline comm-form" method="post" action="/comment"><input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'"><input type="hidden" name="response_id" value="'+response_id+'">  <input type="hidden" name="question_id" value="'+question_id+'">  <input type="text" maxlength="300" autocomplete="off" class="form-control" name="text" placeholder="Escreva seu comentário"></input><input class="btn btn-primary" type="submit" value="Comentar" onclick="this.style.display=`none`"></form>'
 		}
 	})
 	
