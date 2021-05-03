@@ -105,6 +105,27 @@ $(function() {
 				padding-left: 0px;
 				padding-right: 0px;
 			}
+			.comments {
+				background-color: rgba(0,0,0,.03);
+				padding: 10px;
+				display: none;
+			}
+			.c {
+				background-color: rgba(0,0,0,0);
+			}
+			.comm-card {
+				padding-top: 1.25rem;
+			}
+			.comm-form {
+				display: flex;
+			}
+			.form-control {
+				flex-grow: 1;
+				margin-right: 10px;
+			}
+			.load-more {
+				width: 100%;
+			}
 		@media (min-width: 320px) and (max-width: 480px) {
 			.vid-container {
 				height: 50vw;
@@ -115,6 +136,13 @@ $(function() {
     			width: 90%;
     			height: 100%;
 				display: block;
+			}
+			.comm-form .btn {
+				margin-top: 4px;
+				flex-grow: 1;
+			}
+			.form-control {
+				margin-right: 0px;
 			}
 		</style>
 	</head>
@@ -249,7 +277,10 @@ $(function() {
 							<span class="comment">{{ response.id|total_comments }}</span>
 
 							<!-- Comentários -->
-							<div class="comments" id="1"> <!-- O ID deste elemento é usado para paginação. -->
+							<div class="card comments">
+								<ul class="comments-ul list-group list-group-flush" id="1"> <!-- O ID deste elemento é usado para paginação. -->
+
+								</ul>
 							</div>
 						</div>
 					</div>
