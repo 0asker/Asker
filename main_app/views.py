@@ -61,6 +61,9 @@ def get_client_ip(request):
 
 def index(request):
 
+	if Ban.objects.filter(ip=str(get_client_ip(request))).exists():
+		return HttpResponse(Ban.objects.get(ip=get_client_ip(request)).message)
+
 	if request.method == 'POST':
 		if Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=Question.objects.get(id=request.POST.get('question_id'))).exists():
 			return HttpResponse('OK')
@@ -139,6 +142,10 @@ def index(request):
 
 
 def question(request, question_id):
+
+	if Ban.objects.filter(ip=str(get_client_ip(request))).exists():
+		return HttpResponse(Ban.objects.get(ip=get_client_ip(request)).message)
+
 
 	try:
 		q = Question.objects.get(id=question_id)
