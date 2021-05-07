@@ -91,17 +91,18 @@ function show_comments(commentsDiv, response_id, commentsIcon, csrf_token, user_
 		}
 	}
 }
-
-function delete_response(response_id) {
-	$.ajax({
-		url: '/delete_response',
-		data: {
-			response_id: response_id,
-		},
-		complete: function() {
-			alert('Resposta apagada.')
-		}
-	})
+function delete_response(response_button_dom_el, response_id) {
+    if (confirm('Opa! Você tem certeza que deseja apagar sua resposta?')) {
+	    $.ajax({
+    		url: '/delete_response',
+    		data: {
+    			response_id: response_id,
+    		},
+    		complete: function() {
+    			response_button_dom_el.parentElement.parentElement.parentElement.parentElement.remove();
+    		}
+    	})
+    }
 }
 
 function delete_comment(comment_id, csrf_token) {
@@ -118,7 +119,7 @@ function delete_comment(comment_id, csrf_token) {
 }
 
 function report_question(question_id, obj) {
-	// quando a denÃºncia tiver sido feita, a funÃ§Ã£o abaixo Ã© executada:
+	// quando a denuncia tiver sido feita, a funcao abaixo é executada:
 	function ok() {
 		obj.parentElement.innerHTML = '<p>Pergunta denunciada com sucesso <i class="far fa-check-circle"></i></p>'
 		obj.remove()
