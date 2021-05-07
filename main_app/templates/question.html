@@ -373,9 +373,11 @@ function delete_question(id) {
 			data: {
 				csrfmiddlewaretoken: '{{csrf_token}}',
 				question_id: id,
+			},
+			complete: function() {
+				window.location = window.location.href.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[0] + 'news';
 			}
 		})
-		window.location = window.location.href.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[0] + 'news';
 	}
 }
 	</script>
