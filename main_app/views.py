@@ -14,12 +14,15 @@ from main_app.models import UserProfile, Question, Response, Notification, Comme
 from main_app.forms import UploadFileForm
 
 from bs4 import BeautifulSoup as bs
+from redislite import Redis
 
 import re
 from random import shuffle
 from hashlib import sha256
 
-import random, string
+import time
+import random
+import string
 
 import io
 from PIL import Image, ImageFile, UnidentifiedImageError
@@ -60,6 +63,7 @@ def get_client_ip(request):
     return ip
 
 def index(request):
+	start_time = time.time()
 
 	if Ban.objects.filter(ip=str(get_client_ip(request))).exists():
 		return HttpResponse(Ban.objects.get(ip=get_client_ip(request)).message)
@@ -103,12 +107,21 @@ def index(request):
 	page = request.GET.get('page', 1)
 	questions = p.page(page)
 	context['questions'] = questions
-
-	# pega as perguntas mais populares (com mais likes nas respostas) da mais nova para a mais velha:
-	p = Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20)
-	page = request.GET.get('popular-page', 1)
-	questions = p.page(page).object_list
-	context['popular_questions'] = questions
+	
+	'''
+	Perguntas populares:
+	'''
+	try:
+		redis_connection = Redis('/tmp/asker.db')
+		popular_questions_cache = redis_connection.get('popular_questions')
+		if popular_questions_cache is not None:
+			context['popular_questions'] = Question.objects.filter(id__in=popular_questions_cache.decode('utf-8').split())
+		else:
+			# o código abaixo faz todo o cálculo completo para pegar as perguntas populares e então renderizar no template.
+			# porém, este código só é executado caso ocorra algum erro no cache.
+			context['popular_questions'] = Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list
+	except:
+		context['popular_questions'] = Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list
 
 	if request.user.is_authenticated:
 		user_p = UserProfile.objects.get(user=request.user)
@@ -138,7 +151,10 @@ def index(request):
 		</div>
 		'''
 
-	return render(request, 'index.html', context)
+	response = render(request, 'index.html', context)
+	
+	print('Tempo de execução: ' + str(time.time() - start_time))
+	return response
 
 
 def question(request, question_id):
@@ -863,3 +879,17 @@ def reset_password(request):
 		return HttpResponse('Ocorreu um erro, por favor, tente novamente. Caso o erro persista, <a href="mailto:minha.ccontta@gmail.com">nos envie um email</a>.')
 
 	return render(request, 'reset-password-1-part.html')
+
+
+def update_popular_questions(request):
+	
+	q = Question.objects.order_by('-pub_date')
+	
+	redis_connection = Redis('/tmp/asker.db')
+	ID_LIST = ''
+	for id in Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list:
+		ID_LIST += str(id) + ' '
+	ID_LIST = ID_LIST.strip()
+	redis_connection.set('popular_questions', ID_LIST)
+	
+	return HttpResponse('OK')

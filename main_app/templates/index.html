@@ -52,63 +52,6 @@
 			</div>
 		</nav>
 {{ account_verification_alert|safe }}
-<style>
-	#alert {
-		width: 50%;
-		margin: auto;
-	}
-	#hide-alert {
-		float: right;
-		border-bottom-style: solid;
-		border-bottom-width: 1px;
-		cursor: pointer;
-	}
-	#alert-elements {
-		display: none;
-	}
-	.list-group-item {
-		padding-left: 0px;
-		padding-right: 0px;
-	}
-	@media (min-width: 320px) and (max-width: 480px) {
-		#alert {
-			width: 100%;
-		}
-	}
-</style>
-<div id="alert" class="alert alert-info" role="alert">
-	<span id="hide-alert">Mostrar</span>
-  <h4 class="alert-heading">Aviso</h4>
-  <div id="alert-elements">
-	  <p>Devido a um erro no registrador de domínios GoDaddy.com, o Asker vai utilizar este domínio: <b>asker.pythonanywhere.com</b> até que o domínio <b>asker.fun</b> seja recuperado.</p>
-	  <hr>
-	  {% if user.is_authenticated %}
-	   {% if user_p.message == 'ok' %}
-	    <p class="mb-0">Você recebeu seus 100 pontos de recompensa por adicionar o site aos favoritos :)</p>
-	   {% else %}
-	    <p class="mb-0">Dica: adicione este site aos favoritos e ganhe 100 pontos de recompensa! <a id="bookmarkme" href="#" rel="sidebar" title="Favoritar essa página" onclick="increasePoints()">Clique aqui</a> para adicionar e ganhar.</p>
-	   {% endif %}
-	  {% else %}
-	  <p class="mb-0">Crie sua conta no Asker, o melhor site de perguntas e respostas, clicando <a href="/signup">aqui</a>, ou entre clicando <a href="/signin">aqui</a> caso já tenha se registrado.</p>
-	  {% endif %}
-	  <small>Obrigado a todos os usuários do Asker.</small>
-  </div>
-</div>
-<script>
-	btn = document.getElementById('hide-alert')
-	btn.onclick = function() {
-		if (btn.innerText == 'Mostrar') {
-			btn.innerText = 'Ocultar'
-		} else
-			btn.innerText = 'Mostrar'
-
-		alert_div = document.getElementById('alert-elements')
-		if (window.getComputedStyle(alert_div, null).display == 'none') {
-			alert_div.style.display = 'block'
-		} else
-			alert_div.style.display = 'none'
-	}
-</script>
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
 				<span class="nav-link" id="popular">Popular</span>

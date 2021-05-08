@@ -2,3 +2,4 @@ django==3.2
 pillow
 bs4
 lxml
+redislite
