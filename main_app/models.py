@@ -11,6 +11,41 @@ def correct_naturaltime(naturaltime_str):
 			naturaltime_str = naturaltime_str.replace(substr, corrections[substr])
 	return naturaltime_str
 
+def make_embedded_content(text):
+	urls = ('https://youtu.be/', 'youtube.com/watch?v=', 'https://voca.ro/', 'vocaroo.com/')
+	if urls[0] in text or urls[1] in text:
+		type = 0
+		url_index = text.find(urls[0])
+		if url_index == -1 or len(text) < url_index + len(urls[0]) + 11:
+			type = 1
+			url_index = text.find(urls[1])
+
+		if len(text) < url_index + 11:
+			return None
+		url_index += len(urls[type])
+		video_id = text[url_index:url_index + 11]
+		if video_id:
+			return """<div class="vid-container"><iframe src="https://www.youtube.com/embed/{}?rel=0" class="yt-vid" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>""".format(
+				video_id)
+	elif urls[2] in text or urls[3] in text:
+		type = 2
+		url_index = text.find(urls[2])
+		if url_index == -1 or len(text) < url_index + len(urls[0]) + 4:
+			type = 3
+			url_index = text.find(urls[3])
+
+		if len(text) < url_index + 4:
+			return None
+		url_end_index = text.find(' ', url_index)
+		url_index += len(urls[type])
+		if url_end_index > -1:
+			audio_id = text[url_index:url_end_index].replace('"', '') # replace('"') p/ caso o link seja um src attr de uma tag <a> - necessário pois ha tags html guardadas formatadas no db
+		else:
+			audio_id = text[url_index:].replace('"', '') # replace('"') p/ caso o link seja um src attr de uma tag <a> - necessário pois ha tags html guardadas formatadas no db
+		if audio_id:
+			return """<div class="voc-container"><iframe width="300" height="60" src="https://vocaroo.com/embed/{}?autoplay=0" frameborder="0" allow="autoplay"></iframe><br></div>""".format(
+				audio_id)
+
 
 class UserProfile(models.Model):
 	ip = models.TextField(null=True)
@@ -65,21 +100,8 @@ class Question(models.Model):
 	def get_naturaltime(self):
 		return correct_naturaltime(naturaltime(self.pub_date))
 
-	def get_youtube_video(self):
-		urls = ('https://youtu.be/', 'youtube.com/watch?v=')
-		if urls[0] not in self.description and urls[1] not in self.description:
-			return None
-
-		type = 0
-		vid_index = self.description.find(urls[0])
-		if vid_index == -1 or len(self.description) < vid_index+len(urls[0])+11:
-			type = 1
-			vid_index = self.description.find(urls[1])
-
-		if len(self.description) < vid_index+11:
-			return None
-		vid_index += len(urls[type])
-		return(self.description[vid_index:vid_index + 11])
+	def get_embedded_content(self):
+		return make_embedded_content(self.description)
 
 	def cut_description(self):
 		d = self.description[:300]
@@ -105,21 +127,8 @@ class Response(models.Model):
 	def get_naturaltime(self):
 		return correct_naturaltime(naturaltime(self.pub_date))
 
-	def get_youtube_video(self):
-		urls = ('https://youtu.be/', 'youtube.com/watch?v=')
-		if urls[0] not in self.text and urls[1] not in self.text:
-			return None
-
-		type = 0
-		vid_index = self.text.find(urls[0])
-		if vid_index == -1 or len(self.text) < vid_index+len(urls[0])+11:
-			type = 1
-			vid_index = self.text.find(urls[1])
-	
-		if len(self.text) < vid_index+11:
-			return None
-		vid_index += len(urls[type])
-		return(self.text[vid_index:vid_index + 11])
+	def get_embedded_content(self):
+		return make_embedded_content(self.text)
 	
 	def __str__(self):
 		return self.text
