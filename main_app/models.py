@@ -12,7 +12,6 @@ def correct_naturaltime(naturaltime_str):
 	return naturaltime_str
 
 def make_embedded_content(text):
-	print(text)
 	urls = ('https://youtu.be/', 'youtube.com/watch?v=', 'https://voca.ro/', 'vocaroo.com/')
 	if urls[0] in text or urls[1] in text:
 		type = 0
