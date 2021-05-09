@@ -1,48 +1,179 @@
-.heart-comment {
-	display: inline;
+/*
+ * ░██╗░░░░░░░██╗░█████╗░██████╗░███╗░░██╗██╗███╗░░██╗░██████╗░
+ * ░██║░░██╗░░██║██╔══██╗██╔══██╗████╗░██║██║████╗░██║██╔════╝░
+ * ░╚██╗████╗██╔╝███████║██████╔╝██╔██╗██║██║██╔██╗██║██║░░██╗░
+ * ░░████╔═████║░██╔══██║██╔══██╗██║╚████║██║██║╚████║██║░░╚██╗
+ * ░░╚██╔╝░╚██╔╝░██║░░██║██║░░██║██║░╚███║██║██║░╚███║╚██████╔╝
+ * ░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝╚═╝░░╚══╝░╚═════╝░
+ * 
+ * Sempre que este arquivo for atualizado, atualizar a versão dele em TODOS os templates.
+ * Por exemplo:
+ *  de:   /static/css/question.css?version=1
+ *  para: /static/css/question.css?version=2
+ */
+
+.response-image {
+  max-width: 100%;
+  max-height: 400px;
+  display: block;
+  margin: auto;
 }
 
-.icon {
-	cursor: pointer;
+.vid-container {
+  height: 20vw;
+  max-height: 350px;
 }
 
-main {
-	width: 50%;
-	margin: auto;
+.yt-vid {
+  position: relative;
+  width: 60%;
+  height: 100%;
+  display: block;
 }
 
-.card {
-	margin: 1%;
+.card-body {
+  padding-bottom: 0.75rem;
 }
 
-#options-dropdown {
-	float: right;
+.list-group-item {
+  /*Corrige BS*/
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, .125);
 }
 
-#edit-response-form {
-	display: none;
+.list-group-item:focus,
+.list-group-item:hover {
+  /*Corrige BS*/
+  z-index: 0;
+  text-decoration: none;
 }
 
-.recommended {
-	width: 50%;
-	margin: auto;
+.poster-info {
+  display: flex;
+  text-decoration: none;
+  color: black;
+  font-size: 80%;
 }
 
-.recommended h3 {
-	text-align: center;
+.poster-info:hover {
+  text-decoration: none;
+  color: black;
+}
+
+.poster-container {
+  margin-bottom: 15px;
+}
+
+.poster-profile-pic-container,
+.poster-text-container {
+  display: flex;
+  align-items: center;
+  padding-right: 6px;
+}
+
+.post-pub-date {
+  color: #666;
+}
+
+.list-group-item {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.comments {
+  background-color: rgba(0, 0, 0, .03);
+  padding: 10px;
+  display: none;
+}
+
+.c {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.comm-card {
+  padding-top: 1.25rem;
+}
+
+.comm-form {
+  display: flex;
+}
+
+.form-control {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.load-more {
+  width: 100%;
 }
 
 @media (min-width: 320px) and (max-width: 480px) {
-	main {
-		width: 98%;
-	}
-	
-	.recommended {
-		width: 100%;
-	}
-	
-	.r-question {
-		width: 95%;
-		margin: auto;
-	}
+  .vid-container {
+    height: 50vw;
+    max-height: 300px;
+  }
+  .yt-vid {
+    position: relative;
+    width: 90%;
+    height: 100%;
+    display: block;
+  }
+  .comm-form .btn {
+    margin-top: 4px;
+    flex-grow: 1;
+  }
+  .form-control {
+    margin-right: 0px;
+  }
+}
+
+.heart-comment {
+  display: inline;
+}
+
+.icon {
+  cursor: pointer;
+}
+
+main {
+  width: 50%;
+  margin: auto;
+}
+
+.card {
+  margin: 1%;
+}
+
+#options-dropdown {
+  float: right;
+}
+
+#edit-response-form {
+  display: none;
+}
+
+.recommended {
+  width: 50%;
+  margin: auto;
+}
+
+.recommended h3 {
+  text-align: center;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  main {
+    width: 98%;
+  }
+  .recommended {
+    width: 100%;
+  }
+  .r-question {
+    width: 95%;
+    margin: auto;
+  }
+}
+
+#upload-photo {
+  display: none;
 }

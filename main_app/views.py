@@ -162,7 +162,6 @@ def question(request, question_id):
 	if Ban.objects.filter(ip=str(get_client_ip(request))).exists():
 		return HttpResponse(Ban.objects.get(ip=get_client_ip(request)).message)
 
-
 	try:
 		q = Question.objects.get(id=question_id)
 	except:

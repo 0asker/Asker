@@ -1,8 +1,14 @@
+from django_project import general_rules
+
 from django import template
 
 from main_app.models import User, UserProfile, Question, Response, Comment
 
 register = template.Library()
+
+@register.simple_tag
+def MINIMUM_POINTS_FOR_POSTING_IMAGES():
+	return general_rules.MINIMUM_POINTS_FOR_POSTING_IMAGES
 
 @register.filter(name='answered')
 def answered(username, question_id):

