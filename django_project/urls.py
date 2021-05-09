@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
 
 from main_app import views
 
@@ -45,6 +47,7 @@ urlpatterns = [
 	path('account/verify', views.account_verification, name='account_verification'), # padrão de URL usado para verificar o email de uma conta após a sua criação.
 	path('user/<str:username>/info', views.user_info, name='user_info'),
 	path('reset-password', views.reset_password, name='reset_password'), # padrão de URL usado para alterar a senha.
+	path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
 	path('update-popular-questions', views.update_popular_questions, name='update_popular_questions'),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
