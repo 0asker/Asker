@@ -25,7 +25,7 @@ import random
 import string
 
 import io
-from PIL import Image, ImageFile, UnidentifiedImageError
+from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
 
 def replace_url_to_link(value):
     urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)", re.MULTILINE|re.UNICODE)
@@ -33,6 +33,33 @@ def replace_url_to_link(value):
     urls = re.compile(r"([\w\-\.]+@(\w[\w\-]+\.)+[\w\-]+)", re.MULTILINE|re.UNICODE)
     value = urls.sub(r'<a href="mailto:\1">\1</a>', value)
     return value
+
+def compress_animated(bio, max_size, max_frames):
+	im = Image.open(bio)
+	frames = list()
+	min_size = min(max_size)
+	frame_count = 0
+	for frame in ImageSequence.Iterator(im):
+		if frame_count > max_frames:
+			break
+		compressed_f = frame.convert('RGBA') # PIL não salvará o canal A! Workaround: salvar em P-mode
+		alpha_mask = compressed_f.getchannel('A') # Máscara de transparência
+		compressed_f = compressed_f.convert('RGB').convert('P', colors=255) # Converte para P
+		mask = Image.eval(alpha_mask, lambda a: 255 if a <= 128 else 0) # Eleva pixels transparentes
+		compressed_f.paste(255, mask) # Aplica a máscara
+		compressed_f.info['transparency'] = 255 # O valor da transparência, na paleta, é o 255
+		if max(im.size[0], im.size[1]) > min_size:
+			compressed_f.thumbnail(max_size)
+		frames.append(compressed_f)
+		frame_count += 1
+	dur = im.info['duration']
+	im_final = frames[0]
+	obio = io.BytesIO()
+	im_final.save(obio, format='GIF', save_all=True, append_images=frames[1:], duration=dur, optimize=False, disposal=2)
+	#print('Antes: {}, Depois: {}. Redução: {}%'.format(str(bio.tell()), str(obio.tell()), str(100 - int((obio.tell()*100) / bio.tell())) ))
+	if obio.tell() < bio.tell():
+		return obio
+	return bio
 
 def save_img_file(post_file, file_path, max_size):
 	img_data = b''
@@ -42,10 +69,10 @@ def save_img_file(post_file, file_path, max_size):
 	ImageFile.LOAD_TRUNCATED_IMAGES = True
 	try:
 		im = Image.open(io.BytesIO(img_data))
-		if im.format in ('GIF', 'WEBP'):
-			# TODO: implementar compressao em imgs animadas tambem
+		if im.format in ('GIF', 'WEBP') and im.is_animated:
+			bio = compress_animated(io.BytesIO(img_data), max_size, 80)
 			with open(file_path, 'wb+') as destination:
-				destination.write(img_data)
+				destination.write(bio.getbuffer())
 		else:
 			im.thumbnail(max_size)
 			im.save(file_path, im.format)
