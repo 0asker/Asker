@@ -63,8 +63,6 @@ def get_client_ip(request):
     return ip
 
 def index(request):
-	start_time = time.time()
-
 	if Ban.objects.filter(ip=str(get_client_ip(request))).exists():
 		return HttpResponse(Ban.objects.get(ip=get_client_ip(request)).message)
 
@@ -151,10 +149,7 @@ def index(request):
 		</div>
 		'''
 
-	response = render(request, 'index.html', context)
-	
-	print('Tempo de execução: ' + str(time.time() - start_time))
-	return response
+	return render(request, 'index.html', context)
 
 
 def question(request, question_id):
