@@ -96,6 +96,7 @@ class Question(models.Model):
 	total_responses = models.IntegerField(default=0)
 	reports = models.IntegerField(default=0)
 	reporters = models.ManyToManyField(User)
+	best_answer = models.IntegerField(blank=True, null=True)
 
 	def get_naturaltime(self):
 		return correct_naturaltime(naturaltime(self.pub_date))
@@ -110,6 +111,12 @@ class Question(models.Model):
 			d += '<span style="color: #007bff; cursor: pointer;" onclick="show_more(this)">...Mostrar mais</span><span style="display: none;">{}</span> <span style="color: #007bff; cursor: pointer; display: none;" onclick="show_less(this)">Mostrar menos</span>'.format(self.description[300:])
 
 		return d
+
+	def may_choose_answer(self):
+		if self.best_answer is None:
+			if (timezone.now() - self.pub_date).total_seconds() > 3600: # TODO: fazer general rule pra quando é possivel escolher mr?
+				return True
+		return False
 
 	def __str__(self):
 	    return self.text
@@ -146,7 +153,7 @@ class Comment(models.Model):
 
 class Notification(models.Model):
 	receiver = models.ForeignKey(User, on_delete=models.CASCADE)
-	type = models.TextField() # tipos: question-answered, like-in-response, comment-in-response
+	type = models.TextField() # tipos: question-answered, like-in-response, comment-in-response, got-best-answer
 	text = models.TextField(null=True)
 	creation_date = models.DateTimeField(default=timezone.now)
 	
@@ -157,12 +164,17 @@ class Notification(models.Model):
 	def set_text(self, answer_id, comment_id=None):
 		if self.type == 'like-in-response':
 			self.text = '<p>Você recebeu um ❤️ na sua resposta <a href="/question/{}">"{}"</a></p>'.format(Response.objects.get(id=answer_id).question.id, Response.objects.get(id=answer_id).text)
-		if self.type == 'question-answered':
+		elif self.type == 'question-answered':
 		    response = Response.objects.get(id=answer_id)
 		    self.text = '<p><a href="/user/{}">{}</a> respondeu sua pergunta <a href="/question/{}">"{}"</a></p>'.format(response.creator.user.username, response.creator.user.username, response.question.id, response.question.text)
-		if self.type == 'comment-in-response':
+		elif self.type == 'comment-in-response':
 			comment = Comment.objects.get(response=Response.objects.get(id=answer_id), id=comment_id)
 			self.text = '<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text)
+		elif self.type == 'got-best-answer':
+			response = Response.objects.get(id=answer_id)
+			self.text = '<p>Sua resposta foi escolhida a melhor resposta da pergunta: <a href="/question/{}">"{}"</a></p>'.format(response.question.id, response.question.text)
+
+
 
 
 class Report(models.Model):

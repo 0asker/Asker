@@ -29,6 +29,7 @@ urlpatterns = [
 	path('question/<int:question_id>', views.question, name='question'),
 	path('pjax-questions', views.pjax_questions, name='pjax_questions'),
 	path('answer/like', views.like, name='like'), # quando uma resposta recebe um like, é usado esse padrão de URL.
+	path('answer/choose', views.choose_best_answer, name="choose_best_answer"),
 	path('delete_response', views.delete_response, name='delete_response'), # esse padrão de URL é usado para deletar respostas.
 	path('user/<str:username>', views.profile, name='profile'),
 	path('user/<str:username>/edit', views.edit_profile, name='edit_profile'),
@@ -50,5 +51,7 @@ urlpatterns = [
 	path('reset-password', views.reset_password, name='reset_password'), # padrão de URL usado para alterar a senha.
 	path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
 	path('update-popular-questions', views.update_popular_questions, name='update_popular_questions'),
+	path('get_more_questions', views.get_more_questions, name='get_more_questions'),
+	path('get_more_responses', views.get_more_responses, name='get_more_responses'),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

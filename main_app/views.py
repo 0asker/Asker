@@ -610,9 +610,14 @@ def edit_response(request):
 
 
 def get_more_questions(request):
-	q = Question.objects.filter(creator=UserProfile.objects.get(user=request.user)).order_by('-pub_date')
-	p = Paginator(q, 10)
 	page = request.GET.get('q_page', 2)
+	user_id = request.GET.get('user_id')
+	target = UserProfile.objects.get(user=User.objects.get(id=user_id))
+	if target.hide_activity:
+		if target.user.id != request.user.id:
+			return 'Proibido.'
+	q = Question.objects.filter(creator=target).order_by('-pub_date')
+	p = Paginator(q, 10)
 
 	json = {
 	}
@@ -634,9 +639,14 @@ def get_more_questions(request):
 
 
 def get_more_responses(request):
-	r = Response.objects.filter(creator=UserProfile.objects.get(user=request.user)).order_by('-pub_date')
-	p = Paginator(r, 10)
 	page = request.GET.get('r_page', 2)
+	user_id = request.GET.get('user_id')
+	target = UserProfile.objects.get(user=User.objects.get(id=user_id))
+	if target.hide_activity:
+		if target.user.id != request.user.id:
+			return 'Proibido.'
+	r = Response.objects.filter(creator=target).order_by('-pub_date')
+	p = Paginator(r, 10)
 
 	json = {
 	}
@@ -914,3 +924,32 @@ def update_popular_questions(request):
 	redis_connection.set('popular_questions', ID_LIST)
 	
 	return HttpResponse('OK')
+
+def choose_best_answer(request):
+
+    answer_id = request.GET.get('answer_id')
+    r = Response.objects.get(id=answer_id)
+    q = r.question
+    user = request.user
+    quser = q.creator
+    if user.id != quser.id:
+        return HttpResponse('Proibido.')
+    if r.creator.user.id == quser.id:
+        return HttpResponse('Proibido.')
+    if q.may_choose_answer:
+        q.best_answer = answer_id
+        q.save()
+        n = Notification.objects.create(receiver=r.creator.user, type='got-best-answer', response=r)
+        n.set_text(answer_id)
+        n.save()
+        rcuserp = UserProfile.objects.get(user=r.creator.user)
+        quserp = UserProfile.objects.get(user=User.objects.get(id=quser.id))
+        rcuserp.total_points += 2
+        quserp.total_points += 1
+        rcuserp.save()
+        quserp.save()
+    #else: # P/ testes rápidos - desfaz a MR
+    #    q.best_answer = None
+    #    q.save()
+
+    return HttpResponse('OK')

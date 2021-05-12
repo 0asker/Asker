@@ -49,6 +49,14 @@ def like_or_not(response_id, username):
     return 'white-heart.png'
 
 
+@register.filter(name='pull_best_answer')
+def pull_best_answer(responses):
+    best_answer = responses[0].question.best_answer
+    if best_answer is not None:
+        responses = sorted(responses, key=lambda response: response.id != best_answer)
+    return responses
+
+
 @register.filter(name='total_comments')
 def total_comments(response_id):
     return Comment.objects.filter(response=Response.objects.get(id=response_id)).count()
