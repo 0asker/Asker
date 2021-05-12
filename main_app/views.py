@@ -9,6 +9,7 @@ from django_project.settings import EMAIL_HOST_USER
 from django.contrib.humanize.templatetags.humanize import naturalday
 from djpjax import pjax
 from django.template.response import TemplateResponse
+from django.core.cache import cache
 
 from main_app.models import UserProfile, Question, Response, Notification, Comment, Report, Ban
 
@@ -165,7 +166,12 @@ def index(request):
 	'''
 	Perguntas populares:
 	'''
-	context['popular_questions'] = Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list
+	p_questions = cache.get('p_questions')
+	if not p_questions:
+		p_questions = Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list
+		cache.set('p_questions', p_questions)
+
+	context['popular_questions'] = p_questions
 
 	if request.user.is_authenticated:
 		user_p = UserProfile.objects.get(user=request.user)
