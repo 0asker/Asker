@@ -27,7 +27,7 @@ responses.onclick = function() {
 
 
 q_page = 1
-function show_more_questions(button) {
+function show_more_questions(button, uid) {
 	questions = document.getElementById('qs')
 	
 	$.ajax({
@@ -36,6 +36,7 @@ function show_more_questions(button) {
 		url: '/get_more_questions',
 		data: {
 			q_page: ++q_page,
+			user_id: uid,
 		},
 		complete: function(data) {
 			data = JSON.parse(data.responseText)
@@ -53,7 +54,7 @@ function show_more_questions(button) {
 
 
 r_page = 1
-function show_more_responses(button) {
+function show_more_responses(button, uid) {
 	responses = document.getElementById('rs')
 	
 	$.ajax({
@@ -62,6 +63,7 @@ function show_more_responses(button) {
 		url: '/get_more_responses',
 		data: {
 			r_page: ++r_page,
+			user_id: uid,
 		},
 		complete: function(data) {
 			data = JSON.parse(data.responseText)

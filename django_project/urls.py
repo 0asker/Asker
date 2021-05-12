@@ -51,5 +51,7 @@ urlpatterns = [
 	path('reset-password', views.reset_password, name='reset_password'), # padrão de URL usado para alterar a senha.
 	path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
 	path('update-popular-questions', views.update_popular_questions, name='update_popular_questions'),
+	path('get_more_questions', views.get_more_questions, name='get_more_questions'),
+	path('get_more_responses', views.get_more_responses, name='get_more_responses'),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

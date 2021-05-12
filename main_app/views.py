@@ -610,9 +610,14 @@ def edit_response(request):
 
 
 def get_more_questions(request):
-	q = Question.objects.filter(creator=UserProfile.objects.get(user=request.user)).order_by('-pub_date')
-	p = Paginator(q, 10)
 	page = request.GET.get('q_page', 2)
+	user_id = request.GET.get('user_id')
+	target = UserProfile.objects.get(user=User.objects.get(id=user_id))
+	if target.hide_activity:
+		if target.user.id != request.user.id:
+			return 'Proibido.'
+	q = Question.objects.filter(creator=UserProfile.objects.get(user=User.objects.get(id=user_id))).order_by('-pub_date')
+	p = Paginator(q, 10)
 
 	json = {
 	}
@@ -634,9 +639,14 @@ def get_more_questions(request):
 
 
 def get_more_responses(request):
-	r = Response.objects.filter(creator=UserProfile.objects.get(user=request.user)).order_by('-pub_date')
-	p = Paginator(r, 10)
 	page = request.GET.get('r_page', 2)
+	user_id = request.GET.get('user_id')
+	target = UserProfile.objects.get(user=User.objects.get(id=user_id))
+	if target.hide_activity:
+		if target.user.id != request.user.id:
+			return 'Proibido.'
+	r = Response.objects.filter(creator=target).order_by('-pub_date')
+	p = Paginator(r, 10)
 
 	json = {
 	}

