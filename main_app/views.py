@@ -932,7 +932,7 @@ def choose_best_answer(request):
     q = r.question
     user = request.user
     quser = q.creator
-    if user.id != quser.id:
+    if user.id == quser.id:
         return HttpResponse('Proibido.')
     if r.creator.user.id == quser.id:
         return HttpResponse('Proibido.')
