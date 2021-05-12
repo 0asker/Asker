@@ -49,3 +49,23 @@ function show_form_buttons(form) {
 	form.getElementsByClassName('form-button')[1].style.display = 'inline'
 	return false
 }
+
+
+function make_answer(qid) {
+	form = document.getElementById('form-' + qid);
+	div = form.parentElement;
+	modal = document.getElementById('modal-' + qid);
+	
+	form.style.display = 'none';
+	modal.style.display = 'block';
+	
+	$.ajax({
+		url: '/',
+		type: 'post',
+		data: $('#form-' + qid).serialize(),
+		complete: function() {
+			modal.style.display = 'none';
+			div.innerHTML += '<span style="display: block"><b>Sua resposta:</b></span> ' + form.text.value;
+		},
+	});
+}

