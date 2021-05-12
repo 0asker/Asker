@@ -51,6 +51,8 @@ def like_or_not(response_id, username):
 
 @register.filter(name='pull_best_answer')
 def pull_best_answer(responses):
+    if not responses:
+        return responses
     best_answer = responses[0].question.best_answer
     if best_answer is not None:
         responses = sorted(responses, key=lambda response: response.id != best_answer)
