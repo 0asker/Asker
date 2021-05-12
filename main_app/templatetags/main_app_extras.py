@@ -39,7 +39,7 @@ def answer(username, qid):
 def total_likes(response_id):
     return Response.objects.get(id=response_id).likes.all().count()
 
-import operator
+
 @register.filter(name='like_or_not')
 def like_or_not(response_id, username):
     r = Response.objects.get(id=response_id)

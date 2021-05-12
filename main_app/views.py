@@ -276,7 +276,6 @@ def question(request, question_id):
 def like(request):
 
     answer_id = request.GET.get('answer_id')
-    print(request)
 
     r = Response.objects.get(id=answer_id)
 
@@ -927,7 +926,7 @@ def choose_best_answer(request):
         return HttpResponse('Proibido.')
     if r.creator.user.id == quser.id:
         return HttpResponse('Proibido.')
-    if q.best_answer is None:
+    if q.may_choose_answer:
         q.best_answer = answer_id
         q.save()
         n = Notification.objects.create(receiver=r.creator.user, type='got-best-answer', response=r)
