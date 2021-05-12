@@ -13,7 +13,10 @@ def MINIMUM_POINTS_FOR_POSTING_IMAGES():
 
 @register.simple_tag
 def total_answers(qid):
-	return Response.objects.filter(question=Question.objects.get(id=qid)).count()
+	try:
+		return Response.objects.filter(question=Question.objects.get(id=qid)).count()
+	except:
+		return 'null'
 
 
 @register.simple_tag
@@ -72,7 +75,7 @@ def last_response(question_id):
 def cut_description(description):
 	if len(description) < 300:
 		return description
-	
+
 	pt1 = description[:300]
 	pt2 = description[300:]
 	s=''
@@ -84,7 +87,7 @@ def cut_description(description):
 @register.filter(name='blocked')
 def blocked(username, username2):
 	u_p = UserProfile.objects.get(user=User.objects.get(username=username))
-	
+
 	if u_p.blocked_users.filter(username=username2).exists():
 		return 'Bloqueado'
 	return 'Bloquear'
