@@ -90,9 +90,8 @@ def get_client_ip(request):
     return ip
 
 def index(request):
-	if Ban.objects.filter(ip=str(get_client_ip(request))).exists():
-		return HttpResponse(Ban.objects.get(ip=get_client_ip(request)).message)
-
+	start_time = time.time()
+	
 	if request.method == 'POST':
 		if Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=Question.objects.get(id=request.POST.get('question_id'))).exists():
 			return HttpResponse('OK')
@@ -136,17 +135,7 @@ def index(request):
 	'''
 	Perguntas populares:
 	'''
-	try:
-		redis_connection = Redis('/tmp/asker.db')
-		popular_questions_cache = redis_connection.get('popular_questions')
-		if popular_questions_cache is not None:
-			context['popular_questions'] = Question.objects.filter(id__in=popular_questions_cache.decode('utf-8').split())
-		else:
-			# o código abaixo faz todo o cálculo completo para pegar as perguntas populares e então renderizar no template.
-			# porém, este código só é executado caso ocorra algum erro no cache.
-			context['popular_questions'] = Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list
-	except:
-		context['popular_questions'] = Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list
+	context['popular_questions'] = Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list
 
 	if request.user.is_authenticated:
 		user_p = UserProfile.objects.get(user=request.user)
@@ -176,7 +165,10 @@ def index(request):
 		</div>
 		'''
 
-	return render(request, 'index.html', context)
+
+	response = render(request, 'index.html', context)
+	print('Tempo de execução: ' + str(time.time() - start_time))
+	return response
 
 
 def question(request, question_id):
