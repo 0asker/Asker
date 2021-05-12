@@ -616,7 +616,7 @@ def get_more_questions(request):
 	if target.hide_activity:
 		if target.user.id != request.user.id:
 			return 'Proibido.'
-	q = Question.objects.filter(creator=UserProfile.objects.get(user=User.objects.get(id=user_id))).order_by('-pub_date')
+	q = Question.objects.filter(creator=target).order_by('-pub_date')
 	p = Paginator(q, 10)
 
 	json = {
