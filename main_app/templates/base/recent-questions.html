@@ -1,0 +1,47 @@
+{% load main_app_extras %}
+<ul class="list-group list-group-flush infinite-container">
+	{% for question in questions %}
+	<li class="list-group-item infinite-item">
+			<div class="card-body">
+				<a href="/question/{{ question.id }}">
+					<b>{{ question.text }}</b>
+				</a>
+				<p>
+					{% if question.description != '' %}
+{{ question.description|cut_description|safe|linebreaksbr }}
+					{% endif %}
+				</p>
+				<small>{{ question.id|total_answers }} respostas <b>&nbsp;&middot;&nbsp;</b> <span class="text-muted">{{ question.get_naturaltime }}</span></small>
+			{% if user.is_authenticated %}
+				{% if user_p.active %}
+				{% if user.username|answered:question.id %}
+					<span style="display: block"><b>Sua resposta:</b></span> {{ user.username|answer:question.id|linebreaksbr }}
+					{% else %}
+					<form id="form-{{ question.id }}" class="response-form" method="post" action="/" onsubmit="make_answer({{ question.id }}); return false;">
+						{% csrf_token %}
+						<input name="question_id" type="hidden" value="{{ question.id }}">
+						{% if question.creator.user.username|blocked:user.username == 'Bloqueado' %}
+						<textarea disabled="true" name="text" maxlength="5000" class="form-control" placeholder="Você está impossibilitado(a) de responder esta pergunta." onclick="return show_form_buttons(this.parentElement)"></textarea>
+						<input disabled="true" class="btn btn-outline-primary form-button" type="submit" value="Enviar">
+						<input disabled="true" class="btn btn-outline-primary form-button" type="submit" value="Cancelar" onclick="return hide_form_buttons(this.parentElement)">
+						{% else %}
+						<textarea name="text" maxlength="5000" class="form-control" placeholder="Escreva sua resposta aqui" onclick="return show_form_buttons(this.parentElement)"></textarea>
+						<input class="btn btn-outline-primary form-button" type="submit" value="Enviar">
+						<input class="btn btn-outline-primary form-button" type="submit" value="Cancelar" onclick="return hide_form_buttons(this.parentElement)">
+						{% endif %}
+					</form>
+					<img style="display: none" id="modal-{{ question.id }}" src="/static/images/loading.gif" width="5%;">
+					{% endif %}
+				{% else %}
+				<p>Confirme seu email (verifique sua caixa de entrada do email: {{ user.email }}) para responder está pergunta.</p>
+				{% endif %}
+			{% else %}
+			<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.</p>
+			{% endif %}
+			</div>
+	</li>
+	{% endfor %}
+</ul>
+{% if questions.has_next %}
+  <a class="btn btn-primary infinite-more-link" href="/news?page={{ questions.next_page_number }}">Próxima página</a>
+{% endif %}
