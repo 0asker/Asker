@@ -29,6 +29,26 @@ import io
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
 
 
+SUCCESS_ACCOUNT_VERIFICATION = '''
+<style>
+			/* Estilos para a div abaixo. */
+			#alert-email-activation {
+				width: 50%;
+				margin: auto;
+			}
+
+			@media (min-width: 320px) and (max-width: 480px) {
+				#alert-email-activation {
+					width: 98%;
+				}
+			}
+		</style>
+		<div id="alert-email-activation" class="alert alert-success" role="alert">
+			<p>Conta verificada com sucesso!</p>
+		</div>
+'''
+
+
 @pjax()
 def pjax_questions(request):
 	context = {}
@@ -101,9 +121,7 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
-def index(request):
-	start_time = time.time()
-	
+def index(request):	
 	if request.method == 'POST':
 		if Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=Question.objects.get(id=request.POST.get('question_id'))).exists():
 			return HttpResponse('OK')
@@ -158,29 +176,9 @@ def index(request):
 			context['account_verification_alert'] = '<div class="alert alert-info"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div>'.format(request.user.email)
 
 	if request.GET.get('new_user', 'false') == 'true':
-		context['account_verification_alert'] = '''
-		<style>
-			/* Estilos para a div abaixo. */
-			#alert-email-activation {
-				width: 50%;
-				margin: auto;
-			}
-
-			@media (min-width: 320px) and (max-width: 480px) {
-				#alert-email-activation {
-					width: 98%;
-				}
-			}
-		</style>
-		<div id="alert-email-activation" class="alert alert-success" role="alert">
-			<p>Conta verificada com sucesso!</p>
-		</div>
-		'''
-
-
-	response = render(request, 'index.html', context)
-	print('Tempo de execução: ' + str(time.time() - start_time))
-	return response
+		context['account_verification_alert'] = SUCCESS_ACCOUNT_VERIFICATION
+	
+	return render(request, 'index.html', context)
 
 
 def question(request, question_id):
@@ -456,20 +454,12 @@ def profile(request, username):
 
 def ask(request):
 	'''
-	Teste de banimento.
-	'''
-	if Ban.objects.filter(ip=str(get_client_ip(request))).exists():
-		return HttpResponse(Ban.objects.get(ip=get_client_ip(request)).message)
-
-	'''
 	Controle de spam
 	'''
 	try:
 		last_q = Question.objects.filter(creator=UserProfile.objects.get(user=request.user))
 		last_q = last_q[last_q.count()-1] # pega a última questão feita pelo usuário.
-
-		# verifica se já passou 20 segundos:
-		if (timezone.now() - last_q.pub_date).seconds < 20:
+		if (timezone.now() - last_q.pub_date).seconds < 10:
 			return HttpResponse('<p>Você deve esperar {} segundos para perguntar novamente.'.format(20 - (timezone.now() - last_q.pub_date).seconds))
 	except:
 		pass
