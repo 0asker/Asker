@@ -32,18 +32,6 @@ def answer(username, qid):
 	return text
 
 
-'''@register.filter(name='answer')
-def answer(username, question_id):
-	try:
-		text = Response.objects.get(creator=UserProfile.objects.get(user=User.objects.get(username=username)), question=Question.objects.get(id=question_id)).text
-	except:
-		text = 'null'
-	if len(text) > 77:
-		text = text[0:77] + '...'
-	return text
-'''
-
-
 @register.filter(name='total_likes')
 def total_likes(response_id):
     return Response.objects.get(id=response_id).likes.all().count()
