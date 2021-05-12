@@ -146,3 +146,20 @@ $(function () {
 		title: 'Denunciar abuso',
 	})
 })
+
+function chooseAnswer(id) {
+	$.ajax({
+		url: '/answer/choose',
+		data: {
+			answer_id: id,
+		},
+		complete: function() {
+		    btns = document.getElementsByClassName('choose-answer-btn');
+    		for (i = btns.length-1; i >= 0; i--) {
+    		    console.log('removed ' + i)
+                btns[i].remove();
+                location.reload();
+    		}
+		}
+	})
+}

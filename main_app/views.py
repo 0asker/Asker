@@ -276,6 +276,7 @@ def question(request, question_id):
 def like(request):
 
     answer_id = request.GET.get('answer_id')
+    print(request)
 
     r = Response.objects.get(id=answer_id)
 
@@ -914,3 +915,32 @@ def update_popular_questions(request):
 	redis_connection.set('popular_questions', ID_LIST)
 	
 	return HttpResponse('OK')
+
+def choose_best_answer(request):
+
+    answer_id = request.GET.get('answer_id')
+    r = Response.objects.get(id=answer_id)
+    q = r.question
+    user = request.user
+    quser = q.creator
+    if user.id != quser.id:
+        return HttpResponse('Proibido.')
+    if r.creator.user.id == quser.id:
+        return HttpResponse('Proibido.')
+    if q.best_answer is None:
+        q.best_answer = answer_id
+        q.save()
+        n = Notification.objects.create(receiver=r.creator.user, type='got-best-answer', response=r)
+        n.set_text(answer_id)
+        n.save()
+        rcuserp = UserProfile.objects.get(user=r.creator.user)
+        quserp = UserProfile.objects.get(user=User.objects.get(id=quser.id))
+        rcuserp.total_points += 2
+        quserp.total_points += 1
+        rcuserp.save()
+        quserp.save()
+    #else: # P/ testes rápidos - desfaz a MR
+    #    q.best_answer = None
+    #    q.save()
+
+    return HttpResponse('OK')

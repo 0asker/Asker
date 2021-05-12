@@ -39,7 +39,7 @@ def answer(username, qid):
 def total_likes(response_id):
     return Response.objects.get(id=response_id).likes.all().count()
 
-
+import operator
 @register.filter(name='like_or_not')
 def like_or_not(response_id, username):
     r = Response.objects.get(id=response_id)
@@ -47,6 +47,14 @@ def like_or_not(response_id, username):
     if r.likes.filter(username=username).exists():
         return 'red-heart.png'
     return 'white-heart.png'
+
+
+@register.filter(name='pull_best_answer')
+def pull_best_answer(responses):
+    best_answer = responses[0].question.best_answer
+    if best_answer is not None:
+        responses = sorted(responses, key=lambda response: response.id != best_answer)
+    return responses
 
 
 @register.filter(name='total_comments')
