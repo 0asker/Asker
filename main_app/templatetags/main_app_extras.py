@@ -10,14 +10,29 @@ register = template.Library()
 def MINIMUM_POINTS_FOR_POSTING_IMAGES():
 	return general_rules.MINIMUM_POINTS_FOR_POSTING_IMAGES
 
-@register.filter(name='answered')
-def answered(username, question_id):
-	if Response.objects.filter(creator=UserProfile.objects.get(user=User.objects.get(username=username)), question=Question.objects.get(id=question_id)).exists():
-		return True
-	return False
+
+@register.simple_tag
+def total_answers(qid):
+	return Response.objects.filter(question=Question.objects.get(id=qid)).count()
 
 
-@register.filter(name='answer')
+@register.simple_tag
+def answered(username, qid):
+	return Response.objects.filter(creator=UserProfile.objects.get(user=User.objects.get(username=username)), question=Question.objects.get(id=qid)).exists()
+
+
+@register.simple_tag
+def answer(username, qid):
+	try:
+		text = Response.objects.get(creator=UserProfile.objects.get(user=User.objects.get(username=username)), question=Question.objects.get(id=qid)).text
+	except:
+		text = 'null'
+	if len(text) > 77:
+		text = text[0:77] + '...'
+	return text
+
+
+'''@register.filter(name='answer')
 def answer(username, question_id):
 	try:
 		text = Response.objects.get(creator=UserProfile.objects.get(user=User.objects.get(username=username)), question=Question.objects.get(id=question_id)).text
@@ -26,14 +41,7 @@ def answer(username, question_id):
 	if len(text) > 77:
 		text = text[0:77] + '...'
 	return text
-
-
-@register.filter(name='total_answers')
-def total_answers(question_id):
-	try:
-		return Response.objects.filter(question=Question.objects.get(id=question_id)).count()
-	except:
-		return ''
+'''
 
 
 @register.filter(name='total_likes')

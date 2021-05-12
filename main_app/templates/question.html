@@ -197,7 +197,8 @@ $(function() {
 			</section>
 			{% if user.is_authenticated %}
 			{% if user_p.active %}
-			{% if user.username|answered:question.id == False %}
+			{% answered user.username question.id as ANSWERED %}
+			{% if not ANSWERED %}
 			{% if question.creator.user.username|blocked:user.username == 'Bloquear' %}
 
 			<form id="response-form" method="post" enctype="multipart/form-data" onsubmit="document.getElementById('response-loading-gif').style.display = 'block'; document.getElementById('send-response-btn').disabled = true;">
