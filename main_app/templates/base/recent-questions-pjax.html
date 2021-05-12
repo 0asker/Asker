@@ -1,3 +1,4 @@
+{% spaceless %}
 {% load main_app_extras %}
 <ul class="list-group list-group-flush infinite-container">
 	{% for question in questions %}
@@ -13,7 +14,6 @@
 			</p>
 			<small>{% total_answers question.id %} respostas <b>&nbsp;&middot;&nbsp;</b> <span class="text-muted">{{ question.get_naturaltime }}</span></small>
 		{% if user.is_authenticated %}
-			{% if user_p.active %}
 				{% answered user.username question.id as ANSWERED %}
 				{% if ANSWERED %}
 				<span style="display: block"><b>Sua resposta:</b></span> {% answer user.username question.id %}
@@ -27,9 +27,6 @@
 				</form>
 				<img style="display: none" id="modal-{{ question.id }}" src="/static/images/loading.gif" width="5%;">
 				{% endif %}
-			{% else %}
-			<p>Confirme seu email (verifique sua caixa de entrada do email: {{ user.email }}) para responder está pergunta.</p>
-			{% endif %}
 		{% else %}
 		<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.</p>
 		{% endif %}
@@ -40,3 +37,4 @@
 {% if questions.has_next %}
   <a class="btn btn-primary infinite-more-link" href="/news?page={{ questions.next_page_number }}">Próxima página</a>
 {% endif %}
+{% endspaceless %}

@@ -6,8 +6,9 @@ from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django_project.settings import EMAIL_HOST_USER
-
 from django.contrib.humanize.templatetags.humanize import naturalday
+from djpjax import pjax
+from django.template.response import TemplateResponse
 
 from main_app.models import UserProfile, Question, Response, Notification, Comment, Report, Ban
 
@@ -26,6 +27,17 @@ import string
 
 import io
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
+
+
+@pjax()
+def pjax_questions(request):
+	context = {}
+	q = Question.objects.order_by('-pub_date')
+	p = Paginator(q, 20)
+	questions = p.page(1)
+	context['questions'] = questions
+	return TemplateResponse(request, "base/recent-questions.html", context)
+
 
 def replace_url_to_link(value):
     urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)", re.MULTILINE|re.UNICODE)

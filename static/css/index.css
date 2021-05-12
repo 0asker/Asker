@@ -1,3 +1,22 @@
+#reload {
+	width: 35px;
+	height: 35px;
+}
+
+.spinner {
+  animation: spin-animation 1s infinite;
+  display: inline-block;
+}
+
+@keyframes spin-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
 .card {
     margin-bottom: 2px;
 }

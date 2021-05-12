@@ -3,3 +3,4 @@ pillow
 bs4
 lxml
 redislite
+django-pjax
