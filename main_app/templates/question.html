@@ -30,7 +30,7 @@ $(function() {
 			new_innerHTML += '<hr><img src="'+url+'" class="response-image" alt="Ocorreu um erro ao processar a imagem."><hr>'
 		}
 
-		new_innerHTML += '<div class="heart-comment" id="like-counter-'+answer_id+'" onclick="like(this, '+answer_id+')"><img width="20px" src="/static/images/white-heart.png" class="icon"> <span>0</span></div>&nbsp;&nbsp;                   <div class="dropdown" id="options-dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Opções</button>   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"><button class="dropdown-item" onclick="delete_response(this, '+answer_id+');">Apagar</button><button class="dropdown-item" onclick="document.getElementById(`edit-response-form`).style.display=`block`">Editar</button></div>   </div>                  <div class="heart-comment">&nbsp;<img width="20px" src="/static/images/comments.png" class="icon" onclick="show_comments(this.parentElement, '+answer_id+', this.parentElement.getElementsByTagName(`img`)[0], `{{ csrf_token }}`, `{{ user.username }}`, {{ question.id }})"> <span class="comment">0</span><div class="comments" id="1"></div></div>'
+		new_innerHTML += '<div class="heart-comment" id="like-counter-'+answer_id+'" onclick="like(this, '+answer_id+')"><img width="20px" src="/static/images/white-heart.png" class="icon"> <span>0</span></div>&nbsp;&nbsp;                   <div class="dropdown btn-group dropup" id="options-dropdown"><button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Opções</button>   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"><button class="dropdown-item" onclick="delete_response(this, '+answer_id+');">Apagar</button><button class="dropdown-item" onclick="document.getElementById(`edit-response-form`).style.display=`block`">Editar</button></div>   </div>                  <div class="heart-comment">&nbsp;<img width="20px" src="/static/images/comments.png" class="icon" onclick="show_comments(this.parentElement, '+answer_id+', this.parentElement.getElementsByTagName(`img`)[0], `{{ csrf_token }}`, `{{ user.username }}`, {{ question.id }})"> <span class="comment">0</span><div class="comments" id="1"></div></div>'
 		new_innerHTML += '<form id="edit-response-form" class="form-inline" method="post" action="/edit-response" onsubmit="document.getElementById(`response-'+answer_id+'`).innerHTML = this.response.value.replace(`\n`, `<br>`)">{% csrf_token %}<input type="hidden" name="response_id" value="'+answer_id+'"><textarea name="response" class="form-control">'+new_user_response+'</textarea><input class="btn btn-outline-primary" type="submit" value="Enviar"></form></li>'
 		responses.innerHTML += new_innerHTML
 
@@ -161,7 +161,7 @@ $(function() {
 						&nbsp;&nbsp;
 
 						{% if response.creator.user.username == user.username %}
-						<div class="dropdown response-control" id="options-dropdown">
+						<div class="dropdown btn-group dropup" id="options-dropdown">
 						  <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							  Opções
 						  </button>
