@@ -204,28 +204,29 @@ $(function() {
 				</ul>
 			</section>
 			{% if user.is_authenticated %}
-			{% if user_p.active %}
-			{% answered user.username question.id as ANSWERED %}
-			{% if not ANSWERED %}
-			{% if question.creator.user.username|blocked:user.username == 'Bloquear' %}
-
-			<form id="response-form" method="post" enctype="multipart/form-data" onsubmit="document.getElementById('response-loading-gif').style.display = 'block'; document.getElementById('send-response-btn').disabled = true;">
-				{% csrf_token %}
-				<textarea maxlength="5000" class="form-control" placeholder="Escreva uma resposta..." name="response" required="required"></textarea>
-				<input class="btn btn-outline-primary" type="submit" value="Enviar" id="send-response-btn">
-
-				<label for="upload-photo"><img src="/static/images/camera.png" width="25px"> <span id="upload-photo-text"></span></label>
-				<input type="file" accept="image/*" name="file" id="upload-photo" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
-				<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon"><span>
-			</form>
-			<img src="/static/images/loading.gif" width="30px" style="display: none;" id="response-loading-gif">
-			{% endif %}
-			{% endif %}
+				{% if user_p.active %}
+					{% answered user.username question.id as ANSWERED %}
+					{% if not ANSWERED %}
+						{% ablockb question.creator.user.username user.username as BLOCKED %}
+						{% if not BLOCKED %}
+							<form id="response-form" method="post" enctype="multipart/form-data" onsubmit="document.getElementById('response-loading-gif').style.display = 'block'; document.getElementById('send-response-btn').disabled = true;">
+								{% csrf_token %}
+								<textarea maxlength="5000" class="form-control" placeholder="Escreva uma resposta..." name="response" required="required"></textarea>
+								<input class="btn btn-outline-primary" type="submit" value="Enviar" id="send-response-btn">
+								<label for="upload-photo"><img src="/static/images/camera.png" width="25px"> <span id="upload-photo-text"></span></label>
+								<input type="file" accept="image/*" name="file" id="upload-photo" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
+								<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon"><span>
+							</form>
+							<img src="/static/images/loading.gif" width="30px" style="display: none;" id="response-loading-gif">
+						{% else %}
+							Pergunta indisponível.
+						{% endif %}
+					{% endif %}
+				{% else %}
+					<p>Confirme seu email para responder está pergunta.</p>
+				{% endif %}
 			{% else %}
-			<p>Confirme seu email para responder está pergunta.</p>
-			{% endif %}
-			{% else %}
-			<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder esta pergunta.</p>
+				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder esta pergunta.</p>
 			{% endif %}
 		</main>
 		<div class="recommended">

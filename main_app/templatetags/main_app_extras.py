@@ -101,3 +101,15 @@ def blocked(username, username2):
 	if u_p.blocked_users.filter(username=username2).exists():
 		return 'Bloqueado'
 	return 'Bloquear'
+
+
+'''
+a bloqueou b?
+ou seja: o usuário de nome `a` bloqueou o usuário de nome `b`?
+'''
+@register.simple_tag
+def ablockb(a, b):
+	u_p = UserProfile.objects.get(user=User.objects.get(username=a))
+	if u_p.blocked_users.filter(username=b).exists():
+		return True # verdade: a bloqueou b
+	return False # mentira: a não bloqueou b
