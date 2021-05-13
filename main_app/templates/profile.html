@@ -176,24 +176,30 @@
 		</style>
 
 		<center id="block-div">
-			<button id="block-button" class="btn btn-outline-info" onclick="block_user()">{{ user.username|blocked:user_p.user.username }}</button>
+			<!--<button id="block-button" class="btn btn-outline-info" onclick="block_user()">{{ user.username|blocked:user_p.user.username }}</button>-->
+			<button id="block-button" class="btn btn-outline-info" onclick="block_user()">
+				{% ablockb user.username user_p.user.username as BLOCKED %}
+				{% if BLOCKED %}
+					Bloqueado
+				{% else %}
+					Bloquear
+				{% endif %}
+			</button>
 		</center>
 
 		<script>
 			function block_user() {
 				button = document.getElementById('block-button')
-
+				button.disabled = true
 				$.ajax({
 					type: 'get',
 					url: '/user/{{ user_p.user.username }}/block',
-					data: {
-						'action': button.innerHTML,
-					},
 					complete: function(data) {
-						if(button.innerHTML == 'Bloqueado') {
-							button.innerHTML = 'Bloquear'
-						} else
+						if(data.responseText == 'Bloqueado') {
 							button.innerHTML = 'Bloqueado'
+						} else
+							button.innerHTML = 'Bloquear'
+						button.disabled = false
 					}
 				})
 			}

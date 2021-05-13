@@ -782,12 +782,11 @@ def edit_profile(request, username):
 
 def block(request, username):
 	u_p = UserProfile.objects.get(user=request.user)
-
 	if u_p.blocked_users.filter(username=username).exists():
 		u_p.blocked_users.remove(User.objects.get(username=username))
-	else:
-		u_p.blocked_users.add(User.objects.get(username=username))
-	return HttpResponse('OK')
+		return HttpResponse('Bloquear')
+	u_p.blocked_users.add(User.objects.get(username=username))
+	return HttpResponse('Bloqueado')
 
 
 def account_verification(request):
