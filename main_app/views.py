@@ -943,9 +943,9 @@ def choose_best_answer(request):
         n.set_text(answer_id)
         n.save()
         rcuserp = UserProfile.objects.get(user=r.creator.user)
-        quserp = UserProfile.objects.get(user=User.objects.get(id=quser.id))
-        rcuserp.total_points += 2
-        quserp.total_points += 1
+        quserp = UserProfile.objects.get(user=request.user)
+        rcuserp.total_points += 10
+        quserp.total_points += 2
         rcuserp.save()
         quserp.save()
     #else: # P/ testes rápidos - desfaz a MR
