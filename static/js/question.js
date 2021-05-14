@@ -3,14 +3,14 @@ function like(likeElement, response_id) {
 	/* alterna a imagem do like (se coração vermelho, então fica coração branco, e vice-versa) */
 	like_image = likeElement.getElementsByTagName('img')[0]
 	if (like_image.src.includes('white-heart.png')) { /* se o coração for branco */
-		like_image.src = '/static/images/red-heart.png'
+		like_image.src = '/static/images/red-heart.png?version=3'
 		
 		/* aumenta o total de likes do contador */
 		span_like_counter = likeElement.getElementsByTagName('span')[0]
 		span_like_counter.innerHTML = Number(span_like_counter.innerHTML) + 1
 	}
 	else {
-		like_image.src = '/static/images/white-heart.png'
+		like_image.src = '/static/images/white-heart.png?version=3'
 		
 		/* diminuí o total de likes do contador */
 		span_like_counter = likeElement.getElementsByTagName('span')[0]
