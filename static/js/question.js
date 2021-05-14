@@ -165,8 +165,8 @@ function chooseAnswer(id) {
 }
 
 function toggleDarkMode() {
-    var formbgcolor='bg-dark'; var bgcolor='bg-dark'; var textcolor='text-light';
-    var commentformbgcolor='bg-darkish'; var commentbgcolor='bg-darkerish';
+    formbgcolor='bg-dark'; bgcolor='bg-dark'; textcolor='text-light';
+    commentformbgcolor='bg-darkish'; commentbgcolor='bg-darkerish';
 
     document.body.style = "background: #222";
     document.getElementsByClassName('navbar')[0].classList.add("bg-dark");
