@@ -9,3 +9,17 @@
 #responses-section {
 	display: none;
 }
+#tabs.dark {
+    border-bottom: none;
+}
+#tabs .nav-item .nav-link.bg-dark {
+    background-color: rgba(0,0,0,0) !important;
+}
+#tabs .nav-item .bg-dark.active {
+    background-color: #343a40 !important;
+    border-color: rgba(0,0,0,.125) !important;
+    color: #f8f9fa !important;
+}
+.nav-tabs .nav-link:hover {
+    border-color: rgba(255,255,255,.125) !important;
+}

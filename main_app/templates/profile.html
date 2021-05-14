@@ -106,7 +106,7 @@
 			}
 		</style>
 
-		<link rel="stylesheet" href="/static/css/profile.css">
+		<link rel="stylesheet" href="/static/css/profile.css?version=1">
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-sm   navbar-light bg-light">
@@ -212,10 +212,10 @@
 		{% if user_p.user.username == user.username or not user_p.hide_activity %}
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
-				<a class="nav-link active"  id="questions">Perguntas</a>
+				<a class="nav-link activity-tab active"  id="questions">Perguntas</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link disabled" id="responses">Respostas</a>
+				<a class="nav-link activity-tab disabled" id="responses">Respostas</a>
 			</li>
 		</ul>
 		<section id="questions-section">
