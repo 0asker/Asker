@@ -50,7 +50,6 @@ function show_form_buttons(form) {
 	return false
 }
 
-
 function make_answer(qid) {
 	form = document.getElementById('form-' + qid);
 	div = form.parentElement;
@@ -68,4 +67,41 @@ function make_answer(qid) {
 			div.innerHTML += '<span style="display: block"><b>Sua resposta:</b></span> ' + form.text.value;
 		},
 	});
+}
+
+function darkenLiEls() {
+	lis = document.getElementsByClassName('list-group-item')
+	for (i = 0; i < lis.length; i++) {
+	    lis[i].classList.add('bg-dark');
+	    lis[i].classList.add('text-light');
+	}
+	texts = document.getElementsByClassName('form-control')
+	for (i = 0; i < texts.length; i++) {
+	    texts[i].classList.add(formbgcolor);
+	    texts[i].classList.add(textcolor);
+	}
+}
+
+function toggleDarkMode() {
+	darkmode=true;
+	formbgcolor='bg-darkerish'; bgcolor='bg-dark'; textcolor='text-light';
+	inactivetextcolor='text-secondary';
+	document.body.style = "background: #222";
+	document.getElementsByClassName('navbar')[0].classList.add("bg-dark");
+	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+	document.getElementsByClassName('navbar')[0].classList.remove("bg-light");
+	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+	document.getElementById('tabs').classList.add("dark");
+
+	darkenLiEls();
+	cards = document.getElementsByClassName('card');
+	for (i = 0; i < cards.length; i++) {
+		cards[i].classList.add('bg-dark');
+		cards[i].classList.add('text-light');
+	}
+	maintabs = document.getElementsByClassName('main-tab')
+	for (i = 0; i < maintabs.length; i++) {
+		maintabs[i].classList.add(bgcolor);
+		maintabs[i].classList.add(inactivetextcolor);
+	}
 }

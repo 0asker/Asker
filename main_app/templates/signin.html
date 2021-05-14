@@ -38,9 +38,8 @@
 			<p><a href="/reset-password"><br>Esqueci minha senha</a></p>
 		</div>
 
+	<script src="/static/js/cookieman.js?v=0.1"></script>
 	<script>
-		/* Works for: signin.html, signup.html */
-
 function toggleDarkMode() {
 	document.body.style = "background: #222; color: white;";
 
@@ -51,7 +50,9 @@ function toggleDarkMode() {
 	}
 }
 
-toggleDarkMode()
+if (getDarkCookie() == 'true') {
+	toggleDarkMode();
+}
 	</script>
 	</body>
 </html>

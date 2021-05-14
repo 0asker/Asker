@@ -163,3 +163,50 @@ function chooseAnswer(id) {
 		}
 	})
 }
+
+function toggleDarkMode() {
+    var formbgcolor='bg-dark'; var bgcolor='bg-dark'; var textcolor='text-light';
+    var commentformbgcolor='bg-darkish'; var commentbgcolor='bg-darkerish';
+
+    document.body.style = "background: #222";
+    document.getElementsByClassName('navbar')[0].classList.add("bg-dark");
+    document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+    document.getElementsByClassName('navbar')[0].classList.remove("bg-light");
+    document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+    editResponseTextarea = document.getElementsByClassName('edit-response-textarea');
+    if (editResponseTextarea.length > 0) { editResponseTextarea[0].classList.add(commentbgcolor); }
+
+    cards = document.getElementsByClassName('card')
+    for (i = 0; i < cards.length; i++) {
+        cards[i].classList.add('bg-dark');
+        cards[i].classList.add('text-light');
+    }
+    lis = document.getElementsByClassName('list-group-item')
+    for (i = 0; i < lis.length; i++) {
+        lis[i].classList.add('bg-dark');
+        lis[i].classList.add('text-light');
+    }
+    texts = document.getElementsByClassName('form-control')
+    for (i = 0; i < texts.length; i++) {
+        texts[i].classList.add(formbgcolor);
+        texts[i].classList.add(textcolor);
+    }
+    posterinfos = document.getElementsByClassName('poster-info')
+    for (i = 0; i < posterinfos.length; i++) {
+        posterinfos[i].classList.add(textcolor);
+    }
+    commentscards = document.getElementsByClassName('comments')
+    for (i = 0; i < commentscards.length; i++) {
+        commentscards[i].classList.add(commentbgcolor);
+        commentscards[i].classList.remove(bgcolor);
+    }
+    dropdownmenus = document.getElementsByClassName('dropdown-menu')
+    for (i = 0; i < dropdownmenus.length; i++) {
+        dropdownmenus[i].classList.add(bgcolor);
+    }
+    dropdownitems = document.getElementsByClassName('dropdown-item')
+    for (i = 0; i < dropdownitems.length; i++) {
+        dropdownitems[i].classList.add(bgcolor);
+        dropdownitems[i].classList.add(textcolor);
+    }
+}

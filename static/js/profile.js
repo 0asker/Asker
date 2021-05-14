@@ -78,3 +78,20 @@ function show_more_responses(button, uid) {
 		}
 	})
 }
+
+function toggleDarkMode() {
+	formbgcolor='bg-darkerish'; bgcolor='bg-dark'; textcolor='text-light';
+	inactivetextcolor='text-secondary';
+	document.body.style = "background: #222; color: white;";
+	document.getElementsByClassName('navbar')[0].classList.add("bg-dark");
+	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+	document.getElementsByClassName('navbar')[0].classList.remove("bg-light");
+	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+	document.getElementById('tabs').classList.add("dark");
+
+	activitytabs = document.getElementsByClassName('activity-tab')
+	for (i = 0; i < activitytabs.length; i++) {
+		activitytabs[i].classList.add(bgcolor);
+		activitytabs[i].classList.add(inactivetextcolor);
+	}
+}

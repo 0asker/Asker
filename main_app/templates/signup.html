@@ -39,11 +39,11 @@
 			  </div>-->
 			  <button type="submit" class="btn btn-primary">Criar conta</button>
 			</form>
-		</form>
+		</div>
 	</body>
-	<script>
-		/* Works for: signin.html, signup.html */
 
+	<script src="/static/js/cookieman.js?v=0.1"></script>
+	<script>
 function toggleDarkMode() {
 	document.body.style = "background: #222; color: white;";
 
@@ -54,6 +54,8 @@ function toggleDarkMode() {
 	}
 }
 
-toggleDarkMode()
+if (getDarkCookie() == 'true') {
+	toggleDarkMode();
+}
 	</script>
 </html>
