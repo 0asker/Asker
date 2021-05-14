@@ -78,7 +78,15 @@
 }
 
 .post-pub-date {
-  color: #666;
+  color: #888;
+}
+
+.bg-darkerish {
+    background-color: #394046 !important;
+}
+
+.bg-darkish {
+    background-color: #454d54 !important;
 }
 
 .list-group-item {
@@ -88,6 +96,7 @@
 
 .comments {
   background-color: rgba(0, 0, 0, .03);
+  margin-top: 14px !important;
   padding: 10px;
   display: none;
 }
@@ -107,6 +116,7 @@
 .form-control {
   flex-grow: 1;
   margin-right: 10px;
+  border: 1px solid rgba(0,0,0,.125);
 }
 
 .load-more {
@@ -154,7 +164,7 @@ main {
     float: right;
 }
 
-#options-dropdown { /* TODO: remover apos implementar novo template de MRs */
+#options-dropdown { /* TODO: remover apos implementar novo template de MRs, pois .response-control abrange */
   float: right;
 }
 

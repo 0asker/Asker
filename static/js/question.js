@@ -54,9 +54,9 @@ function show_comments(commentsDiv, response_id, commentsIcon, csrf_token, user_
 			data = JSON.parse(data.responseText)
 			$.each(data.comments, function(index, value) {
 				if(user_logged != value.username) {
-					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a></div><p>'+value.text+'</p></div></li>'
+					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info '+textcolor+'" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a></div><p>'+value.text+'</p></div></li>'
 				} else {
-					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a><img onclick="delete_comment('+value.comment_id+'); this.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png"></div><p>'+value.text+'</p></div></li>'
+					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info '+textcolor+'" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a><img onclick="delete_comment('+value.comment_id+'); this.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png"></div><p>'+value.text+'</p></div></li>'
 				}
 			})
 			
@@ -68,7 +68,7 @@ function show_comments(commentsDiv, response_id, commentsIcon, csrf_token, user_
 			}
 			
 			/* Adiciona o formulário para comentar */
-			commentsSection.innerHTML += '<form class="form-inline comm-form" method="post" action="/comment"><input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'"><input type="hidden" name="response_id" value="'+response_id+'">  <input type="hidden" name="question_id" value="'+question_id+'">  <input type="text" maxlength="300" autocomplete="off" class="form-control" name="text" placeholder="Escreva seu comentário"></input><input class="btn btn-primary" type="submit" value="Comentar" onclick="this.style.display=`none`"></form>'
+			commentsSection.innerHTML += '<form class="form-inline comm-form" method="post" action="/comment"><input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'"><input type="hidden" name="response_id" value="'+response_id+'">  <input type="hidden" name="question_id" value="'+question_id+'">  <input type="text" maxlength="300" autocomplete="off" class="form-control '+commentformbgcolor+' '+textcolor+'" name="text" placeholder="Escreva seu comentário"></input><input class="btn btn-primary" type="submit" value="Comentar" onclick="this.style.display=`none`"></form>'
 		}
 	})
 	
