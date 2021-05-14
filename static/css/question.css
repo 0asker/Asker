@@ -123,6 +123,14 @@
   width: 100%;
 }
 
+main .card {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.edit-response-textarea {
+    margin-top: 12px;
+}
+
 @media (min-width: 320px) and (max-width: 480px) {
   .vid-container {
     height: 50vw;
