@@ -8,7 +8,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="/static/css/index.css?v=9.2">
+<script src="/static/js/cookieman.js?v=0.1"></script>
+<script>
+	var cssfn = 'index.css';
+	var cssversion = '?v=9.3';
+	if (getDarkCookie() == 'true') { cssfn = 'index-d.css'; }
+	var link = document.createElement('link');
+	link.rel = 'stylesheet';
+	link.type = 'text/css';
+	link.href = '/static/css/' + cssfn + cssversion;
+	document.head.appendChild(link);
+</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -18,7 +28,7 @@
 </head>
 
 	<body>
-		<nav class="navbar navbar-expand-sm navbar-light bg-light">
+		<nav class="navbar navbar-expand-sm navbar-light">
 		    <a id="logo" href="/" class="navbar-brand"><img src="/static/images/asker.png" height="40px" alt="Asker"></a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -55,26 +65,26 @@
 {{ account_verification_alert|safe }}
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
-				<span class="nav-link main-tab" id="popular">Popular</span>
+				<span class="nav-link main-tab bg-main-tab" id="popular">Popular</span>
 			</li>
 			<li class="nav-item">
-				<span class="nav-link main-tab" id="news">Novas perguntas</span>
+				<span class="nav-link main-tab bg-main-tab" id="news">Novas perguntas</span>
 			</li>
 			<li style="flex-grow: 1;">
 				<a data-pjax style="float: right;" href="/pjax-questions"><img src="/static/images/reload.png" id="reload"></a>
 			</li>
 		</ul>
 <!-- Questões recentes -->
-<section class="card" id="n_questions">
+<section class="card bg-main" id="n_questions">
 {% include "base/recent-questions-pjax.html" %}
 </section>
 <!-- !Questões recentes -->
 
 <!-- Questões populares -->
-<section class="card" id="p_questions">
+<section class="card bg-main" id="p_questions">
 	<ul class="list-group list-group-flush infinite-container">
 		{% for question in popular_questions %}
-		<li class="list-group-item">
+		<li class="list-group-item bg-main">
 			<div class="card-body">
 				<a href="/question/{{ question.id }}"><b>{{ question.text }}</b></a>
 				<p>
@@ -121,8 +131,6 @@
 		document.getElementById('n_questions').style.opacity = 1;
 		document.getElementById('reload').onclick = function () { return true; }
 
-		if (darkmode) {darkenLiEls();}
-
 		/*testing darkmode*/
 		update7();
 	});
@@ -130,14 +138,10 @@
 <!-- !PJAX -->
 
 		<script src="/static/js/index.js?v=7.1"></script>
-		<script src="/static/js/cookieman.js?v=0.1"></script>
 		<script>
-var darkmode=false;
-var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
-var inactivetextcolor='text-dark';
-
 if (getDarkCookie() == 'true') {
-	toggleDarkMode();
+	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
 }
 
 /*testing darkmode*/
