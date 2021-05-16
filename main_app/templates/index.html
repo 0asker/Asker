@@ -8,7 +8,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<script src="/static/js/cookieman.js?v=0.1"></script>
+<script src="/static/js/cookieman.js?v=1"></script>
 <script>
 	var cssfn = 'index.css';
 	var cssversion = '?v=10';
@@ -131,8 +131,6 @@
 		document.getElementById('n_questions').style.opacity = 1;
 		document.getElementById('reload').onclick = function () { return true; }
 
-		/*testing darkmode*/
-		update7();
 	});
 </script>
 <!-- !PJAX -->
@@ -142,33 +140,9 @@
 if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
 	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
-}
-
-/*testing darkmode*/
-var v7 = 0;
-var v2 = 0;
-document.getElementById('p_questions').addEventListener('click', update2);
-document.getElementById('n_questions').addEventListener('click', update2);
-
-function update7() {
-	if (v2 == 1) {
-		v7++;
-	} else if (v2 == 2) {
-		if (v7 == 7) {
-			setDarkCookie(true);
-			alert('Dark mode ativado');
-			v7++;
-		} else if (v7 == 8) {
-			setDarkCookie(false);
-			alert('Dark mode desativado');
-			v7++;
-		}
-	}
-	console.log(v7);
-}
-function update2() {
-	v2++;
-	console.log(v2);
+} else if (getDarkCookie() == 'none') {
+	let prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+	setDarkCookie(prefersDarkMode);
 }
 		</script>
 	</body>

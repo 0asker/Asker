@@ -88,6 +88,10 @@
 			<input class="btn btn-primary" type="submit" value="Alterar privacidade">
 		</form>
 
+		<hr>
+		<h2>Layout</h2>
+		<input id="dark-mode" type="checkbox" name="dark-mode" /> <label for="dark-mode"> Ativar modo escuro para este dispositivo (beta)</label><br>
+
 		{% if user.username == user_p.user.username %}
 		<hr>
 		<p>Seu email: {{ user.email }}</p>
@@ -95,7 +99,7 @@
 		{% endif %}
 
 	</main></body>
-    <script src="/static/js/cookieman.js?v=0.1"></script>
+    <script src="/static/js/cookieman.js?v=1"></script>
 	<script>
 function toggleDarkMode() {
 	document.body.style = "background: #222; color: white;";
@@ -106,9 +110,21 @@ function toggleDarkMode() {
 	    texts[i].classList.add("text-light");
 	}
 }
+darkcheckbox = document.getElementById('dark-mode');
 if (getDarkCookie() == 'true') {
 	toggleDarkMode();
+	darkcheckbox.checked = true;
 }
+darkcheckbox.addEventListener('change', function() {
+    if (this.checked) {
+    	setDarkCookie(true);
+    	alert('Modo escuro ativado.');
+    } else {
+    	setDarkCookie(false);
+    	alert('Modo escuro desativado.');
+    }
+});
+
 
 	</script>
 </html>

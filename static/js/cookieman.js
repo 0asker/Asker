@@ -14,5 +14,5 @@ function getDarkCookie() {
       return c.split('=')[1];
     }
   }
-  return "false";
+  return "none";
 }
