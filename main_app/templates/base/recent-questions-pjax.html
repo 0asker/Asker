@@ -2,7 +2,7 @@
 {% load main_app_extras %}
 <ul class="list-group list-group-flush infinite-container">
 	{% for question in questions %}
-	<li class="list-group-item infinite-item">
+	<li class="list-group-item bg-main infinite-item">
 		<div class="card-body">
 			<a href="/question/{{ question.id }}">
 				<b>{{ question.text }}</b>

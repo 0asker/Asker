@@ -17,17 +17,3 @@
 		width: 90%;
 	}
 }
-
-/* Correção de "behavior" inoportuno do webkit,
-   que muda cor do input quando um auto-fill é
-   usado - sem o seletor abaixo, o form ficará
-   branco-azulado caso o user escolha um email
-   do auto-fill */
-input.bg-dark:-webkit-autofill,
-input.bg-dark:-webkit-autofill:hover,
-input.bg-dark:-webkit-autofill:focus,
-input.bg-dark:-webkit-autofill:active {
-    transition: background-color 5000s ease-in-out 0s;
-    -webkit-box-shadow: 0 0 0px 1000px #343a40 inset;
-    -webkit-text-fill-color: white !important;
-}

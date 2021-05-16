@@ -1,0 +1,33 @@
+body {
+    background-color: #222;
+}
+.bg-main {
+  background-color: #343a40 !important;
+  color: #f8f9fa;
+}
+nav {
+    margin-bottom: 10px;
+}
+.notifications {
+    width: 60%;
+    margin: 0 auto;
+}
+.ntime {
+    color: #AAA;
+}
+.card-body {
+    padding-bottom: 8px;
+}
+.page-btn-container {
+    display: flex;
+    padding: 2px;
+}
+.page-btn {
+    flex: 1;
+    margin: 2px;
+}
+@media (min-width: 320px) and (max-width: 480px) {
+    .notifications {
+        width: 95%;
+    }
+}

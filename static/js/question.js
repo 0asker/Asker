@@ -54,9 +54,9 @@ function show_comments(commentsDiv, response_id, commentsIcon, csrf_token, user_
 			data = JSON.parse(data.responseText)
 			$.each(data.comments, function(index, value) {
 				if(user_logged != value.username) {
-					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info '+textcolor+'" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a></div><p>'+value.text+'</p></div></li>'
+					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a></div><p>'+value.text+'</p></div></li>'
 				} else {
-					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info '+textcolor+'" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a><img onclick="delete_comment('+value.comment_id+'); this.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png"></div><p>'+value.text+'</p></div></li>'
+					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a><img onclick="delete_comment('+value.comment_id+'); this.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png"></div><p>'+value.text+'</p></div></li>'
 				}
 			})
 			
@@ -68,7 +68,7 @@ function show_comments(commentsDiv, response_id, commentsIcon, csrf_token, user_
 			}
 			
 			/* Adiciona o formulário para comentar */
-			commentsSection.innerHTML += '<form class="form-inline comm-form" method="post" action="/comment"><input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'"><input type="hidden" name="response_id" value="'+response_id+'">  <input type="hidden" name="question_id" value="'+question_id+'">  <input type="text" maxlength="300" autocomplete="off" class="form-control '+commentformbgcolor+' '+textcolor+'" name="text" placeholder="Escreva seu comentário"></input><input class="btn btn-primary" type="submit" value="Comentar" onclick="this.style.display=`none`"></form>'
+			commentsSection.innerHTML += '<form class="form-inline comm-form" method="post" action="/comment"><input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'"><input type="hidden" name="response_id" value="'+response_id+'">  <input type="hidden" name="question_id" value="'+question_id+'">  <input type="text" maxlength="300" autocomplete="off" class="form-control comment-form" name="text" placeholder="Escreva seu comentário"></input><input class="btn btn-primary" type="submit" value="Comentar" onclick="this.style.display=`none`"></form>'
 		}
 	})
 	
@@ -162,51 +162,4 @@ function chooseAnswer(id) {
     		}
 		}
 	})
-}
-
-function toggleDarkMode() {
-    formbgcolor='bg-dark'; bgcolor='bg-dark'; textcolor='text-light';
-    commentformbgcolor='bg-darkish'; commentbgcolor='bg-darkerish';
-
-    document.body.style = "background: #222";
-    document.getElementsByClassName('navbar')[0].classList.add("bg-dark");
-    document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
-    document.getElementsByClassName('navbar')[0].classList.remove("bg-light");
-    document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
-    editResponseTextarea = document.getElementsByClassName('edit-response-textarea');
-    if (editResponseTextarea.length > 0) { editResponseTextarea[0].classList.add(commentbgcolor); }
-
-    cards = document.getElementsByClassName('card')
-    for (i = 0; i < cards.length; i++) {
-        cards[i].classList.add('bg-dark');
-        cards[i].classList.add('text-light');
-    }
-    lis = document.getElementsByClassName('list-group-item')
-    for (i = 0; i < lis.length; i++) {
-        lis[i].classList.add('bg-dark');
-        lis[i].classList.add('text-light');
-    }
-    texts = document.getElementsByClassName('form-control')
-    for (i = 0; i < texts.length; i++) {
-        texts[i].classList.add(formbgcolor);
-        texts[i].classList.add(textcolor);
-    }
-    posterinfos = document.getElementsByClassName('poster-info')
-    for (i = 0; i < posterinfos.length; i++) {
-        posterinfos[i].classList.add(textcolor);
-    }
-    commentscards = document.getElementsByClassName('comments')
-    for (i = 0; i < commentscards.length; i++) {
-        commentscards[i].classList.add(commentbgcolor);
-        commentscards[i].classList.remove(bgcolor);
-    }
-    dropdownmenus = document.getElementsByClassName('dropdown-menu')
-    for (i = 0; i < dropdownmenus.length; i++) {
-        dropdownmenus[i].classList.add(bgcolor);
-    }
-    dropdownitems = document.getElementsByClassName('dropdown-item')
-    for (i = 0; i < dropdownitems.length; i++) {
-        dropdownitems[i].classList.add(bgcolor);
-        dropdownitems[i].classList.add(textcolor);
-    }
 }

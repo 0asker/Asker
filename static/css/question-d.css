@@ -1,22 +1,12 @@
-/*
- * ░██╗░░░░░░░██╗░█████╗░██████╗░███╗░░██╗██╗███╗░░██╗░██████╗░
- * ░██║░░██╗░░██║██╔══██╗██╔══██╗████╗░██║██║████╗░██║██╔════╝░
- * ░╚██╗████╗██╔╝███████║██████╔╝██╔██╗██║██║██╔██╗██║██║░░██╗░
- * ░░████╔═████║░██╔══██║██╔══██╗██║╚████║██║██║╚████║██║░░╚██╗
- * ░░╚██╔╝░╚██╔╝░██║░░██║██║░░██║██║░╚███║██║██║░╚███║╚██████╔╝
- * ░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝╚═╝░░╚══╝░╚═════╝░
- * 
- * Sempre que este arquivo for atualizado, atualizar a versão dele em TODOS os templates.
- * Por exemplo:
- *  de:   /static/css/question.css?version=1
- *  para: /static/css/question.css?version=2
- */
-
 .response-image {
   max-width: 100%;
   max-height: 400px;
   display: block;
   margin: auto;
+}
+
+main img {
+    opacity: 0.7;
 }
 
 .vid-container {
@@ -51,17 +41,18 @@
 .poster-info {
   display: flex;
   text-decoration: none;
-  color: #343a40;
+  color: #f8f9fa;
   font-size: 80%;
 }
 
 .poster-info:hover {
   text-decoration: none;
-  color: black;
+  color: white;
 }
 
 .poster-container, .best-answer-badge {
   margin-bottom: 15px;
+  color: #f8f9fa;
 }
 
 .best-answer-badge span {
@@ -81,12 +72,13 @@
   color: #888;
 }
 
-.bg-darkerish {
-    background-color: #394046 !important;
+body {
+    background-color: #222;
 }
 
-.bg-darkish {
-    background-color: #454d54 !important;
+.bg-main {
+  background-color: #343a40 !important;
+  color: #f8f9fa;
 }
 
 .list-group-item {
@@ -94,8 +86,32 @@
   padding-right: 0px;
 }
 
+.dropdown-menu, .dropdown-item {
+  background-color: #343a40 !important;
+  color: #f8f9fa;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: #222 !important;
+  color: #f8f9fa;
+}
+
+textarea {
+  background-color: #394046 !important;
+  color: #f8f9fa !important;
+}
+
+.comment-form:focus, textarea:focus {
+  color: #f8f9fa !important;
+}
+
+.comment-form {
+  background-color: #454d54 !important;
+  color: #f8f9fa !important;
+}
+
 .comments {
-  background-color: rgba(0, 0, 0, .03);
+  background-color: #394046 !important;
   margin-top: 14px !important;
   padding: 10px;
   display: none;
@@ -168,6 +184,10 @@ main {
   margin: 1%;
 }
 
+.card, .list-group-item {
+    background-color: rgba(0,0,0,0);
+}
+
 .response-control {
     float: right;
 }
@@ -200,4 +220,8 @@ main {
 
 #upload-photo {
   display: none;
+}
+
+#upload-photo-text {
+    color: #f8f9fa;
 }

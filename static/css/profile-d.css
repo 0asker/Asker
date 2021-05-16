@@ -1,0 +1,39 @@
+body {
+  background-color: #222;
+  color: #f8f9fa;
+}
+
+#questions {
+	cursor: pointer;
+}
+
+#responses {
+	cursor: pointer;
+}
+
+#responses-section {
+	display: none;
+}
+#tabs {
+    border-bottom: none;
+}
+.bg-main {
+  background-color: #343a40 !important;
+  color: #f8f9fa;
+}
+.nav-tabs .nav-link:hover {
+    border-color: rgba(0,0,0,.125) !important;
+}
+.bg-main-tab.active {
+  background-color: #343a40 !important;
+  color: #f8f9fa !important;
+  border-color: rgba(0,0,0,.125) !important;
+}
+.bg-main-tab {
+  color: #f8f9fa !important;
+  border-color: rgba(0,0,0,.125) !important;
+}
+.bg-main-tab:hover {
+  border-color: rgba(0,0,0,.125) !important;
+  background-color: #394046 !important;
+}
