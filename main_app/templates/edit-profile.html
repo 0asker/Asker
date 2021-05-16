@@ -118,8 +118,10 @@ if (getDarkCookie() == 'true') {
 darkcheckbox.addEventListener('change', function() {
     if (this.checked) {
     	setDarkCookie(true);
+    	alert('Modo escuro ativado.');
     } else {
     	setDarkCookie(false);
+    	alert('Modo escuro desativado.');
     }
 });
 
