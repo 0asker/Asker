@@ -140,9 +140,6 @@
 if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
 	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
-} else if (getDarkCookie() == 'none') {
-	let prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-	setDarkCookie(prefersDarkMode);
 }
 		</script>
 	</body>
