@@ -66,6 +66,10 @@
 				width: 50%;
 				margin: auto;
 			}
+			.small-text {
+				color: #888;
+				font-size: 80%;
+			}
 
 			@media (min-width: 320px) and (max-width: 480px) {
 				#edit-profile {
@@ -221,9 +225,9 @@
 					<li class="list-group-item bg-main">
 						<div class="question card-body">
 							<a href="/question/{{ question.id }}">{{ question.text }}</a><br>
-							<span style="color: #888; font-size: 80%;">Perguntada em: {{ question.pub_date|naturalday }}</span>
+							<span class="small-text">Perguntada em: {{ question.pub_date|naturalday }}</span>
 							{% if question.best_answer == None and user_p.user.username == user.username %}
-								<br><span style="color: #888; font-size: 80%;">Sem melhor resposta</span>
+								<br><span class="small-text">Sem melhor resposta</span>
 							{% endif %}
 						</div>
 					</li>
@@ -246,7 +250,7 @@
 								{% endif %}
 								{{ response.text }}
 							</p>
-							<span style="color: #888; font-size: 80%;">Perguntada por <a href="/user/{{response.question.creator}}">{{response.question.creator}}</a> {{ response.question.get_naturaltime }}</span>
+							<span class="small-text">Perguntada por <a href="/user/{{response.question.creator}}">{{response.question.creator}}</a> {{ response.question.get_naturaltime }}</span>
 						</div>
 					</li>
 					{% endfor %}
