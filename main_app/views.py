@@ -626,10 +626,15 @@ def get_more_questions(request):
 
 	count = 1
 	for q in p.page(page):
+		if target.user.id == request.user.id:
+			best_answer = q.best_answer
+		else:
+			best_answer = -1
 		json['questions'][count] = {
 			'text': q.text,
 			'id': q.id,
 			'naturalday': naturalday(q.pub_date),
+			'best_answer': best_answer
 		}
 		count += 1
 
@@ -659,7 +664,9 @@ def get_more_responses(request):
 			'text': r.text,
 			'question_text': r.question.text,
 			'question_id': r.question.id,
-			'id': r.question.id,
+			'best_answer': r.id == r.question.best_answer,
+			'creator': r.question.creator.user.username,
+			'naturalday': r.question.get_naturaltime()
 		}
 		count += 1
 
