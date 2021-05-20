@@ -44,7 +44,7 @@
 
 			#center1 img {
 				max-width: 30vw;
-				max-height: 40vh;
+				max-height: 30vh;
 				display: block;
 			}
 
@@ -151,19 +151,19 @@
 		<div class="card-group">
 			<div class="card bg-inner">
 				<div class="card-body">
-					<h4>Perguntas</h4>
+					<h5>Perguntas</h5>
 					<p>{{user_p.total_questions}}</p>
 				</div>
 			</div>
 			<div class="card bg-inner">
 				<div class="card-body">
-					<h4>Respostas</h4>
+					<h5>Respostas</h5>
 					<p>{{user_p.total_responses}}</p>
 				</div>
 			</div>
 			<div class="card bg-inner">
 				<div class="card-body">
-					<h4>Pontos</h4>
+					<h5>Pontos</h5>
 					<p>{{user_p.total_points}}</p>
 				</div>
 			</div>
@@ -260,7 +260,7 @@
 				</ul>
 				<button class="btn btn-outline-primary" onclick="show_more_responses(this, {{ user_p.user.id }})">mais</button>
 			</div>
-		</section>
+		</section><br>
 
 		{% endif %}
 		</main><script src="/static/js/profile.js?v=4"></script>
