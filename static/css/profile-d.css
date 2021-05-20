@@ -16,6 +16,12 @@ body {
 }
 #tabs {
     border-bottom: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+}
+#tabs .nav-item {
+    white-space: nowrap;
 }
 .bg-main {
   background-color: #343a40 !important;
