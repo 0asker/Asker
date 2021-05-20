@@ -11,7 +11,7 @@
 		<script src="/static/js/cookieman.js?v=1"></script>
 		<script>
 			var cssfn = 'profile.css';
-			var cssversion = '?v=3';
+			var cssversion = '?v=4';
 			if (getDarkCookie() == 'true') { cssfn = 'profile-d.css';}
 			var link = document.createElement('link');
 			link.rel = 'stylesheet';
@@ -43,7 +43,8 @@
 			}
 
 			#center1 img {
-				width: 10%;
+				max-width: 30vw;
+				max-height: 40vh;
 				display: block;
 			}
 
@@ -57,38 +58,29 @@
             }
 
             #tabs {
-				width: 50%;
+				width: 48%;
 				margin: auto;
 			}
 
-			#edit-profile {
+			#edit-profile, #questions-section, #responses-section, #uinfo {
 				width: 50%;
 				margin: auto;
 			}
-
-			#questions-section {
-				width: 50%;
-				margin: auto;
-			}
-
-			#responses-section {
-				width: 50%;
-				margin: auto;
+			.small-text {
+				color: #888;
+				font-size: 80%;
 			}
 
 			@media (min-width: 320px) and (max-width: 480px) {
 				#edit-profile {
 					width: 95%;
+					margin-top: 10px;
+					margin-bottom: 10px;
 				}
 
 				#tabs {
-					width: 95%;
+					width: 94%;
 				}
-
-				#center1 img {
-					width: 25%;
-				}
-
 				.table {
 				    width: 98%;
 				}
@@ -97,20 +89,15 @@
 					width: 90%;
 				}
 
-				#qs {
+				#responses-section, #questions-section, #uinfo {
 					width: 95%;
 				}
-
-				#rs {
-					width: 95%;
+				#qs, #rs {
+					width: 100%;
 				}
-
-				#responses-section {
-					width: 95%;
-				}
-
-				#questions-section {
-					width: 95%;
+				.question.card-body, .response.card-body {
+					padding-left: 0px;
+					padding-right: 0px;
 				}
 			}
 		</style>
@@ -152,28 +139,32 @@
 					{% endif %}
 				</ul>
 			</div>
-		</nav>
+		</nav><main><div class="card bg-main" id="uinfo"><div class="card-body">
 		<center id="center1">
 		    <img src="{{user_p.avatar.url}}" alt="{{user_p.user.username}}"> <span>{{ user_p.user.username }}</span>
 			{% if user_p.user.username == "Erick" %}<p id="bio">{{ user_p.bio|safe }}</p>{% else %}
 			<p id="bio">{{ user_p.bio }}</p>{% endif %}
 		</center>
-		<table class="table table-bordered">
-		  <thead>
-			<tr>
-			  <th scope="col">Perguntas</th>
-			  <th scope="col">Respostas</th>
-			  <th scope="col">Pontos</th>
-			</tr>
-		  </thead>
-		  <tbody>
-			<tr>
-			  <td>{{user_p.total_questions}}</td>
-			  <td>{{user_p.total_responses}}</td>
-			  <td>{{user_p.total_points}}</td>
-			</tr>
-		  </tbody>
-		</table>
+		<div class="card-group">
+			<div class="card bg-inner">
+				<div class="card-body">
+					<h4>Perguntas</h4>
+					<p>{{user_p.total_questions}}</p>
+				</div>
+			</div>
+			<div class="card bg-inner">
+				<div class="card-body">
+					<h4>Respostas</h4>
+					<p>{{user_p.total_responses}}</p>
+				</div>
+			</div>
+			<div class="card bg-inner">
+				<div class="card-body">
+					<h4>Pontos</h4>
+					<p>{{user_p.total_points}}</p>
+				</div>
+			</div>
+		</div>
 
 		{% if user_p.user.username != user.username %}
 		<style>
@@ -211,10 +202,12 @@
 				})
 			}
 		</script>
-		{% endif %}
+		{% endif %}</div></div>
 
 		{% if user_p.user.username == user.username %}
 		<div id="edit-profile"><a href="/user/{{ user.username }}/edit">Editar perfil</a></div>
+		{% else %}
+		<br>
 		{% endif %}
 		{% if user_p.user.username == user.username or not user_p.hide_activity %}
 		<ul class="nav nav-tabs" id="tabs">
@@ -226,34 +219,48 @@
 			</li>
 		</ul>
 		<section id="questions-section">
-			<div id="qs">
-				{% for question in questions %}
-				<hr>
-				<div class="question">
-					<a href="/question/{{ question.id }}">{{ question.text }}</a> <span>&middot; perguntada {{ question.pub_date|naturalday }}</span>
-				</div>
-				<hr>
-				{% endfor %}
+			<div class="questions-card card bg-main">
+				<ul class="list-group list-group-flush" id="qs">
+					{% for question in questions %}
+					<li class="list-group-item bg-main">
+						<div class="question card-body">
+							<a href="/question/{{ question.id }}">{{ question.text }}</a><br>
+							<span class="small-text">Perguntada em: {{ question.pub_date|naturalday }}</span>
+							{% if question.best_answer == None and user_p.user.username == user.username %}
+								<br><span class="small-text">Sem melhor resposta</span>
+							{% endif %}
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+				<button class="btn btn-outline-primary" onclick="show_more_questions(this, {{ user_p.user.id }})">mais</button>
 			</div>
-			<button class="btn btn-outline-primary" onclick="show_more_questions(this, {{ user_p.user.id }})">mais</button>
 		</section>
 
 		<section id="responses-section">
-			<div id="rs">
-				{% for response in responses %}
-				<hr>
-				<div class="response">
-					<a href="/question/{{ response.question.id }}">{{ response.question.text }}</a><br>
-					<p>{{ response.text }}</p>
-				</div>
-				<hr>
-				{% endfor %}
+			<div class="responses-card card bg-main">
+				<ul class="list-group list-group-flush" id="rs">
+					{% for response in responses %}
+					<li class="list-group-item bg-main">
+						<div class="response card-body">
+							<a href="/question/{{ response.question.id }}">{{ response.question.text }}</a><br>
+							<p>
+								{% if response.question.best_answer == response.id %}
+									<span class="badge badge-pill badge-primary">🏆 Melhor resposta</span>
+								{% endif %}
+								{{ response.text }}
+							</p>
+							<span class="small-text">Perguntada por <a href="/user/{{response.question.creator}}">{{response.question.creator}}</a> {{ response.question.get_naturaltime }}</span>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+				<button class="btn btn-outline-primary" onclick="show_more_responses(this, {{ user_p.user.id }})">mais</button>
 			</div>
-			<button class="btn btn-outline-primary" onclick="show_more_responses(this, {{ user_p.user.id }})">mais</button>
 		</section>
 
 		{% endif %}
-		<script src="/static/js/profile.js?v=3"></script>
+		</main><script src="/static/js/profile.js?v=4"></script>
 		<script>
 if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
