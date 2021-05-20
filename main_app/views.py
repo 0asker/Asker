@@ -57,7 +57,10 @@ def pjax_questions(request):
 	p = Paginator(q, 20)
 	questions = p.page(1)
 	context['questions'] = questions
-	return TemplateResponse(request, "base/recent-questions.html", context)
+	try:
+		return TemplateResponse(request, "base/recent-questions.html", context)
+	except:
+		return redirect('/')
 
 
 def replace_url_to_link(value):
@@ -122,7 +125,7 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
-def index(request):	
+def index(request):
 	if request.method == 'POST':
 		if Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=Question.objects.get(id=request.POST.get('question_id'))).exists():
 			return HttpResponse('OK')
@@ -162,7 +165,7 @@ def index(request):
 	page = request.GET.get('page', 1)
 	questions = p.page(page)
 	context['questions'] = questions
-	
+
 	'''
 	Perguntas populares:
 	'''
@@ -183,7 +186,7 @@ def index(request):
 
 	if request.GET.get('new_user', 'false') == 'true':
 		context['account_verification_alert'] = SUCCESS_ACCOUNT_VERIFICATION
-	
+
 	return render(request, 'index.html', context)
 
 
@@ -626,10 +629,15 @@ def get_more_questions(request):
 
 	count = 1
 	for q in p.page(page):
+		if target.user.id == request.user.id:
+			best_answer = q.best_answer
+		else:
+			best_answer = -1
 		json['questions'][count] = {
 			'text': q.text,
 			'id': q.id,
 			'naturalday': naturalday(q.pub_date),
+			'best_answer': best_answer
 		}
 		count += 1
 
@@ -659,7 +667,9 @@ def get_more_responses(request):
 			'text': r.text,
 			'question_text': r.question.text,
 			'question_id': r.question.id,
-			'id': r.question.id,
+			'best_answer': r.id == r.question.best_answer,
+			'creator': r.question.creator.user.username,
+			'naturalday': r.question.get_naturaltime()
 		}
 		count += 1
 
@@ -912,16 +922,16 @@ def reset_password(request):
 
 
 def update_popular_questions(request):
-	
+
 	q = Question.objects.order_by('-pub_date')
-	
+
 	redis_connection = Redis('/tmp/asker.db')
 	ID_LIST = ''
 	for id in Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list:
 		ID_LIST += str(id) + ' '
 	ID_LIST = ID_LIST.strip()
 	redis_connection.set('popular_questions', ID_LIST)
-	
+
 	return HttpResponse('OK')
 
 def choose_best_answer(request):

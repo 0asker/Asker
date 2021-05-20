@@ -42,7 +42,14 @@ function show_more_questions(button, uid) {
 			data = JSON.parse(data.responseText)
 			
 			$.each(data.questions, function(i, val) {
-				questions.innerHTML += '<hr><div class="question"><a href="/question/'+val.id+'">'+val.text+'</a> <span>&middot; perguntada '+val.naturalday+'</span></div><hr>'
+			        var newLi = '<li class="list-group-item bg-main"><div class="question card-body"><a href="/question/'+val.id+'">'+val.text+'</a><br><span style="color: #888; font-size: 80%;">Perguntada '+val.naturalday+'</span>';
+                    if (!val.best_answer) {
+                        /* val.best_answer será -1 se proibido, a qid se existir, e null se não existir */
+                        newLi += '<br><span style="color: #888; font-size: 80%;">Sem melhor resposta</span>';
+                    }
+					newLi += '</div></li>';
+
+				questions.innerHTML += newLi;
 			})
 			
 			if(!data.has_next) {
@@ -69,7 +76,12 @@ function show_more_responses(button, uid) {
 			data = JSON.parse(data.responseText)
 			
 			$.each(data.responses, function(i, val) {
-				responses.innerHTML += '<hr><div class="response"><a href="/question/'+val.question_id+'">'+val.question_text+'</a><br><p>'+val.text+'</p></div><hr>'
+			    var newLi = '<li class="list-group-item bg-main"><div class="response card-body"><a href="/question/'+val.question_id+'">'+val.question_text+'</a><br><p>';
+			    if (val.best_answer) {
+			        newLi += '<span class="badge badge-pill badge-primary">🏆 Melhor resposta</span> ';
+			    }
+			    newLi += val.text + '</p><span style="color: #888; font-size: 80%;">Perguntada por <a href="/user/'+val.creator+'">'+val.creator+'</a> '+val.naturalday+'</span></div></li>';
+			    responses.innerHTML += newLi;
 			})
 			
 			if(!data.has_next) {

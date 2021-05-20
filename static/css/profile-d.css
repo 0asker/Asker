@@ -16,9 +16,19 @@ body {
 }
 #tabs {
     border-bottom: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+}
+#tabs .nav-item {
+    white-space: nowrap;
 }
 .bg-main {
   background-color: #343a40 !important;
+  color: #f8f9fa;
+}
+.bg-inner {
+  background-color: #394046 !important;
   color: #f8f9fa;
 }
 .nav-tabs .nav-link:hover {
@@ -36,4 +46,17 @@ body {
 .bg-main-tab:hover {
   border-color: rgba(0,0,0,.125) !important;
   background-color: #394046 !important;
+}
+
+.list-group-item {
+  /*Corrige BS*/
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, .125);
+}
+
+.list-group-item:focus,
+.list-group-item:hover {
+  /*Corrige BS*/
+  z-index: 0;
+  text-decoration: none;
 }
