@@ -16,11 +16,13 @@ from main_app.models import UserProfile, Question, Response, Notification, Comme
 from main_app.forms import UploadFileForm
 
 from bs4 import BeautifulSoup as bs
+from redislite import Redis
 
 import re
 from random import shuffle
 from hashlib import sha256
 
+import time
 import random
 import string
 
@@ -918,6 +920,19 @@ def reset_password(request):
 
 	return render(request, 'reset-password-1-part.html')
 
+
+def update_popular_questions(request):
+
+	q = Question.objects.order_by('-pub_date')
+
+	redis_connection = Redis('/tmp/asker.db')
+	ID_LIST = ''
+	for id in Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list:
+		ID_LIST += str(id) + ' '
+	ID_LIST = ID_LIST.strip()
+	redis_connection.set('popular_questions', ID_LIST)
+
+	return HttpResponse('OK')
 
 def choose_best_answer(request):
 
