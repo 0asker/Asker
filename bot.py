@@ -28,8 +28,9 @@ def get_response(message):
 	result = 'tá'
 	conversations = conn.execute('SELECT * FROM conversations').fetchall()
 	for c in conversations:
-		if similar(c[0].lower(), message) >= 0.6:
+		if similar(c[0].lower(), message) >= 0.65:
 			result = c[1]
+			break
 	return result
 
 while True:
@@ -47,3 +48,7 @@ while True:
 	response = get_response(last.text)
 	r = Response.objects.create(question=last, creator=bot_user_p, text=response)
 	r.save()
+
+	q = r.question
+	q.total_responses += 1
+	q.save()

@@ -717,9 +717,9 @@ def report(request):
 		q = Question.objects.get(id=request.GET.get('id'))
 		if q.reporters.filter(username=request.user.username).exists():
 			return HttpResponse('OK')
-		q.reports += 1
-		q.reporters.add(request.user)
-		q.save()
+		#q.reports += 1
+		#q.reporters.add(request.user)
+		#q.save()
 
 		if q.reports >= 3:
 			q.delete()
