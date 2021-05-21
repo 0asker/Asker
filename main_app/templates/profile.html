@@ -279,17 +279,19 @@
 			</div>
 		</section>
 
-		<section id="blocked-section">
-			<div class="responses-card card bg-main">
-				<ul class="list-group list-group-flush" id="bs">
-					{% for blocked_user in user_p.blocked_users.all %}
-					<li class="list-group-item bg-main blocked-user">
-						<a href="/user/{{ blocked_user }}">{{ blocked_user }}</a> <span onclick="unblock_listed_user(this.parentNode, '{{ blocked_user }}');">❌</span>
-					</li>
-					{% endfor %}
-				</ul>
-			</div>
-		</section>
+			{% if user_p.user.username == user.username %}
+			<section id="blocked-section">
+				<div class="responses-card card bg-main">
+					<ul class="list-group list-group-flush" id="bs">
+						{% for blocked_user in user_p.blocked_users.all %}
+						<li class="list-group-item bg-main blocked-user">
+							<a href="/user/{{ blocked_user }}">{{ blocked_user }}</a> <span onclick="unblock_listed_user(this.parentNode, '{{ blocked_user }}');">❌</span>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</section>
+			{% endif %}
 
 		{% endif %}<br>
 		</main><script src="/static/js/profile.js?v=5"></script>
