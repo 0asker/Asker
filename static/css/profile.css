@@ -1,12 +1,8 @@
-#questions {
+.activity-tab {
 	cursor: pointer;
 }
 
-#responses {
-	cursor: pointer;
-}
-
-#responses-section {
+#responses-section, #blocked-section {
 	display: none;
 }
 #tabs {
