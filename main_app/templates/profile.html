@@ -11,7 +11,7 @@
 		<script src="/static/js/cookieman.js?v=1"></script>
 		<script>
 			var cssfn = 'profile.css';
-			var cssversion = '?v=4';
+			var cssversion = '?v=5';
 			if (getDarkCookie() == 'true') { cssfn = 'profile-d.css';}
 			var link = document.createElement('link');
 			link.rel = 'stylesheet';
@@ -34,14 +34,6 @@
 			});
 		</script>
 		<style>
-			#responses-section {
-				width: 50%;
-			}
-
-			#questions-section {
-				width: 50%;
-			}
-
 			#center1 img {
 				max-width: 30vw;
 				max-height: 30vh;
@@ -62,7 +54,7 @@
 				margin: auto;
 			}
 
-			#edit-profile, #questions-section, #responses-section, #uinfo {
+			#edit-profile, section, #uinfo {
 				width: 50%;
 				margin: auto;
 			}
@@ -74,6 +66,13 @@
 			.small-text {
 				color: #888;
 				font-size: 80%;
+			}
+			.blocked-user a {
+				float: left;
+			}
+			.blocked-user span {
+				float: right;
+				cursor: pointer;
 			}
 
 			@media (min-width: 320px) and (max-width: 480px) {
@@ -92,7 +91,7 @@
 					width: 90%;
 				}
 
-				#responses-section, #questions-section, #uinfo {
+				section, #uinfo {
 					width: 95%;
 				}
 				#qs, #rs {
@@ -206,6 +205,19 @@
 			}
 		</script>
 		{% endif %}</div></div>
+		<script>
+			function unblock_listed_user(listEl, username) {
+				if (confirm('Deseja desbloquear ' + username + '?')) {
+					$.ajax({
+						type: 'get',
+						url: '/user/'+ username +'/block',
+						complete: function(data) {
+							listEl.remove();
+						}
+					})
+				}
+			}
+		</script>
 
 		{% if user_p.user.username == user.username %}
 		<div id="edit-profile"><a href="/user/{{ user.username }}/edit">Editar perfil</a></div>
@@ -220,6 +232,11 @@
 			<li class="nav-item">
 				<a class="nav-link bg-main-tab activity-tab disabled" id="responses">Respostas</a>
 			</li>
+			{% if user_p.user.username == user.username %}
+			<li class="nav-item">
+				<a class="nav-link bg-main-tab activity-tab disabled" id="blocked">Usuários bloqueados</a>
+			</li>
+			{% endif %}
 		</ul>
 		<section id="questions-section">
 			<div class="questions-card card bg-main">
@@ -260,10 +277,24 @@
 				</ul>
 				<button class="btn btn-outline-primary" onclick="show_more_responses(this, {{ user_p.user.id }})">mais</button>
 			</div>
-		</section><br>
+		</section>
 
-		{% endif %}
-		</main><script src="/static/js/profile.js?v=4"></script>
+			{% if user_p.user.username == user.username %}
+			<section id="blocked-section">
+				<div class="responses-card card bg-main">
+					<ul class="list-group list-group-flush" id="bs">
+						{% for blocked_user in user_p.blocked_users.all %}
+						<li class="list-group-item bg-main blocked-user">
+							<a href="/user/{{ blocked_user }}">{{ blocked_user }}</a> <span onclick="unblock_listed_user(this.parentNode, '{{ blocked_user }}');">❌</span>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</section>
+			{% endif %}
+
+		{% endif %}<br>
+		</main><script src="/static/js/profile.js?v=5"></script>
 		<script>
 if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
