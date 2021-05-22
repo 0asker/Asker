@@ -79,6 +79,10 @@ body {
 }
 /* Para smartphones: */
 @media (min-width: 320px) and (max-width: 480px) {
+    .navbar-brand {
+        margin-right: 0px;
+    }
+
 	#p_questions {
 		width: 98%;
 		margin: auto;

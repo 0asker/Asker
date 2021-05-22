@@ -20,6 +20,10 @@ nav {
     margin: 2px;
 }
 @media (min-width: 320px) and (max-width: 480px) {
+    .navbar-brand {
+        margin-right: 0px;
+    }
+
     .notifications {
         width: 95%;
     }

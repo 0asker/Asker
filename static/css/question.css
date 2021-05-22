@@ -132,6 +132,9 @@ main .card {
 }
 
 @media (min-width: 320px) and (max-width: 480px) {
+    .navbar-brand {
+        margin-right: 0px;
+    }
   .vid-container {
     height: 50vw;
     max-height: 300px;
