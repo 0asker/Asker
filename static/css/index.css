@@ -7,7 +7,6 @@
   animation: spin-animation 1s infinite;
   display: inline-block;
 }
-
 @keyframes spin-animation {
   0% {
     transform: rotate(0deg);
@@ -73,6 +72,10 @@
 
 /* Para smartphones: */
 @media (min-width: 320px) and (max-width: 480px) {
+    .navbar-brand {
+        margin-right: 0px;
+    }
+
 	#p_questions {
 		width: 98%;
 		margin: auto;
