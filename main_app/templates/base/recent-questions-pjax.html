@@ -22,7 +22,7 @@
 					{% if BLOCKED %}
 						<span><br>Pergunta indisponível.</span>
 					{% else %}
-						<form id="form-{{ question.id }}" class="response-form" method="post" action="/" onsubmit="make_answer({{ question.id }}); return false;">
+						<form id="form-{{ question.id }}" class="response-form" onsubmit="make_answer({{ question.id }}); return false;">
 							{% csrf_token %}
 							<input name="question_id" type="hidden" value="{{ question.id }}">
 							<textarea name="text" maxlength="5000" class="form-control" placeholder="Escreva sua resposta aqui" onclick="return show_form_buttons(this.parentElement)"></textarea>

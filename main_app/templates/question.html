@@ -184,7 +184,7 @@ $(function() {
 					{% if not ANSWERED %}
 						{% ablockb question.creator.user.username user.username as BLOCKED %}
 						{% if not BLOCKED %}
-							<form id="response-form" method="post" enctype="multipart/form-data" onsubmit="document.getElementById('response-loading-gif').style.display = 'block'; document.getElementById('send-response-btn').disabled = true;">
+							<form id="response-form" method="post" action="/save_answer" enctype="multipart/form-data" onsubmit="document.getElementById('response-loading-gif').style.display = 'block'; document.getElementById('send-response-btn').disabled = true;">
 								{% csrf_token %}
 								<textarea maxlength="5000" class="form-control" placeholder="Escreva uma resposta..." name="response" required="required"></textarea>
 								<input class="btn btn-outline-primary" type="submit" value="Enviar" id="send-response-btn">

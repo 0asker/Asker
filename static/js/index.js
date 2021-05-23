@@ -59,7 +59,7 @@ function make_answer(qid) {
 	modal.style.display = 'block';
 	
 	$.ajax({
-		url: '/',
+		url: '/save_answer',
 		type: 'post',
 		data: $('#form-' + qid).serialize(),
 		complete: function() {

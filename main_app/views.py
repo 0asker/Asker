@@ -125,37 +125,79 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+
+'''
+ Essa função salva uma resposta. Sempre quando um usuário
+envia uma resposta para uma pergunta, a resposta passa por aqui
+para ser salva (no banco de dados).
+'''
+def save_answer(request):
+	if request.method != 'POST':
+		return HttpResponse('Proibido.');
+	
+	question_id = request.POST.get('question_id')
+	question = Question.objects.get(id=question_id)
+	
+	response_creator = UserProfile.objects.get(user=request.user) # criador da nova resposta.
+	
+	'''
+	Testa se o usuário já respondeu a pergunta:
+	'''
+	if Response.objects.filter(creator=response_creator, question=question).exists():
+		return HttpResponse('Você já respondeu essa pergunta.')
+	
+	if question.creator.blocked_users.filter(username=request.user.username).exists():
+		return HttpResponse(False)
+	
+	text = request.POST.get('text')
+	
+	if not is_a_valid_response(text):
+		return HttpResponse('Proibido.')
+	
+	response = Response.objects.create(question=question,
+									   creator=response_creator,
+									   text=bs(text, 'lxml').text)
+	
+	question.total_responses += 1
+	question.save()
+	
+	response_creator.total_points += 1
+	response_creator.save()
+	
+	notification = Notification.objects.create(receiver=question.creator.user,
+											   type='question-answered')
+	notification.set_text(response.id)
+	notification.save()
+	
+	json = {'answer_id': r.id}
+
+	'''
+	Upload de imagens:
+	'''
+	form = UploadFileForm(request.POST, request.FILES)
+	if form.is_valid():
+		f = request.FILES['file']
+
+		file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+		file_name += str(f)
+
+		success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
+		if success: # TODO: mensagem caso não dê certo
+			response.image = 'responses/' + file_name
+
+		response.save()
+
+	try:
+		image_url = response.image.url
+		json['has_image'] = True
+		json['image_url'] = response.image.url
+	except:
+		json['has_image'] = False
+
+	return JsonResponse(json) # este json é útil quando a resposta tem imagem.
+
+
 def index(request):
-	if request.method == 'POST':
-		if Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=Question.objects.get(id=request.POST.get('question_id'))).exists():
-			return HttpResponse('OK')
-
-		user = User.objects.get(username=Question.objects.get(id=request.POST.get('question_id')).creator.user.username)
-		user_profile = UserProfile.objects.get(user=user)
-
-		if user_profile.blocked_users.filter(username=request.user.username).exists():
-			return HttpResponse(False)
-
-		q = Question.objects.get(id=request.POST.get('question_id'))
-
-		text = request.POST.get('text').replace('\r\n\r\n', '\n\n')
-		if not is_a_valid_response(text):
-			return HttpResponse('Proibido.')
-
-		r = Response.objects.create(question=q, creator=UserProfile.objects.get(user=request.user), text=bs(text, 'lxml').text)
-		q.total_responses += 1
-
-		u_p = UserProfile.objects.get(user=request.user)
-		u_p.total_points += 2
-		u_p.save()
-
-		q.save()
-
-		n = Notification.objects.create(receiver=r.question.creator.user,
-										type='question-answered')
-		n.set_text(r.id)
-		n.save()
-		return HttpResponse('OK')
 
 	context = {}
 
@@ -208,56 +250,6 @@ def question(request, question_id):
 				<p>Essa pergunta não existe, talvez ela tenha sido apagada pelo criador da pergunta. <a href="/">Clique aqui</a> para voltar para a página inicial.</p>
 			</body>
 			</html>''')
-
-	if request.method == 'POST':
-
-		# para evitar respostas duplas:
-		if Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=q).exists():
-			return HttpResponse('OK')
-
-		text = request.POST.get('response').replace('\r\n\r\n', '\n\n')
-		if not is_a_valid_response(text):
-			return HttpResponse('Proibido.')
-
-		r = Response.objects.create(question=q, creator=UserProfile.objects.get(user=request.user), text=bs(text, 'lxml').text)
-
-		''' Upload de imagens: '''
-		form = UploadFileForm(request.POST, request.FILES)
-		if form.is_valid():
-			f = request.FILES['file']
-
-			file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-			file_name += str(f)
-
-			success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
-			if success: # TODO: mensagem caso não dê certo
-				r.image = 'responses/' + file_name
-
-			r.save()
-
-		u = UserProfile.objects.get(user=request.user)
-		u.total_points += 2
-		u.save()
-
-		# cria a notificação da resposta:
-		n = Notification.objects.create(receiver=r.question.creator.user,
-										type='question-answered')
-		n.set_text(r.id)
-		n.save()
-
-		q.total_responses += 1
-		q.save()
-
-		json = {'answer_id': r.id}
-
-		try:
-			image_url = r.image.url
-			json['has_image'] = True
-			json['image_url'] = r.image.url
-		except:
-			json['has_image'] = False
-
-		return JsonResponse(json)
 
 	context = {'question': q,
 			   'responses': Response.objects.filter(question=q).order_by('-pub_date').order_by('-total_likes')}
