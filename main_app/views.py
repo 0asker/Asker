@@ -954,3 +954,17 @@ def choose_best_answer(request):
     #    q.save()
 
     return HttpResponse('OK')
+
+
+def delete_account(request):
+	if not request.user.is_authenticated:
+		return HttpResponse('Proibido.')
+	
+	if request.method == 'POST':
+		try:
+			user = request.user
+			user.delete()
+		except:
+			return False
+	
+	return render(request, 'delete-account.html')
