@@ -31,7 +31,7 @@ $(function() {
 
 		responses = document.getElementById('responses')
 
-		new_user_response = document.getElementById('response-form').response.value
+		new_user_response = document.getElementById('response-form').text.value
 
 		new_innerHTML = '<li class="list-group-item"><div class="card-body"><div class="poster-container"><a class="poster-info" href="/user/{{ user.username }}"><div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" width="45px" src="{{ user_p.avatar.url }}" alt="{{ user.username }}"></div><div class="poster-text-container"><div><span>{{ user.username }}</span></div></div></div></a><p>' + new_user_response + '</p></p>'
 
@@ -184,9 +184,10 @@ $(function() {
 					{% if not ANSWERED %}
 						{% ablockb question.creator.user.username user.username as BLOCKED %}
 						{% if not BLOCKED %}
-							<form id="response-form" method="post" enctype="multipart/form-data" onsubmit="document.getElementById('response-loading-gif').style.display = 'block'; document.getElementById('send-response-btn').disabled = true;">
+							<form id="response-form" method="post" action="/save_answer" enctype="multipart/form-data" onsubmit="document.getElementById('response-loading-gif').style.display = 'block'; document.getElementById('send-response-btn').disabled = true;">
 								{% csrf_token %}
-								<textarea maxlength="5000" class="form-control" placeholder="Escreva uma resposta..." name="response" required="required"></textarea>
+								<input type="hidden" name="question_id" value="{{ question.id }}">
+								<textarea maxlength="5000" class="form-control" placeholder="Escreva uma resposta..." name="text" required="required"></textarea>
 								<input class="btn btn-outline-primary" type="submit" value="Enviar" id="send-response-btn">
 								<label for="upload-photo"><img src="/static/images/camera.png?version=3" width="25px"> <span id="upload-photo-text"></span></label>
 								<input type="file" accept="image/*" name="file" id="upload-photo" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
