@@ -169,15 +169,16 @@ def save_answer(request):
 	notification.set_text(response.id)
 	notification.save()
 	
-	json = {'answer_id': r.id}
+	json = {'answer_id': response.id}
 
 	'''
 	Upload de imagens:
 	'''
+	
 	form = UploadFileForm(request.POST, request.FILES)
 	if form.is_valid():
 		f = request.FILES['file']
-
+		
 		file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 		file_name += str(f)
 
@@ -251,6 +252,56 @@ def question(request, question_id):
 			</body>
 			</html>''')
 
+	if request.method == 'POST':
+
+		# para evitar respostas duplas:
+		if Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=q).exists():
+			return HttpResponse('OK')
+
+		text = request.POST.get('response').replace('\r\n\r\n', '\n\n')
+		if not is_a_valid_response(text):
+			return HttpResponse('Proibido.')
+
+		r = Response.objects.create(question=q, creator=UserProfile.objects.get(user=request.user), text=bs(text, 'lxml').text)
+
+		''' Upload de imagens: '''
+		form = UploadFileForm(request.POST, request.FILES)
+		if form.is_valid():
+			f = request.FILES['file']
+
+			file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+			file_name += str(f)
+
+			success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
+			if success: # TODO: mensagem caso não dê certo
+				r.image = 'responses/' + file_name
+
+			r.save()
+
+		u = UserProfile.objects.get(user=request.user)
+		u.total_points += 2
+		u.save()
+
+		# cria a notificação da resposta:
+		n = Notification.objects.create(receiver=r.question.creator.user,
+										type='question-answered')
+		n.set_text(r.id)
+		n.save()
+
+		q.total_responses += 1
+		q.save()
+
+		json = {'answer_id': r.id}
+
+		try:
+			image_url = r.image.url
+			json['has_image'] = True
+			json['image_url'] = r.image.url
+		except:
+			json['has_image'] = False
+
+		return JsonResponse(json)
+
 	context = {'question': q,
 			   'responses': Response.objects.filter(question=q).order_by('-pub_date').order_by('-total_likes')}
 
@@ -266,6 +317,7 @@ def question(request, question_id):
 	context['recommended_questions'] = qs_list[:20]
 
 	return render(request, 'question.html', context)
+
 
 
 def like(request):
@@ -842,8 +894,6 @@ def is_a_valid_question(text, description):
 
 ''' A função abaixo faz a validação de novas respostas. '''
 def is_a_valid_response(text):
-	if len(text) > 5000:
-		return False
 	return True
 
 
