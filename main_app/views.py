@@ -134,51 +134,51 @@ para ser salva (no banco de dados).
 def save_answer(request):
 	if request.method != 'POST':
 		return HttpResponse('Proibido.');
-	
+
 	question_id = request.POST.get('question_id')
 	question = Question.objects.get(id=question_id)
-	
+
 	response_creator = UserProfile.objects.get(user=request.user) # criador da nova resposta.
-	
+
 	'''
 	Testa se o usuário já respondeu a pergunta:
 	'''
 	if Response.objects.filter(creator=response_creator, question=question).exists():
 		return HttpResponse('Você já respondeu essa pergunta.')
-	
+
 	if question.creator.blocked_users.filter(username=request.user.username).exists():
 		return HttpResponse(False)
-	
+
 	text = request.POST.get('text')
-	
+
 	if not is_a_valid_response(text):
 		return HttpResponse('Proibido.')
-	
+
 	response = Response.objects.create(question=question,
 									   creator=response_creator,
 									   text=bs(text, 'lxml').text)
-	
+
 	question.total_responses += 1
 	question.save()
-	
-	response_creator.total_points += 1
+
+	response_creator.total_points += 2
 	response_creator.save()
-	
+
 	notification = Notification.objects.create(receiver=question.creator.user,
 											   type='question-answered')
 	notification.set_text(response.id)
 	notification.save()
-	
+
 	json = {'answer_id': response.id}
 
 	'''
 	Upload de imagens:
 	'''
-	
+
 	form = UploadFileForm(request.POST, request.FILES)
 	if form.is_valid():
 		f = request.FILES['file']
-		
+
 		file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
 		file_name += str(f)
 
@@ -959,12 +959,12 @@ def choose_best_answer(request):
 def delete_account(request):
 	if not request.user.is_authenticated:
 		return HttpResponse('Proibido.')
-	
+
 	if request.method == 'POST':
 		try:
 			user = request.user
 			user.delete()
 		except:
 			return False
-	
+
 	return render(request, 'delete-account.html')
