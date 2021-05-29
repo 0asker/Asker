@@ -161,7 +161,7 @@ def save_answer(request):
 	question.total_responses += 1
 	question.save()
 
-	if response_creator.user.username == 'Erick':
+	if response_creator.user.username == 'Polinho':
 		response_creator.total_points += 1
 	else:
 		response_creator.total_points += 2
