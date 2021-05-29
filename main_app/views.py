@@ -974,3 +974,7 @@ def delete_account(request):
 			return False
 
 	return render(request, 'delete-account.html')
+
+
+def rules(request):
+  return render(request, 'rules.html')
