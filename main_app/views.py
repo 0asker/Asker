@@ -310,6 +310,11 @@ def like(request):
 def delete_response(request):
     r = Response.objects.get(id=request.GET.get('response_id'))
 
+    ''' Tira 2 pontos do criador da resposta, já que a resposta vai ser apagada por ele mesmo. '''
+    creator = r.creator
+    creator.total_points -= 3 # por enquanto vai tirar 3, para alertar trolls.
+    creator.save()
+
     try:
         ''' Deleta também a imagem do sistema de arquivos para liberar espaço. '''
         import os
@@ -321,6 +326,7 @@ def delete_response(request):
     q.total_responses -= 1
     q.save()
     r.delete()
+
     return HttpResponse('OK')
 
 
