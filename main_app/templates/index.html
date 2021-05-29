@@ -53,7 +53,13 @@
 		{% for question in popular_questions %}
 		<li class="list-group-item bg-main">
 			<div class="card-body">
-				<a href="/question/{{ question.id }}"><b>{{ question.text }}</b></a>
+
+        <a href="/question/{{ question.id }}" style="text-decoration: none">
+          <p>
+            {{ question.text }}
+          </p>
+        </a>
+
 				<p>
 					{% if question.description != '' %}{{ question.description|cut_description|safe|linebreaksbr }}{% endif %}
 				</p>
