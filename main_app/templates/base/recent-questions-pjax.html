@@ -17,9 +17,6 @@
       </p>
       {% endif %}
 			<small>{% total_answers question.id %} respostas <b>&nbsp;&middot;&nbsp;</b> <span class="text-muted">{{ question.get_naturaltime }}</span></small>
-      <div style="font-size: 0.9rem; display: inline;">
-        &nbsp;<i class="far fa-eye"></i>&nbsp;{% question_total_views question.id %}
-      </div>
 		{% if user.is_authenticated %}
 				{% answered user.username question.id as ANSWERED %}
 				{% if ANSWERED %}
