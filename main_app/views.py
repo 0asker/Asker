@@ -1000,7 +1000,10 @@ def change_email(request):
     user.email = new_email
     user.save()
     
-    login(user)
+    try:
+      login(request)
+    except:
+      pass
     
     return HttpResponse('Pronto! Seu novo email é: {}. <a href="/">Voltar para a página inicial</a>.'.format(new_email))
   
