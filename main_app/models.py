@@ -94,9 +94,10 @@ class Question(models.Model):
 	description = models.TextField(null=True)
 	total_likes = models.IntegerField(default=0, null=True)
 	total_responses = models.IntegerField(default=0)
-	reports = models.IntegerField(default=0)
-	reporters = models.ManyToManyField(User)
-	best_answer = models.IntegerField(blank=True, null=True)
+	reports = models.IntegerField(default=0) # TODO: remover este campo.
+	reporters = models.ManyToManyField(User) # TODO: remover este campo.
+	best_answer = models.IntegerField(blank=True, null=True) # ID da melhor resposta.
+	total_views = models.IntegerField(null=True, default=0)
 
 	def get_naturaltime(self):
 		return correct_naturaltime(naturaltime(self.pub_date))

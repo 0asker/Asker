@@ -65,7 +65,7 @@
               {{ question.description|cut_description|safe|linebreaksbr }}
             </p>
           {% endif %}
-				<small>{% total_answers question.id %} respostas <b>&middot; </b> <span class="text-muted"><img src="/static/images/white-heart.png?version=3" width="15px"> {{ question.total_likes }}</span></small>
+				<small>{% total_answers question.id %} respostas <b>&middot; </b> <span class="text-muted"><img src="/static/images/white-heart.png?version=3" width="15px"> {{ question.total_likes }}</span></small>&nbsp;|&nbsp;<small>{% question_total_views question.id %} visualizações</small>
 				{% if user.is_authenticated %}
 					{% answered user.username question.id as ANSWERED %}
 					{% if ANSWERED %}

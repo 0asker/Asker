@@ -11,7 +11,7 @@ from djpjax import pjax
 from django.template.response import TemplateResponse
 from django.core.cache import cache
 
-from main_app.models import UserProfile, Question, Response, Notification, Comment, Report, Ban
+from main_app.models import UserProfile, Question, Response, Notification, Comment, Report
 
 from main_app.forms import UploadFileForm
 
@@ -237,12 +237,11 @@ def index(request):
 
 
 def question(request, question_id):
-
-	if Ban.objects.filter(ip=str(get_client_ip(request))).exists():
-		return HttpResponse(Ban.objects.get(ip=get_client_ip(request)).message)
-
 	try:
 		q = Question.objects.get(id=question_id)
+
+		q.total_views += 1
+		q.save()
 	except:
 		# pergunta não encontrada:
 		return HttpResponse('''<html>

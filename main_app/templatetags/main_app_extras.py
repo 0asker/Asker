@@ -104,6 +104,14 @@ def blocked(username, username2):
 
 
 '''
+Retorna o total de visualizações de uma pergunta.
+'''
+@register.simple_tag
+def question_total_views(question_id):
+  return Question.objects.get(id=question_id).total_views
+
+
+'''
 a bloqueou b?
 ou seja: o usuário de nome `a` bloqueou o usuário de nome `b`?
 '''
