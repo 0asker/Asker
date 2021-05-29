@@ -945,7 +945,7 @@ def choose_best_answer(request):
         return HttpResponse('Proibido.')
     if r.creator.user.id == quser.id:
         return HttpResponse('Proibido.')
-    if q.may_choose_answer:
+    if q.may_choose_answer():
         q.best_answer = answer_id
         q.save()
         n = Notification.objects.create(receiver=r.creator.user, type='got-best-answer', response=r)
