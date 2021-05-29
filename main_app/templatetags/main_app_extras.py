@@ -108,7 +108,10 @@ Retorna o total de visualizações de uma pergunta.
 '''
 @register.simple_tag
 def question_total_views(question_id):
-  return Question.objects.get(id=question_id).total_views
+  try:
+    return Question.objects.get(id=question_id).total_views
+  except:
+    return '0'
 
 
 '''
