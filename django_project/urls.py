@@ -56,5 +56,6 @@ urlpatterns = [
 	path('save_answer', views.save_answer, name='save_answer'),
 	path('delete-account', views.delete_account, name='delete_account'),
   path('rules', views.rules, name='rules'),
+  path('change-email', views.change_email, name='change_email'),
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
