@@ -161,10 +161,10 @@ def save_answer(request):
 	question.total_responses += 1
 	question.save()
 
-  if response_creator.user.username == 'Erick':
-    response_creator.total_points += 1
-  else:
-    response_creator.total_points += 2
+	if response_creator.user.username == 'Erick':
+		response_creator.total_points += 1
+	else:
+		response_creator.total_points += 2
 	response_creator.save()
 
 	notification = Notification.objects.create(receiver=question.creator.user,
