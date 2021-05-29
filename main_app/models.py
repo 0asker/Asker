@@ -185,5 +185,5 @@ class Report(models.Model):
     text = models.TextField(null=True)
 
 class Ban(models.Model): # todos os IP's banidos:
-    ip = models.TextField()
-    message = models.TextField(null=True)
+    ip = models.TextField(null=False)
+    message = models.TextField(null=True, blank=True)
