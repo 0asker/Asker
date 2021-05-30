@@ -40,6 +40,7 @@ urlpatterns = [
 	path('logout', views.logout, name='logout'),
 	path('notifications', views.notification, name='notification'),
 	path('delete_question', views.deleteQuestion, name='deleteQuestion'),
+  path('test', views.test, name='test'),
 	path('delete_comment', views.delete_comment, name='delete_comment'),
 	path('comments', views.comments, name='comments'), # esse padrão de URL é usado para obter comentários de respostas. Os comentários são retornados no formato JSON.
 	path('comment', views.comment, name='comment'), # esse padrão de URL é usado para fazer um comentário em uma resposta (postar um comentário).

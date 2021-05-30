@@ -1008,3 +1008,7 @@ def change_email(request):
     return HttpResponse('Pronto! Seu novo email é: {}. <a href="/">Voltar para a página inicial</a>.'.format(new_email))
   
   return render(request, 'change-email.html')
+
+
+def test(request):
+  return render(request, 'test.html')
