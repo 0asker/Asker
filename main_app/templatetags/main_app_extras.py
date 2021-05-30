@@ -20,7 +20,10 @@ def total_answers(qid):
 
 @register.simple_tag
 def answered(username, qid):
-	return Response.objects.filter(creator=UserProfile.objects.get(user=User.objects.get(username=username)), question=Question.objects.get(id=qid)).exists()
+  try:
+    return Response.objects.filter(creator=UserProfile.objects.get(user=User.objects.get(username=username)), question=Question.objects.get(id=qid)).exists()
+  except:
+    return False
 
 
 @register.simple_tag
