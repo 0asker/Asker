@@ -160,8 +160,8 @@ def save_answer(request):
 
 	question.total_responses += 1
 	question.save()
-  
-  response_creator.total_points += 2
+
+	response_creator.total_points += 2
 	response_creator.save()
 
 	notification = Notification.objects.create(receiver=question.creator.user,
@@ -980,30 +980,30 @@ def rules(request):
 
 
 def change_email(request):
-  
+
   if request.method == 'POST':
     password = request.POST.get('password')
     new_email = request.POST.get('email')
-    
+
     user = authenticate(username=request.user.username, password=password)
-    
+
     print(request.user.username)
     print(new_email)
     print(password)
-    
+
     if user is None:
       return HttpResponse('Senha incorreta. <a href="/change-email">Tentar novamente</a>.')
-    
+
     user.email = new_email
     user.save()
-    
+
     try:
       login(request)
     except:
       pass
-    
+
     return HttpResponse('Pronto! Seu novo email é: {}. <a href="/">Voltar para a página inicial</a>.'.format(new_email))
-  
+
   return render(request, 'change-email.html')
 
 
