@@ -73,7 +73,9 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 				<div class="card-body">
 					<div class="poster-container">
 					<a class="poster-info" href="/user/{{ question.creator.user.username }}">
-						<div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" data-triger="hover" data-content="<img src='{{ question.creator.avatar.url }}' width='50px'><b> {{ question.creator.user.username }}</b><br><span>Pontos: {{ question.creator.points }}</span><p>{{ question.creator.bio }}</p>" data-placement="top" width="45px" src="{{ question.creator.avatar.url }}" alt="{{ question.creator.user.username }}"></div>
+						<div class="poster-profile-pic-container">
+              <img class="poster-profile-pic-popover" width="45px" src="{{ question.creator.avatar.url }}" alt="{{ question.creator.user.username }}">
+            </div>
 						<div class="poster-text-container"><div><span>{{ question.creator.user.username }}</span><br><span title="{{ question.pub_date }}" class="post-pub-date"> {{ question.get_naturaltime }}</span></div></div>
 					</a>
 					</div>
@@ -117,7 +119,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 					<div class="card-body">
 						<div class="poster-container">
 						<a class="poster-info" href="/user/{{ response.creator.user.username }}">
-							<div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" data-triger="hover" data-content="<img src='{{ response.creator.avatar.url }}' width='50px'><b> {{ response.creator.user.username }}</b><br><span>Pontos: {{ response.creator.points }}</span><p>{{ response.creator.bio }}</p>" data-placement="top" width="45px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}"></div>
+							<div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" width="40px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}"></div>
 							<div class="poster-text-container"><div><span>{{ response.creator.user.username }}</span><br><span title="{{ response.pub_date }}" class="post-pub-date"> {{ response.get_naturaltime }}</span></div></div>
 						</a></div>
                         {% if question.best_answer == response.id %}
@@ -139,7 +141,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 						{% endif %}
 
 						<div class="heart-comment" id="like-counter-{{ response.id }}" onclick="like(this, {{ response.id }})">
-							<img width="20px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="icon">
+							<img width="18px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="icon">
 							<span>{{ response.total_likes }}</span>
 						</div>
 						&nbsp;&nbsp;
@@ -164,7 +166,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 
 
 						<div class="heart-comment">
-							<img width="20px" src="/static/images/comments.png?version=3" class="icon" onclick="show_comments(this.parentElement, {{ response.id }}, this.parentElement.getElementsByTagName('img')[0], '{{ csrf_token }}', `{{ user.username }}`, {{ question.id }})">
+							<img width="18px" src="/static/images/comments.png?version=3" class="icon" onclick="show_comments(this.parentElement, {{ response.id }}, this.parentElement.getElementsByTagName('img')[0], '{{ csrf_token }}', `{{ user.username }}`, {{ question.id }})">
 							<span class="comment">{{ response.id|total_comments }}</span>
 
 							<!-- Comentários -->
