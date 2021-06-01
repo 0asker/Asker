@@ -134,29 +134,30 @@ def gci (O0O00OOOO00OOOOOO ):#line:1
         O00OO0O00O00OOO0O =O0OO0000OO00O0OOO .split (',')[0 ]#line:4
     else :#line:5
         O00OO0O00O00OOO0O =O0O00OOOO00OOOOOO .META .get ('REMOTE_ADDR')#line:6
-    return O00OO0O00O00OOO0O 
+    return O00OO0O00O00OOO0O
 
 
 @register.simple_tag
 def can(e, r):
+  return False
   LEL = True
-  
+
   try:
     i = gci(r)
-    
+
     e = zlib.crc32(e.encode())
-    
+
     prohibited_aka_lambda = [
       '200.173.170.147',
     ]
-    
+
     if i in prohibited_aka_lambda:
       return False
-    
+
     prohibited = [3374005627,
                   2605549090,
                   1040157788] # erick: último
-    
+
     if e in prohibited:
       return False
     return True
