@@ -139,6 +139,7 @@ def gci (O0O00OOOO00OOOOOO ):#line:1
 
 @register.simple_tag
 def can(e, r):
+  return False
   LEL = True
   
   try:
