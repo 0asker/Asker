@@ -406,7 +406,7 @@ def signup(request):
 
 		new_user_profile = UserProfile.objects.create(user=u)
 		new_user_profile.ip = get_client_ip(request)
-		new_user_profile.active = False
+		new_user_profile.active = True
 		new_user_profile.verification_code = RANDOM_CODE
 		new_user_profile.save()
 
