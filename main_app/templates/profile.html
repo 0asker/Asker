@@ -117,7 +117,7 @@
 	<main><div class="card bg-main" id="uinfo"><div class="card-body">
 		<center id="center1">
 		    <img src="{{user_p.avatar.url}}" alt="{{user_p.user.username}}">
-        <h4>{{ user_p.user.username }}</h4>
+        <b>{{ user_p.user.username }}</b>
 			{% if user_p.user.username == "Erick" %}<p id="bio">{{ user_p.bio|safe }}</p>{% else %}
 			<p id="bio">{{ user_p.bio }}</p>{% endif %}
 		</center>
