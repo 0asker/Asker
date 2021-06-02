@@ -512,10 +512,6 @@ def logout(request):
 	return redirect('/')
 
 
-def test(request):
-	return render(request, 'test.html')
-
-
 def notification(request):
 
     p = Paginator(Notification.objects.filter(receiver=request.user).order_by('-creation_date'), 15)
@@ -1009,3 +1005,7 @@ def change_email(request):
 
 def test(request):
   return render(request, 'test.html')
+
+
+def adstxt(request):
+  return render(request, 'ads.html')
