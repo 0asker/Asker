@@ -1,3 +1,4 @@
+{% load humanize %}
 <!doctype html>
 <html lang="pt-br">
     <head>
@@ -38,7 +39,7 @@
             	{% for notification in notifications %}
                 <li class="list-group-item bg-main">
 	                <div class="card-body">
-	                    <p class="ntime">{{ notification.creation_date }}</p>
+	                    <p class="ntime">{{ notification.creation_date|naturaltime }}</p>
 	                    <p class="ntext">{{ notification.text|safe }}</p>
                     </div>
                 </li>
