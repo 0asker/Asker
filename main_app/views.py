@@ -1009,3 +1009,7 @@ def test(request):
 
 def adstxt(request):
   return render(request, 'ads.html')
+
+
+def activity(request):
+  return redirect('/user/' + request.user.username)

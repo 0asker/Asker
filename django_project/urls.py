@@ -31,6 +31,7 @@ urlpatterns = [
   path('answer/like', views.like, name='like'), # quando uma resposta recebe um like, é usado esse padrão de URL.
   path('answer/choose', views.choose_best_answer, name="choose_best_answer"),
   path('delete_response', views.delete_response, name='delete_response'), # esse padrão de URL é usado para deletar respostas.
+  path('user/activity', views.activity, name='activity'),
   path('user/<str:username>', views.profile, name='profile'),
   path('user/<str:username>/edit', views.edit_profile, name='edit_profile'),
   path('user/<str:username>/block', views.block, name='block'), # esse padrão de URL é usado para um usuário bloquear outro.
