@@ -175,6 +175,8 @@ class Notification(models.Model):
 			response = Response.objects.get(id=answer_id)
 			self.text = '<p>Sua resposta foi escolhida a melhor resposta da pergunta: <a href="/question/{}">"{}"</a></p>'.format(response.question.id, response.question.text)
 
+	def get_naturaltime(self):
+		return correct_naturaltime(naturaltime(self.creation_date))
 
 
 
