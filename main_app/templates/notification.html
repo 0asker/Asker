@@ -35,10 +35,11 @@
     <body>
 		{% include "includes/navbar.html" %}
         <section class="card notifications bg-main">
-            <button class="btn btn-outline-primary" onclick="read_all()">Marcar todas como lidas</button>
+            <!--<button class="btn btn-outline-primary" onclick="read_all()">Marcar todas como lidas</button>-->
             <ul class="list-group list-group-flush">
             	{% for notification in notifications %}
-                <li class="list-group-item bg-main notif" style="background-color: {% if not notification.read %}#f7f7f7;{% endif %}">
+                <!--<li class="list-group-item bg-main notif" style="background-color: {% if not notification.read %}#f7f7f7;{% endif %}">-->
+                <li class="list-group-item bg-main notif">
 	                <div class="card-body">
 	                    <p class="ntime">{{ notification.creation_date|naturaltime }}</p>
 	                    <p class="ntext">{{ notification.text|safe }}</p>
@@ -61,21 +62,21 @@ if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
 }
 		</script>
-    
+
     <script>
       /* Função para marcar todas as notificações como lidas. */
       function read_all() {
         notifications = document.getElementsByClassName("notif");
-        
+
         for (let notif in notifications) {
-          
+
           if (notifications[notif].style == undefined) {
             continue;
           }
-          
+
           notifications[notif].style.backgroundColor = "white";
         }
-        
+
         $.ajax({
           url: "/mark-notifications-as-viewed",
           type: "get",
