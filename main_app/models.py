@@ -162,18 +162,20 @@ class Notification(models.Model):
 	liker = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='l') # quem deu o like
 	response = models.ForeignKey(Response, on_delete=models.CASCADE, null=True, related_name='r') # qual é a resposta
 
+	read = models.BooleanField(default=False) # notificação foi vista ou não pelo receiver (receiver clicou ou não na notificação, na verdade).
+
 	def set_text(self, answer_id, comment_id=None):
 		if self.type == 'like-in-response':
-			self.text = '<p>Você recebeu um ❤️ na sua resposta <a href="/question/{}">"{}"</a></p>'.format(Response.objects.get(id=answer_id).question.id, Response.objects.get(id=answer_id).text)
+			self.text = '<p>Você recebeu um ❤️ na sua resposta <a href="/question/{}?n={}">"{}"</a></p>'.format(Response.objects.get(id=answer_id).question.id, self.id, Response.objects.get(id=answer_id).text)
 		elif self.type == 'question-answered':
 		    response = Response.objects.get(id=answer_id)
-		    self.text = '<p><a href="/user/{}">{}</a> respondeu sua pergunta <a href="/question/{}">"{}"</a></p>'.format(response.creator.user.username, response.creator.user.username, response.question.id, response.question.text)
+		    self.text = '<p><a href="/user/{}">{}</a> respondeu sua pergunta <a href="/question/{}?n={}">"{}"</a></p>'.format(response.creator.user.username, response.creator.user.username, response.question.id, self.id, response.question.text)
 		elif self.type == 'comment-in-response':
 			comment = Comment.objects.get(response=Response.objects.get(id=answer_id), id=comment_id)
-			self.text = '<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text)
+			self.text = '<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}?n={}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, self.id, comment.response.question.text)
 		elif self.type == 'got-best-answer':
 			response = Response.objects.get(id=answer_id)
-			self.text = '<p>Sua resposta foi escolhida a melhor resposta da pergunta: <a href="/question/{}">"{}"</a></p>'.format(response.question.id, response.question.text)
+			self.text = '<p>Sua resposta foi escolhida a melhor resposta da pergunta: <a href="/question/{}?n={}">"{}"</a></p>'.format(response.question.id, self.id, response.question.text)
 
 
 

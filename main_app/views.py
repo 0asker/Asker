@@ -1013,3 +1013,20 @@ def adstxt(request):
 
 def activity(request):
   return redirect('/user/' + request.user.username)
+
+
+'''
+Retorna True se tem novas notificações e False se não.
+'''
+def have_new_notif(request):
+  return HttpResponse(True)
+
+
+'''
+Marca todas as notificações como vistas.
+'''
+def mark_notifications_as_viewed(request):
+  for notification in Notification.objects.filter(receiver=request.user):
+    notification.read = True
+    notification.save()
+  return HttpResponse('OK')

@@ -60,5 +60,7 @@ urlpatterns = [
   path('rules', views.rules, name='rules'),
   path('change-email', views.change_email, name='change_email'),
   path('ads.txt', views.adstxt, name='adstxt'),
+  path('have-new-notif', views.have_new_notif, name='have_new_notif'),
+  path('mark-notifications-as-viewed', views.mark_notifications_as_viewed, name='mark_notifications_as_viewed'),
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
