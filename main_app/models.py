@@ -85,7 +85,6 @@ class UserProfile(models.Model):
 		total += self.total_questions()
 		return total
 
-
 class Question(models.Model):
 	creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 	text = models.TextField()
@@ -118,6 +117,9 @@ class Question(models.Model):
 			if (timezone.now() - self.pub_date).total_seconds() > 3600: # TODO: fazer general rule pra quando é possivel escolher mr?
 				return True
 		return False
+
+	def has_poll(self):
+		return Poll.objects.filter(question=self).exists()
 
 	def __str__(self):
 	    return self.text
@@ -190,3 +192,21 @@ class Report(models.Model):
 class Ban(models.Model): # todos os IP's banidos:
     ip = models.TextField(null=False)
     message = models.TextField(null=True, blank=True)
+
+class Poll(models.Model):
+	question = models.ForeignKey(Question, on_delete=models.CASCADE)
+	is_anonymous = models.BooleanField(default=True)
+	multichoice = models.BooleanField()
+
+	def may_vote(self):
+		return (timezone.now() - self.question.pub_date).total_seconds() < 43200
+
+class PollChoice(models.Model):
+	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+	text = models.TextField()
+	votes = models.IntegerField(default=0)
+
+class PollVote(models.Model):
+	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
+	choice = models.ForeignKey(PollChoice, on_delete=models.CASCADE)
+	voter = models.ForeignKey(User, on_delete=models.CASCADE)
