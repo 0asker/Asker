@@ -9,3 +9,4 @@
 '''
 
 MINIMUM_POINTS_FOR_POSTING_IMAGES = 100 # mínimo de pontos para postar imagens, seja em perguntas ou respostas.
+MAXIMUM_POLL_CHOICES = 12

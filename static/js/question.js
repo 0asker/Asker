@@ -156,10 +156,84 @@ function chooseAnswer(id) {
 		complete: function() {
 		    btns = document.getElementsByClassName('choose-answer-btn');
     		for (i = btns.length-1; i >= 0; i--) {
-    		    console.log('removed ' + i)
                 btns[i].remove();
                 location.reload();
     		}
 		}
 	})
+}
+
+function voteOnPoll() {
+    let userChoicesEls = $("input[name='poll-option']:checked");
+    let userChoices = [];
+    if (userChoicesEls.length < 1) { return 0; }
+    for (var i = 0; i < userChoicesEls.length; i++) {
+        userChoices.push(userChoicesEls[i].value);
+    }
+    $.ajax({
+      type: "POST",
+      url: '/poll/vote',
+      data: {
+          poll: $("input[name=qpoll]").val(),
+          choices: userChoices,
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+      },
+      success: function() {
+          window.location.reload();
+      }
+    });
+}
+
+function undoVote() {
+    $.ajax({
+      type: "POST",
+      url: '/poll/undovote',
+      data: {
+          poll: $("input[name=qpoll]").val(),
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+      },
+      success: function() {
+          window.location.reload();
+      }
+    });
+}
+
+function openChooser() {
+    let chooser = document.getElementsByClassName('poll-chooser')[0];
+    let shower = document.getElementsByClassName('poll-shower')[0];
+    shower.style.display = 'none';
+    chooser.style.display = 'block';
+}
+
+function openShower() {
+    let chooser = document.getElementsByClassName('poll-chooser')[0];
+    let shower = document.getElementsByClassName('poll-shower')[0];
+    chooser.style.display = 'none';
+    shower.style.display = 'block';
+}
+
+function setPollPercentages() {
+    if (document.getElementsByClassName('poll-shower').length == 0) { return 0; }
+    let els = document.getElementsByClassName('choice-show');
+    var totalVotes = 0;
+    var votes = [];
+    for (var i=0; i < els.length; i++) {
+        let choiceVotes = Number(els[i].getElementsByClassName('vote-count')[0].textContent);
+        totalVotes = totalVotes + choiceVotes;
+        votes.push(choiceVotes);
+    }
+
+    for (var i=0; i < els.length; i++) {
+        let progressBar = els[i].getElementsByClassName('progress-bar')[0];
+        let percentage = (votes[i] / totalVotes) * 100;
+        let percentageString = Math.round(percentage) + '%';
+        if (percentage >= 15) { progressBar.textContent = percentageString; }
+        progressBar.title = percentageString;
+        progressBar.style = 'width: ' + percentageString + ';'
+    }
+}
+setPollPercentages();
+
+if (document.getElementsByClassName('poll-chooser').length == 1) {
+   openChooser();
 }

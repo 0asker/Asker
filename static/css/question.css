@@ -94,8 +94,56 @@
   padding-right: 0px;
 }
 
-.comments {
+.choice-show {
+    margin-bottom: 5px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+label span, .clickable {
+    margin-left: 5px;
+}
+
+.float-right {
+    float: right;
+}
+
+.progress {
+    border: 1px solid #ccc;
+}
+
+.chooser label {
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: -6px;
+}
+
+.choice.list-group-item {
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: white;
+}
+
+.choice.list-group-item:first-child {
+  border-top: none;
+}
+
+.choice.list-group-item:hover {
+  background-color: rgba(0, 0, 0, .0);
+}
+
+.comments, .poll-shower, .poll-chooser {
   background-color: rgba(0, 0, 0, .03);
+}
+
+.comments {
   margin-top: 14px !important;
   padding: 10px;
   display: none;
