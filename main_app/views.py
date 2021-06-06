@@ -11,7 +11,8 @@ from djpjax import pjax
 from django.template.response import TemplateResponse
 from django.core.cache import cache
 
-from main_app.models import UserProfile, Question, Response, Notification, Comment, Report
+import django_project.general_rules as general_rules
+from main_app.models import UserProfile, Question, Response, Notification, Comment, Report, Poll, PollChoice, PollVote
 
 from main_app.forms import UploadFileForm
 
@@ -264,6 +265,11 @@ def question(request, question_id):
 	shuffle(qs_list)
 
 	context['recommended_questions'] = qs_list[:20]
+
+	if q.has_poll():
+		context['poll'] = Poll.objects.filter(question=q)[0]
+		context['poll_choices'] = PollChoice.objects.filter(poll=context['poll'])
+		context['poll_votes'] = PollVote.objects.filter(poll=context['poll'])
 
 	return render(request, 'question.html', context)
 
@@ -1030,3 +1036,53 @@ def mark_notifications_as_viewed(request):
     notification.read = True
     notification.save()
   return HttpResponse('OK')
+
+
+
+def vote_on_poll(request):
+	if request.method != 'POST':
+		return HttpResponse('Ok.')
+
+	poll_id = request.POST.get('poll')
+	user_choices = request.POST.getlist('choices[]')
+	p = Poll.objects.get(id=poll_id)
+	has_voted = PollVote.objects.filter(poll=p, voter=request.user).exists()
+
+	if has_voted:
+		return HttpResponse('Proibido.')
+	if not p.multichoice:
+		if len(user_choices) > 1:
+			return HttpResponse('Proibido.')
+	if len(user_choices) > general_rules.MAXIMUM_POLL_CHOICES:
+		return HttpResponse('Proibido.')
+	if not p.may_vote():
+		return HttpResponse('Proibido.')
+
+	for choice in user_choices:
+		c_query = PollChoice.objects.filter(id=choice, poll=p) # pollchoice.poll == req.poll (poll=p) p/ evitar manipulação de POST
+		if c_query.exists():
+			c = c_query[0]
+			PollVote.objects.create(poll=p, choice=c, voter=request.user)
+			c.votes += 1
+			c.save()
+
+	return HttpResponse('Ok.')
+
+def undo_vote_on_poll(request):
+	if request.method != 'POST':
+		return HttpResponse('Ok.')
+	poll_id = request.POST.get('poll')
+	p = Poll.objects.get(id=poll_id)
+	votes = PollVote.objects.filter(poll=p, voter=request.user)
+
+	if not p.may_vote():
+		return HttpResponse('Proibido.')
+
+	for vote in votes:
+		c = vote.choice
+		c.votes -= 1
+		c.save()
+		vote.delete()
+
+	return HttpResponse('Ok.')
+

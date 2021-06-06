@@ -15,7 +15,7 @@
 		<script src="/static/js/cookieman.js?v=1"></script>
 		<script>
 			var cssfn = 'question.css';
-			var cssversion = '?v=12';
+			var cssversion = '?v=12.2';
 			if (getDarkCookie() == 'true') { cssfn = 'question-d.css';}
 			var link = document.createElement('link');
 			link.rel = 'stylesheet';
@@ -98,6 +98,71 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 						<img width="70%" src="{{ question.image.url }}">
 					</center>
 					{% endif %}
+
+					{% if question.has_poll %}
+						{% voted user poll as VOTED %}
+						{% if not VOTED and poll.may_vote and user.is_authenticated %}
+							<div class="card poll poll-chooser">
+								<ul class="list-group list-group-flush">
+								{% for choice in poll_choices %}
+									<li class="choice list-group-item">
+										<div class="chooser">
+											<label>
+												{% if poll.multichoice %}
+													<input class="poll-option" type="checkbox" name="poll-option" value="{{ choice.id }}">
+												{% else %}
+													<input class="poll-option" type="radio" name="poll-option" value="{{ choice.id }}">
+												{% endif %}
+												<span>{{ choice.text }}</span>
+											</label>
+										</div>
+									</li>
+								{% endfor %}
+								</ul>
+								<div class="card-footer">
+									<button class="btn btn-primary" onclick="voteOnPoll();" >Votar</button>
+									<span class="clickable" onclick="openShower();">Ver resultados</span>
+								</div>
+							</div>
+						{% endif %}
+
+						<div class="card poll-shower"><div class="card-body">
+							<input type="hidden" name="qpoll" value="{{ poll.id }}">
+							{% for choice in poll_choices %}
+								<div class="choice-show">
+									<span>{{ choice.text }}</span>
+
+									{% if user|has_chosen:choice %}
+									<span class="float-right">
+										<span class="vote-count">{{ choice.votes }}</span> votos
+										<i class="fa fa-check-circle-o" aria-hidden="true"></i> </span>
+									{% else %}
+									<span class="float-right"><span class="vote-count">{{ choice.votes }}</span> votos</span>
+									{% endif %}
+
+									<div class="progress progress-striped active">
+										<div class="progress-bar progress-bar-primary" style="width: 0%;"></div>
+									</div>
+								</div>
+							{% endfor %}
+
+						</div>
+							<div class="card-footer">
+							{% if poll.may_vote %}
+								{% if not VOTED and user.is_authenticated %}
+									<span class="clickable" onclick="openChooser();">Votar</span>
+								{% elif user.is_authenticated %}
+									<span class="clickable" onclick="undoVote();">Retirar voto</span>
+								{% else %}
+									<span>Faça login ou crie uma conta para responder à enquete.</span>
+								{% endif %}
+							{% else %}
+								<span>Votação encerrada.</span>
+							{% endif %}
+							</div>
+						</div>
+					{% endif %}
+
 					{% if question.creator.user.username == user.username %}
 					{% else %}
 					<i class="far fa-flag" id="question-popover" data-toggle="popover" data-content="<p>Para denunciar esta pergunta, use o botão abaixo. Use apenas quando necessário.</p><button class='btn btn-outline-danger' onclick='report_question({{ question.id }}, this)'>Denunciar</button>"></i>
@@ -228,7 +293,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 			</div>
 			{% endfor %}
 		</div>
-<script src="/static/js/question.js?v=9"></script>
+<script src="/static/js/question.js?v=9.2"></script>
 <script>
 var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
 var commentformbgcolor='bg-white'; var commentbgcolor='bg-light';
