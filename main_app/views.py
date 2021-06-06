@@ -1085,4 +1085,3 @@ def undo_vote_on_poll(request):
 		vote.delete()
 
 	return HttpResponse('Ok.')
-
