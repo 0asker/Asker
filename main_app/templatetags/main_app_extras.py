@@ -1,6 +1,6 @@
 from django_project import general_rules
 from django import template
-from main_app.models import User, UserProfile, Question, Response, Comment
+from main_app.models import User, UserProfile, Question, Response, Comment, Poll, PollChoice, PollVote
 import zlib
 
 register = template.Library()
@@ -35,6 +35,13 @@ def answer(username, qid):
 	if len(text) > 77:
 		text = text[0:77] + '...'
 	return text
+
+@register.simple_tag
+def voted(voter, poll):
+    try:
+        return PollVote.objects.filter(poll=poll, voter=voter).exists()
+    except:
+        return False
 
 
 @register.filter(name='total_likes')
@@ -103,6 +110,15 @@ def blocked(username, username2):
 	if u_p.blocked_users.filter(username=username2).exists():
 		return 'Bloqueado'
 	return 'Bloquear'
+
+
+@register.filter(name='has_chosen')
+def has_chosen(user, poll_choice):
+    try:
+        return PollVote.objects.filter(choice=poll_choice, voter=user).exists()
+    except TypeError:
+        # Exceção do AnonymousUser
+        return False
 
 
 '''
