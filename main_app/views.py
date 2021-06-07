@@ -479,6 +479,7 @@ def ask(request):
 		pass
 
 	if request.method == 'POST':
+
 		if request.POST.get('question') == '' or request.POST.get('question') == '.':
 			return render(request, 'ask.html', {'error': '<p>Pergunta inválida.</p>'})
 
@@ -503,6 +504,20 @@ def ask(request):
 				q.image = 'questions/' + file_name
 
 			q.save()
+
+		ccount = request.POST.get('choices-count')
+		if ccount.isdigit():
+			is_multichoice = request.POST.get('is-multichoice') is not None
+			ccount = int(ccount)
+			if ccount <= general_rules.MAXIMUM_POLL_CHOICES and ccount > 1: # Proteção de POST manual
+				qpoll = Poll.objects.create(question=q, is_anonymous=True, multichoice=is_multichoice)
+				for i in range(1, ccount + 1):
+					choice = request.POST.get('choice-' + str(i))
+					if len(choice) <= 60 and len(choice) >= 1: # Proteção de POST manual
+						PollChoice.objects.create(poll=qpoll, text=choice)
+					else:
+						PollChoice.objects.create(poll=qpoll, text="...")
+
 
 		u = UserProfile.objects.get(user=request.user)
 		u.total_points += 1
