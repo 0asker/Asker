@@ -111,11 +111,59 @@ textarea {
   color: #f8f9fa !important;
 }
 
-.comments {
+.comments, .poll-shower, .poll-chooser {
   background-color: #394046 !important;
+}
+
+.comments {
   margin-top: 14px !important;
   padding: 10px;
   display: none;
+}
+
+.choice-show {
+    margin-bottom: 5px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+label span, .clickable {
+    margin-left: 5px;
+}
+
+.float-right {
+    float: right;
+}
+
+.chooser label {
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: -6px;
+}
+
+.choice.list-group-item {
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: rgba(0, 0, 0, .0);
+}
+
+.choice.list-group-item:first-child {
+  border-top: none;
+}
+
+.choice.list-group-item:hover {
+  background-color: rgba(0, 0, 0, .0);
+}
+
+.progress {
+    background-color: #454d54 !important;
 }
 
 .c {
