@@ -11,7 +11,7 @@
 <script src="/static/js/cookieman.js?v=1"></script>
 <script>
 	if (getDarkCookie() == 'true') {
-		var cssversion = '?v=0.9';
+		var cssversion = '?v=2.0';
 		var cssfn = 'ask-d.css';
 		var link = document.createElement('link');
 		link.rel = 'stylesheet';
@@ -30,6 +30,21 @@
 main {
 	width: 50%;
 	margin: 5px auto;
+}
+.smallbtn {
+  color: black;
+  cursor: pointer;
+}
+.smallbtn:hover {
+  color: black;
+  text-decoration: underline;
+}
+#button-container {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+#poll-box {
+  margin-bottom: 10px;
 }
 @media (min-width: 320px) and (max-width: 480px) {
 	main {
@@ -50,7 +65,32 @@ main {
 					<textarea maxlength="5000" class="form-control" placeholder="Descrição (opcional)" name="description"></textarea>
 					<label for="image">Imagem</label>
 					<input type="file" class="form-control-file" id="image" name="file" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
-					<input class="btn btn-primary" type="submit" value="Fazer pergunta" onclick="this.style.display = 'none'">
+
+					<div id="button-container"><a href="#" class="smallbtn" onclick="togglePoll();">Incluir enquete</a></div>
+
+					<div class="card" id="poll-box" style="display: none;"><div class="card-body">
+						<input id="choices-counter" type="hidden" name="choices-count" value="0">
+						<input type="checkbox" name="is-multichoice" id="is-multichoice"> <label for="is-multichoice"> Permitir múltiplas escolhas </label>
+						<div id="poll-choices">
+							<div class="poll-choice" id="choice-1">
+								<span>Opção 1:</span>
+								<br>
+								<input class="form-control poll-choice-text" type="text" name="choice-1" autocomplete="off" maxlength="60">
+							</div>
+
+							<div class="poll-choice" id="choice-2">
+								<span>Opção 2:</span>
+								<br>
+								<input class="form-control poll-choice-text" type="text" name="choice-2" autocomplete="off" maxlength="60">
+							</div>
+						</div>
+
+						<a href="#" class="smallbtn" style="float:left;" onclick="addPollChoice();"> Mais </a>
+						<a href="#" class="smallbtn" style="float:right;" onclick="removePollChoice();"> Remover </a>
+
+					</div></div>
+
+					<input class="btn btn-primary" type="submit" value="Fazer pergunta">
 				</div>
 			</form>
 		</div>
@@ -63,6 +103,50 @@ main {
 <div class="alert alert-info"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div>
 {% endif %}
 	</main>
+<script>
+	var pollChoices = 2;
+
+	function addPollChoice() {
+		if (pollChoices == 12) { return 0; }
+		pollChoices += 1;
+		var choicesDiv = document.getElementById('poll-choices');
+
+		var newChoiceDiv = document.createElement('div');
+		newChoiceDiv.class = 'poll-choice';
+		newChoiceDiv.id = 'choice-' + pollChoices;
+		newChoiceDiv.innerHTML += '<span>Opção '+ pollChoices +':</span><br><input class="form-control poll-choice-text" type="text" name="choice-'+ pollChoices +'" autocomplete="off" maxlength="60" required>';
+		choicesDiv.appendChild(newChoiceDiv);
+
+		document.getElementById('choices-counter').value = pollChoices;
+	}
+
+	function removePollChoice() {
+		if (pollChoices == 2) { return 0; }
+		let choiceDiv = document.getElementById('choice-' + pollChoices);
+		choiceDiv.remove();
+		pollChoices -= 1;
+		document.getElementById('choices-counter').value = pollChoices;
+	}
+
+	function togglePoll() {
+		let counter = document.getElementById('choices-counter');
+		let pollBox = document.getElementById('poll-box');
+		let pollChoicesTexts = document.getElementsByClassName('poll-choice-text');
+		if (counter.value == 0) {
+			pollBox.style = 'display: flex;';
+			counter.value = pollChoices;
+			for (var i = 0; i < pollChoicesTexts.length; i++) {
+				pollChoicesTexts[i].required = true;
+			}
+		} else {
+			pollBox.style = 'display: none;';
+			counter.value = 0;
+			for (var i = 0; i < pollChoicesTexts.length; i++) {
+				pollChoicesTexts[i].required = false;
+			}
+		}
+	}
+</script>
 <script src="/static/js/general_functions.js?version=2"></script>
 </body>
 </html>

@@ -7,3 +7,16 @@ body {
   color: #f8f9fa !important;
   border: 1px solid rgba(0,0,0,0) !important;
 }
+.smallbtn, .smallbtn:hover {
+    color: #f8f9fa !important;
+}
+
+#poll-box {
+  background-color: #343a40 !important;
+  color: #f8f9fa !important;
+}
+
+.poll-choice-text {
+    background-color: #454d54 !important;
+  color: #f8f9fa !important;
+}
