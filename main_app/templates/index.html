@@ -204,29 +204,6 @@
 	{% include "includes/navbar.html" %}
 	{{ account_verification_alert|safe }}
   
-  {% if user.is_authenticated %}
-  {% else %}
-  <!-- Anúncio para usuários não logados -->
-  <center>
-    <a href="//thaudray.com/4/4172017">
-      <style>
-        #ad {
-          width: 25%;
-        }
-        
-        @media (min-width: 320px) and (max-width: 480px) {
-          #ad {
-            width: 50%;
-          }
-        }
-      </style>
-      
-      <span>Precisa de um antivírus? Clique aqui</span><br>
-      <img id="ad" src="https://blog.elgscreen.com/wp-content/uploads/2018/12/antivirus-pago-vale-a-pena-750x410.jpg">
-    </a>
-  </center>
-  {% endif %}
-  
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
 				<span class="nav-link main-tab bg-main-tab" id="popular">Popular</span>
