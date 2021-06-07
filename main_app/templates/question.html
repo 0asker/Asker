@@ -173,8 +173,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 					{% endif %}
 				</div>
 			</div>
-{% if user.is_anonymous %}
-<!-- Ad -->
+
 <style>
 #ad {
      width: 25%;
@@ -191,14 +190,26 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
     }
 }
 </style>
-<a href="//thaudray.com/4/4172017">
+<a href="//thaudray.com/4/4172017" id="ad_href" style="display: none;">
     <div class="ad1">
         <small>&nbsp;precisa de um antivírus? clique aqui!</small>
         <img id="ad" src="https://blog.elgscreen.com/wp-content/uploads/2018/12/antivirus-pago-vale-a-pena-750x410.jpg">
     </div>
 </a>
-<!-- !Ad -->
-{% endif %}
+<script>
+    /* Este script faz com que o anúncio só seja mostrado a cada x tempo. */
+    last_ad_impression = localStorage.getItem('last_ad_impression');
+    
+    if (last_ad_impression == null) {
+        localStorage.setItem('last_ad_impression', Date.now());
+        document.getElementById('ad_href').style.display = 'block';
+    } else {
+        if (((Date.now() - last_ad_impression) / 1000) > 10) {
+            document.getElementById('ad_href').style.display = 'block';
+            localStorage.setItem('last_ad_impression', Date.now());
+        }
+    }
+</script>
 
 			<section class="card bg-main" id="responses">
   				<div class="card-header">
