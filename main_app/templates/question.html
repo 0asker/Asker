@@ -204,7 +204,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
         localStorage.setItem('last_ad_impression', Date.now());
         document.getElementById('ad_href').style.display = 'block';
     } else {
-        if (((Date.now() - last_ad_impression) / 1000) > 10) {
+        if (((Date.now() - last_ad_impression) / 1000) > 43200) {
             document.getElementById('ad_href').style.display = 'block';
             localStorage.setItem('last_ad_impression', Date.now());
         }
