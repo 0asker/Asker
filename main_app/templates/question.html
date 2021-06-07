@@ -130,7 +130,6 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 							<input type="hidden" name="qpoll" value="{{ poll.id }}">
 							{% for choice in poll_choices %}
 								<div class="choice-show">
-									<span>{{ choice.text }}</span>
 
 									{% if user|has_chosen:choice %}
 									<span class="float-right">
@@ -139,6 +138,8 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 									{% else %}
 									<span class="float-right"><span class="vote-count">{{ choice.votes }}</span> votos</span>
 									{% endif %}
+
+									<span>{{ choice.text }}</span>
 
 									<div class="progress progress-striped active">
 										<div class="progress-bar progress-bar-primary" style="width: 0%;"></div>
