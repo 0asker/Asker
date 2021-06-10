@@ -513,7 +513,7 @@ def ask(request):
 				qpoll = Poll.objects.create(question=q, is_anonymous=True, multichoice=is_multichoice)
 				for i in range(1, ccount + 1):
 					choice = request.POST.get('choice-' + str(i))
-					if len(choice) <= 60 and len(choice) >= 1: # Proteção de POST manual
+					if len(choice) <= 60 and len(choice) >= 1 and choice.replace(' ', '') != '':
 						PollChoice.objects.create(poll=qpoll, text=choice)
 					else:
 						PollChoice.objects.create(poll=qpoll, text="...")
