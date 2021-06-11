@@ -17,7 +17,7 @@
 <script src="/static/js/cookieman.js?v=1"></script>
 <script>
 	var cssfn = 'index.css';
-	var cssversion = '?v=11';
+	var cssversion = '?v=12';
 	if (getDarkCookie() == 'true') { cssfn = 'index-d.css'; }
 	var link = document.createElement('link');
 	link.rel = 'stylesheet';
@@ -53,6 +53,12 @@
     @media (min-width: 320px) and (max-width: 480px) {
          #ad {
              width: 25%;
+        }
+    }
+    
+    @media (max-width:281px) {
+        #ad_href {
+            display: none;
         }
     }
     </style>

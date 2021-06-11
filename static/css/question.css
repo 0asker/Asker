@@ -252,3 +252,16 @@ main {
 #upload-photo {
   display: none;
 }
+
+@media (max-width:281px) {
+  main {
+    width: 98%;
+  }
+  .recommended {
+    width: 100%;
+  }
+  .r-question {
+    width: 95%;
+    margin: auto;
+  }
+}

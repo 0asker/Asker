@@ -70,8 +70,8 @@
 	margin-bottom: -1px;
 }
 
-/* Para smartphones: */
-@media (min-width: 320px) and (max-width: 480px) {
+/* smartphones, iPhone, portrait 480x320 phones */
+@media (min-width:320px)  {
     .navbar-brand {
         margin-right: 0px;
     }
@@ -89,4 +89,40 @@
 	#tabs {
 		width: 96%;
 	}
+}
+
+@media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
+    #p_questions {
+        width: 50%;
+        margin: auto;
+    }
+
+    #n_questions {
+        width: 50%;
+        margin: auto;
+    }
+
+    #tabs {
+        width: 48%;
+        margin: 1% auto;
+        margin-bottom: -1px;
+    }
+}
+
+@media (max-width:281px) {
+    #p_questions {
+        width: 100%;
+        margin: auto;
+    }
+
+    #n_questions {
+        width: 100%;
+        margin: auto;
+    }
+
+    #tabs {
+        width: 90%;
+        margin: 1% auto;
+        margin-bottom: -1px;
+    }
 }
