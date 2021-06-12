@@ -1100,3 +1100,7 @@ def undo_vote_on_poll(request):
 		vote.delete()
 
 	return HttpResponse('Ok.')
+
+
+def sw_js(request):
+    return render(request, 'base/sw.js')
