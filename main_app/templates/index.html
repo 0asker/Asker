@@ -39,36 +39,6 @@
 	<body>
 	{% include "includes/navbar.html" %}
 	{{ account_verification_alert|safe }}
-{% if user.is_anonymous %}
-    <style>
-    #ad {
-         width: 10%;
-    }
-
-    .ad1 {
-         border-style: solid;
-         border-width: 1px;
-    }
-
-    @media (min-width: 320px) and (max-width: 480px) {
-         #ad {
-             width: 25%;
-        }
-    }
-    
-    @media (max-width:281px) {
-        #ad_href {
-            display: none;
-        }
-    }
-    </style>
-    <a href="//thaudray.com/4/4172017" id="ad_href">
-        <div class="ad1">
-            <small>&nbsp;precisa de um antivírus?&nbsp;</small>
-            <img id="ad" src="https://blog.elgscreen.com/wp-content/uploads/2018/12/antivirus-pago-vale-a-pena-750x410.jpg">
-        </div>
-    </a>
-{% endif %}
 
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
