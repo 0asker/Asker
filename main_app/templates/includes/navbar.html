@@ -35,10 +35,10 @@
             </li>
             {% else %}
             <li class="nav-item">
-                <a class="nav-link" href="/signin">Entrar</a>
+                <a class="nav-link" href="/signin?redirect={{ request.get_full_path }}">Entrar</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/signup">Criar uma conta</a>
+                <a class="nav-link" href="/signup?redirect={{ request.get_full_path }}">Criar uma conta</a>
             </li>
             {% endif %}
         </ul>
