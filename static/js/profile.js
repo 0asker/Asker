@@ -100,3 +100,12 @@ function show_more_responses(button, uid) {
 		}
 	})
 }
+
+/*
+ * Converte URLs da biografia do usuário para tags âncora <a></a> HTML.
+ * Para funcionar, é preciso dos scripts:
+ * /static/js/linkify.min.js
+ * /static/js/linkify-html.min.js
+ */
+bio = document.getElementById("bio");
+bio.innerHTML = linkifyHtml(bio.innerHTML);

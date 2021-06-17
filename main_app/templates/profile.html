@@ -32,6 +32,10 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
+		<!-- Linkify -->
+		<script src="/static/js/linkify.min.js"></script>
+		<script src="/static/js/linkify-html.min.js"></script>
+
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$('.navbar-light .dmenu').hover(function() {
@@ -49,7 +53,7 @@
 			}
 
 			#bio {
-				width: 50%;
+				width: 80%;
 			}
 
             .table {
@@ -119,7 +123,7 @@
 		    <img src="{{user_p.avatar.url}}" alt="{{user_p.user.username}}">
         <b>{{ user_p.user.username }}</b>
 			{% if user_p.user.username == "Erick" %}<p id="bio">{{ user_p.bio|safe }}</p>{% else %}
-			<p id="bio">{{ user_p.bio }}</p>{% endif %}
+			<p id="bio">{{ user_p.bio|linebreaksbr }}</p>{% endif %}
 		</center>
 		<div class="card-group">
 			<div class="card bg-inner">
@@ -269,7 +273,7 @@
 			{% endif %}
 
 		{% endif %}<br>
-		</main><script src="/static/js/profile.js?v=5"></script>
+		</main><script src="/static/js/profile.js?v=6"></script>
 		<script>
 if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
