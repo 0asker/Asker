@@ -206,7 +206,7 @@ function make_comment(form) {
                             <span class="post-pub-date">` + data['posted_time'] + `</span>
                         </div>
                     </a>
-                    <img onclick="delete_comment(` + data['id'] + `); this.parentElement.parentElement.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png">
+                    <i class="fas fa-trash" onclick="delete_comment(` + data['id'] + `); this.parentElement.parentElement.parentElement.remove()" style="float: right; cursor: pointer;"></i>
                 </div>
                 <p>` + data['text'] + `</p>
             </div>
@@ -259,7 +259,7 @@ function show_comments(element, response_id, jaAbriu, usuario_logado) {
                 adminOrNot = '';
                 
                 if (comments[comment]['username'] == usuario_logado) {
-                    adminOrNot = '<img onclick="delete_comment(' + comments[comment]['id'] + '); this.parentElement.parentElement.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png">';
+                    adminOrNot = '<i class="fas fa-trash" onclick="delete_comment(' + comments[comment]['id'] + '); this.parentElement.parentElement.parentElement.remove()" style="float: right; cursor: pointer;"></i>';
                 } else {
                     adminOrNot = '';
                 }
