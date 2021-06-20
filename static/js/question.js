@@ -192,13 +192,6 @@ function make_comment(form) {
         
         form.parentElement.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'none';
         
-        comment = {
-            'profile_picture': data['profile_picture'],
-            'username': data['username'],
-            'posted_time': data['posted_time'],
-            'text': data['text'],
-        };
-        
         var comment_template = `
         <li class="list-group-item c">
             <div class="comm-card">

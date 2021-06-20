@@ -566,7 +566,7 @@ def comments(request):
 	for comment in Comment.objects.filter(response=response):
 		comments.append( {
 			'id': comment.id,
-			'profile_picture': '/user/' + comment.creator.username,
+			'profile_picture': UserProfile.objects.get(user=comment.creator).avatar.url,
 			'username': comment.creator.username,
 			'posted_time': naturaltime(comment.pub_date),
 			'text': comment.text,
@@ -604,7 +604,7 @@ def comment(request):
 
 	comment = {
 		'id': c.id,
-		'profile_picture': '/user/' + c.creator.username,
+		'profile_picture': UserProfile.objects.get(user=c.creator).avatar.url,
 		'username': c.creator.username,
 		'posted_time': naturaltime(c.pub_date),
 		'text': c.text,
