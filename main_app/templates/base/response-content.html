@@ -52,7 +52,7 @@
 			   <script>
 				   var jaAbriu{{ response.id }} = false;
 			   </script>
-			<img width="18px" src="/static/images/comments.png?version=3" class="icon" onclick="show_comments(this.parentElement, {{ response.id }}, jaAbriu{{ response.id }}, `{{ user.username }}`); if(jaAbriu{{ response.id }} == false) {jaAbriu{{ response.id }} = true}">
+			<img width="18px" src="/static/images/comments.png?version=3" class="icon" onclick="try { show_comments(this.parentElement, {{ response.id }}, jaAbriu{{ response.id }}, `{{ user.username }}`); if(jaAbriu{{ response.id }} == false) {jaAbriu{{ response.id }} = true} } catch { show_comments(this.parentElement, {{ response.id }}, 'undefined', `{{ user.username }}`); }">
 			<span class="comment">{{ response.id|total_comments }}</span>
 			<!-- Comentários -->
 			<div class="card comments" id="comments-response-{{ response.id }}">

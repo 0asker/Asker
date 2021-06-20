@@ -223,15 +223,25 @@ function show_comments(element, response_id, jaAbriu, usuario_logado) {
     
     comments = document.getElementById('comments-response-' + response_id);
     
-    if (jaAbriu) {
-        if (comments.style.display == 'block') {
-            comments.style.display = 'none';
-        } else {
-            comments.style.display = 'block';
-        }
-        
-        return false;
-    }
+    if (typeof(jaAbriu) == 'undefined') {
+		if (comments.style.display == 'block') {
+			comments.style.display = 'none';
+		} else {
+			comments.style.display = 'block';
+		}
+		
+		return false;
+	}
+    
+	if (jaAbriu) {
+		if (comments.style.display == 'block') {
+			comments.style.display = 'none';
+		} else {
+			comments.style.display = 'block';
+		}
+		
+		return false;
+	}
     
     element.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'block'; /* ícone de carregamento de comentários */
     
