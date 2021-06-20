@@ -555,29 +555,24 @@ def deleteQuestion(request):
 
 
 def comments(request):
-	response = Response.objects.get(id=request.GET.get('id'))
-	page = int(request.GET.get('page'))
-	p = Paginator(Comment.objects.filter(response=response), 3)
+	from django.contrib.humanize.templatetags.humanize import naturaltime
+	
+	response_id = request.GET.get('response_id')
+	response = Response.objects.get(id=response_id)
+	
+	comments = []
+	
 
-	json = {}
-	json['comments'] = {}
-
-	count = 1
-	for comment in p.page(page):
-		json['comments'][count] = {
+	for comment in Comment.objects.filter(response=response):
+		comments.append( {
+			'id': comment.id,
+			'profile_picture': '/user/' + comment.creator.username,
 			'username': comment.creator.username,
-			'avatar': UserProfile.objects.get(user=comment.creator).avatar.url,
+			'posted_time': naturaltime(comment.pub_date),
 			'text': comment.text,
-			'comment_id': comment.id,
-		}
-		count += 1
-
-	if p.page(page).has_next():
-		json['has_next'] = True
-	else:
-		json['has_next'] = False
-
-	return JsonResponse(json)
+		} )
+	
+	return JsonResponse(comments, safe=False)
 
 
 '''
@@ -605,7 +600,17 @@ def comment(request):
 		n.set_text(r.id, comment_id=c.id)
 		n.save()
 
-	return redirect('/question/' + str(c.response.question.id))
+	from django.contrib.humanize.templatetags.humanize import naturaltime
+
+	comment = {
+		'id': c.id,
+		'profile_picture': '/user/' + c.creator.username,
+		'username': c.creator.username,
+		'posted_time': naturaltime(c.pub_date),
+		'text': c.text,
+	}
+
+	return JsonResponse(comment)
 
 
 def rank(request):

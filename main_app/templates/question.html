@@ -232,15 +232,33 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 
 
 						<div class="heart-comment">
-							<img width="18px" src="/static/images/comments.png?version=3" class="icon" onclick="show_comments(this.parentElement, {{ response.id }}, this.parentElement.getElementsByTagName('img')[0], '{{ csrf_token }}', `{{ user.username }}`, {{ question.id }})">
+                            <script>
+                                var jaAbriu{{ response.id }} = false;
+                            </script>
+							<img width="18px" src="/static/images/comments.png?version=3" class="icon" onclick="show_comments(this.parentElement, {{ response.id }}, jaAbriu{{ response.id }}, `{{ user.username }}`); if(jaAbriu{{ response.id }} == false) {jaAbriu{{ response.id }} = true}">
 							<span class="comment">{{ response.id|total_comments }}</span>
 
-							<!-- Comentários -->
-							<div class="card comments">
-								<ul class="comments-ul list-group list-group-flush" id="1"> <!-- O ID deste elemento é usado para paginação. -->
-
-								</ul>
-							</div>
+                            <!-- Comentários -->
+                            <div class="card comments" id="comments-response-{{ response.id }}">
+                                <ul class="comments-ul list-group list-group-flush">
+                                    
+                                </ul>
+                                
+                                <center>
+                                    <img src="/static/images/loading.gif" width="10%" class="comment-loader" style="display: none">
+                                </center>
+                                
+                                <form class="form-inline comm-form" onsubmit="make_comment(this); return false">
+                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                    <input type="hidden" name="response_id" value="{{ response.id }}">
+                                    <input type="hidden" name="question_id" value="{{ question.id }}">
+                                    <input type="text" maxlength="300" autocomplete="off" class="form-control comment-form" name="text" placeholder="Escreva seu comentário" required>
+                                    <input class="btn btn-primary" type="submit" value="Comentar">
+                                </form>
+                                
+                                
+                            </div>
+                            
 						</div>
 					{% if response.creator.user.username == user.username %}
 						<form id="edit-response-form" class="form-inline" method="post" action="/edit-response" onsubmit="document.getElementById('response-{{ response.id }}').innerHTML = this.response.value.replace('\n', '<br>')">
@@ -294,7 +312,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 			</div>
 			{% endfor %}
 		</div>
-<script src="/static/js/question.js?v=10"></script>
+<script src="/static/js/question.js?v=11"></script>
 <script>
 var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
 var commentformbgcolor='bg-white'; var commentbgcolor='bg-light';

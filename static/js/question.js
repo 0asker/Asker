@@ -29,68 +29,6 @@ function like(likeElement, response_id) {
 }
 
 
-
-function show_comments(commentsDiv, response_id, commentsIcon, csrf_token, user_logged, question_id) {
-
-	commentsSection = commentsDiv.getElementsByClassName("comments")[0]
-	commentsUl = commentsDiv.getElementsByClassName("comments-ul")[0]
-	commentsSection.style.display = "block";
-	
-	if (commentsSection.getElementsByTagName('form')[0] != undefined) {
-		commentsSection.getElementsByTagName('form')[0].remove()
-	}
-	
-	if (commentsSection.getElementsByClassName('load-more')[0] != undefined) {
-		commentsSection.getElementsByClassName('load-more')[0].remove()
-	}
-	
-	$.ajax({
-		url: '/comments',
-		data: {
-			id: response_id,
-			page: commentsUl.id,
-		},
-		complete: function(data) {
-			data = JSON.parse(data.responseText)
-			$.each(data.comments, function(index, value) {
-				if(user_logged != value.username) {
-					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a></div><p>'+value.text+'</p></div></li>'
-				} else {
-					commentsUl.innerHTML += '<li class="list-group-item c"><div class="comm-card"><div class="poster-container"><a class="poster-info" href="/user/'+value.username+'"><div class="poster-profile-pic-container"><img src="'+value.avatar+'" width="40px"></div><div class="poster-text-container"><span>'+value.username+'</span></div></a><img onclick="delete_comment('+value.comment_id+'); this.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png"></div><p>'+value.text+'</p></div></li>'
-				}
-			})
-			
-			if(data.has_next) {
-				commentsUl.id = Number(commentsUl.id) + 1
-				
-				/* Adiciona elemento para clicar e carregar mais comentários */
-				commentsSection.innerHTML += `<p class="btn btn-outline-primary load-more" onclick="show_comments(this.parentElement.parentElement, ${response_id}, this.parentElement.getElementsByTagName('img')[0], '${csrf_token}', '`+user_logged+`', `+question_id+`)">Carregar mais</p>`
-			}
-			
-			/* Adiciona o formulário para comentar */
-			commentsSection.innerHTML += '<form class="form-inline comm-form" method="post" action="/comment"><input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'"><input type="hidden" name="response_id" value="'+response_id+'">  <input type="hidden" name="question_id" value="'+question_id+'">  <input type="text" maxlength="300" autocomplete="off" class="form-control comment-form" name="text" placeholder="Escreva seu comentário"></input><input class="btn btn-primary" type="submit" value="Comentar" onclick="this.style.display=`none`"></form>'
-		}
-	})
-	
-	commentsIcon.onclick = function() {
-		var el = commentsDiv.getElementsByClassName('comments')[0]
-		var styleObj;
-
-		if (typeof window.getComputedStyle != "undefined") {
-			styleObj = window.getComputedStyle(el, null);
-		} else if (el.currentStyle != "undefined") {
-			styleObj = el.currentStyle;
-		}
-
-		if (styleObj) {
-		   if(styleObj.display == 'block') {
-			   el.style.display = 'none'
-		   } else {
-			   el.style.display = 'block'
-		   }
-		}
-	}
-}
 function delete_response(response_button_dom_el, response_id) {
     if (confirm('Opa! Você tem certeza que deseja apagar sua resposta?')) {
 	    $.ajax({
@@ -236,4 +174,127 @@ setPollPercentages();
 
 if (document.getElementsByClassName('poll-chooser').length == 1) {
    openChooser();
+}
+
+
+/*
+ * Faz um comentário.
+ */
+function make_comment(form) {
+    
+    form.parentElement.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'block';
+    
+    formValues = $(form).serialize();
+    
+    form.text.value = '';
+    
+    $.post("/comment", formValues, function(data) {
+        
+        form.parentElement.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'none';
+        
+        comment = {
+            'profile_picture': data['profile_picture'],
+            'username': data['username'],
+            'posted_time': data['posted_time'],
+            'text': data['text'],
+        };
+        
+        var comment_template = `
+        <li class="list-group-item c">
+            <div class="comm-card">
+                <div class="poster-container">
+                    <a class="poster-info" href="` + data['username'] + `">
+                        <div class="poster-profile-pic-container">
+                            <img src="` + data['profile_picture'] + `" width="40px">
+                        </div>
+                        <div class="poster-text-container">
+                            <span>` + data['username'] + `</span>
+                            &nbsp;|&nbsp;
+                            <span class="post-pub-date">` + data['posted_time'] + `</span>
+                        </div>
+                    </a>
+                    <img onclick="delete_comment(` + data['id'] + `); this.parentElement.parentElement.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png">
+                </div>
+                <p>` + data['text'] + `</p>
+            </div>
+        </li>
+        `;
+        
+        var ul = form.parentElement.getElementsByTagName('ul')[0];
+        ul.innerHTML += comment_template;
+    });
+}
+
+
+function show_comments(element, response_id, jaAbriu, usuario_logado) {
+    
+    comments = document.getElementById('comments-response-' + response_id);
+    
+    if (jaAbriu) {
+        if (comments.style.display == 'block') {
+            comments.style.display = 'none';
+        } else {
+            comments.style.display = 'block';
+        }
+        
+        return false;
+    }
+    
+    element.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'block'; /* ícone de carregamento de comentários */
+    
+    if (window.getComputedStyle(comments, null).display == 'none')
+        comments.style.display = 'block';
+    else {
+        comments.style.display = 'none';
+        return false;
+    }
+    
+    $.ajax({
+        type: 'get',
+        url: '/comments',
+        dataType: 'json',
+        data: {
+            response_id: response_id,
+        },
+        complete: function(data) {
+            element.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'none'; /* ícone de carregamento de comentários */
+            
+            comments = JSON.parse(data.responseText);
+            
+            for (comment in comments) {
+                
+                adminOrNot = '';
+                
+                if (comments[comment]['username'] == usuario_logado) {
+                    adminOrNot = '<img onclick="delete_comment(' + comments[comment]['id'] + '); this.parentElement.parentElement.parentElement.remove()" style="float: right; cursor: pointer;" width="20px" src="/static/images/trash.png">';
+                } else {
+                    adminOrNot = '';
+                }
+                
+                var comment_template = `
+                <li class="list-group-item c">
+                    <div class="comm-card">
+                        <div class="poster-container">
+                            <a class="poster-info" href="/user/` + comments[comment]['username'] + `">
+                                <div class="poster-profile-pic-container">
+                                    <img src="` + comments[comment]['profile_picture'] + `" width="40px">
+                                </div>
+                                <div class="poster-text-container">
+                                    <span>` + comments[comment]['username'] + `</span>
+                                    &nbsp;|&nbsp;
+                                    <span class="post-pub-date">` + comments[comment]['posted_time'] + `</span>
+                                </div>
+                            </a>` +
+                            adminOrNot +
+                            `
+                        </div>
+                        <p>` + comments[comment]['text'] + `</p>
+                    </div>
+                </li>
+                `;
+                
+                element.getElementsByTagName('ul')[0].innerHTML += comment_template;
+            }
+        }
+    });
 }
