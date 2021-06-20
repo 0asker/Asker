@@ -196,7 +196,22 @@ def save_answer(request):
 	except:
 		json['has_image'] = False
 
-	return JsonResponse(json) # este json é útil quando a resposta tem imagem.
+	#from django.contrib.humanize.templatetags.humanize import naturaltime
+
+	'''
+	Resposta serializada:
+	response = {
+		'creator_username': response.creator.user.username,
+		'text': response.text,
+		'pub_date': naturaltime(response.pub_date),
+		'total_likes': response.total_likes,
+	}
+	'''
+
+	return render(request, 'base/response-content.html', {
+		'question': question,
+		'response': response,
+	})
 
 
 def index(request):
@@ -1030,7 +1045,7 @@ def change_email(request):
 
 
 def test(request):
-  return render(request, 'test.html')
+  return render(request, 'base/response-content.html', {'question': Question.objects.all().last(), 'response': Response.objects.all().last()})
 
 
 def adstxt(request):

@@ -1,0 +1,88 @@
+{% load main_app_extras %}
+<li class="list-group-item">
+	<div class="card-body">
+		<div class="poster-container">
+		<a class="poster-info" href="/user/{{ response.creator.user.username }}">
+			<div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" width="40px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}"></div>
+			<div class="poster-text-container"><div><span>{{ response.creator.user.username }}</span><br><span title="{{ response.pub_date }}" class="post-pub-date"> {{ response.get_naturaltime }}</span></div></div>
+		</a></div>
+		   {% if question.best_answer == response.id %}
+			   <div class="best-answer-badge"><span class="badge badge-pill badge-primary">🏆 Melhor resposta</span></div>
+		   {% endif %}
+		<p id="response-{{ response.id }}">{{ response.text|cut_description|safe|linebreaksbr }}</p>
+		{% if response.get_embedded_content %}
+			<div class="embedded-content">
+				{{ response.get_embedded_content|safe }}
+			</div>
+			<br>
+		{% endif %}
+
+		{% if response.image %}
+			<hr>
+			<img src="{{ response.image.url }}" class="response-image" alt="Ocorreu um erro ao processar a imagem.">
+			<hr>
+		{% endif %}
+
+		<div class="heart-comment" id="like-counter-{{ response.id }}" onclick="like(this, {{ response.id }})">
+			<img width="18px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="icon">
+			<span>{{ response.total_likes }}</span>
+		</div>
+		&nbsp;&nbsp;
+
+		{% if response.creator.user.username == user.username %}
+		<div class="dropdown btn-group dropup response-control" id="options-dropdown">
+		  <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  Opções
+		  </button>
+		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+			<button class="dropdown-item" onclick="delete_response(this, {{ response.id }})">Apagar</button>
+			<button class="dropdown-item" onclick="document.getElementById('edit-response-form').style.display='block'">Editar</button>
+		  </div>
+		</div>
+		{% elif question.creator.user.username == user.username %}
+			{% if question.may_choose_answer %}
+			<button class="btn btn-primary btn-sm response-control choose-answer-btn" type="button" onclick="chooseAnswer({{ response.id }})">
+			  	Definir melhor resposta
+			</button>
+			{% endif %}
+		{% endif %}
+
+
+		<div class="heart-comment">
+			   <script>
+				   var jaAbriu{{ response.id }} = false;
+			   </script>
+			<img width="18px" src="/static/images/comments.png?version=3" class="icon" onclick="show_comments(this.parentElement, {{ response.id }}, jaAbriu{{ response.id }}, `{{ user.username }}`); if(jaAbriu{{ response.id }} == false) {jaAbriu{{ response.id }} = true}">
+			<span class="comment">{{ response.id|total_comments }}</span>
+			<!-- Comentários -->
+			<div class="card comments" id="comments-response-{{ response.id }}">
+				<ul class="comments-ul list-group list-group-flush">
+						
+				</ul>
+					
+				<center>
+					<img src="/static/images/loading.gif" width="10%" class="comment-loader" style="display: none">
+				</center>
+					
+				<form class="form-inline comm-form" onsubmit="make_comment(this); return false">
+					<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+					<input type="hidden" name="response_id" value="{{ response.id }}">
+					<input type="hidden" name="question_id" value="{{ question.id }}">
+					<input type="text" maxlength="300" autocomplete="off" class="form-control comment-form" name="text" placeholder="Escreva seu comentário" required>
+					<input class="btn btn-primary" type="submit" value="Comentar">
+				</form>
+					
+					
+			</div>
+				
+		</div>
+	{% if response.creator.user.username == user.username %}
+		<form id="edit-response-form" class="form-inline" method="post" action="/edit-response" onsubmit="document.getElementById('response-{{ response.id }}').innerHTML = this.response.value.replace('\n', '<br>')">
+			{% csrf_token %}
+			<input type="hidden" name="response_id" value="{{ response.id }}">
+			<textarea class="form-control edit-response-textarea" name="response">{{ response.text }}</textarea>
+			<input class="btn btn-outline-primary" type="submit" value="Enviar">
+		</form>
+		{% endif %}
+	</div>
+</li>
