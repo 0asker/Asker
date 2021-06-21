@@ -710,7 +710,7 @@ def get_more_responses(request):
 			'question_id': r.question.id,
 			'best_answer': r.id == r.question.best_answer,
 			'creator': r.question.creator.user.username,
-			'naturalday': r.question.get_naturaltime()
+			'naturalday': naturalday(r.question.pub_date())
 		}
 		count += 1
 

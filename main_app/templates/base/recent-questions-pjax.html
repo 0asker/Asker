@@ -1,5 +1,6 @@
 {% spaceless %}
 {% load main_app_extras %}
+{% load humanize %}
 <ul class="list-group list-group-flush infinite-container">
 	{% for question in questions %}
 	<li class="list-group-item bg-main infinite-item">
@@ -18,7 +19,7 @@
         {{ question.description|cut_description|safe|linebreaksbr }}
       </p>
       {% endif %}
-			<small>{% total_answers question.id %} respostas <b>&nbsp;&middot;&nbsp;</b> <span class="text-muted">{{ question.get_naturaltime }}</span></small>
+			<small>{% total_answers question.id %} respostas <b>&nbsp;&middot;&nbsp;</b> <span class="text-muted">{% fix_naturaltime question.pub_date|naturaltime %}</span></small>
 		{% if user.is_authenticated %}
 				{% answered user.username question.id as ANSWERED %}
 				{% if ANSWERED %}

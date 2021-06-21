@@ -1,4 +1,5 @@
 {% load humanize %}
+{% load main_app_extras %}
 <!doctype html>
 <html lang="pt-br">
     <head>
@@ -41,7 +42,7 @@
                 <!--<li class="list-group-item bg-main notif" style="background-color: {% if not notification.read %}#f7f7f7;{% endif %}">-->
                 <li class="list-group-item bg-main notif">
 	                <div class="card-body">
-	                    <p class="ntime">{{ notification.creation_date|naturaltime }}</p>
+	                    <p class="ntime">{% fix_naturaltime notification.creation_date|naturaltime %}</p>
 	                    <p class="ntext">{{ notification.text|safe }}</p>
                     </div>
                 </li>

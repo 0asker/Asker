@@ -1,10 +1,11 @@
 {% load main_app_extras %}
+{% load humanize %}
 <li class="list-group-item">
 	<div class="card-body">
 		<div class="poster-container">
 		<a class="poster-info" href="/user/{{ response.creator.user.username }}">
 			<div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" width="40px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}"></div>
-			<div class="poster-text-container"><div><span>{{ response.creator.user.username }}</span><br><span title="{{ response.pub_date }}" class="post-pub-date"> {{ response.get_naturaltime }}</span></div></div>
+			<div class="poster-text-container"><div><span>{{ response.creator.user.username }}</span><br><span title="{{ response.pub_date }}" class="post-pub-date"> {% fix_naturaltime response.pub_date|naturaltime %}</span></div></div>
 		</a></div>
 		   {% if question.best_answer == response.id %}
 			   <div class="best-answer-badge"><span class="badge badge-pill badge-primary">🏆 Melhor resposta</span></div>

@@ -70,7 +70,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 						<div class="poster-profile-pic-container">
               <img class="poster-profile-pic-popover" width="45px" src="{{ question.creator.avatar.url }}" alt="{{ question.creator.user.username }}">
             </div>
-						<div class="poster-text-container"><div><span>{{ question.creator.user.username }}</span><br><span title="{{ question.pub_date }}" class="post-pub-date"> {{ question.get_naturaltime }}</span></div></div>
+						<div class="poster-text-container"><div><span>{{ question.creator.user.username }}</span><br><span title="{{ question.pub_date }}" class="post-pub-date"> {% fix_naturaltime question.pub_date|naturaltime %}</span></div></div>
 					</a>
 					</div>
 					<h3>{{ question.text }}</h3>
@@ -213,7 +213,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 			<div class="r-question">
 				<a href="/question/{{ question.id }}"><b>{{ question.text }}</b></a>
 				<br>
-				<small class="text-muted">perguntada {{ question.get_naturaltime }} por <a href="/user/{{ question.creator.user.username }}">{{ question.creator.user.username }}</a></small>
+				<small class="text-muted">perguntada {% fix_naturaltime question.pub_date|naturaltime %} por <a href="/user/{{ question.creator.user.username }}">{{ question.creator.user.username }}</a></small>
 				<hr>
 			</div>
 			{% endfor %}
