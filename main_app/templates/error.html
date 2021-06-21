@@ -34,6 +34,12 @@
         .err-msg {
             text-align: center;
         }
+
+        @media (min-width: 320px) and (max-width: 480px) {
+            main {
+                width: 98%;
+            }
+        }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
@@ -49,8 +55,8 @@
         <div class="err-msg card bg-main">
             <div class="card-body">
                 <i class="fas fa-exclamation-triangle fa-4x"></i> <br><br>
-                <h4> {{ error }} </h4>
-                <h5> {{ err_msg }} </h5>
+                <h5> {{ error }} </h5>
+                <p> {{ err_msg }} </p>
                 <a href="{{ redirect }}">Voltar</a>
             </div>
         </div>
