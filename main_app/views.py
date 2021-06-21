@@ -256,16 +256,11 @@ def question(request, question_id):
 		q.total_views += 1
 		q.save()
 	except:
-		# pergunta não encontrada:
-		return HttpResponse('''<html>
-			<head>
-				<meta charset="utf-8">
-				<meta name="viewport" content="width=device-width, initial-scale=1">
-			</head>
-			<body>
-				<p>Essa pergunta não existe, talvez ela tenha sido apagada pelo criador da pergunta. <a href="/">Clique aqui</a> para voltar para a página inicial.</p>
-			</body>
-			</html>''')
+		return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
+		context = {'error': 'Pergunta não encontrada',
+				   'err_msg': 'Talvez ela tenha sido apagada pelo criador da pergunta.',
+				   'redirect': return_to}
+		return render(request, 'error.html', context)
 
 	context = {'question': q,
 			   'responses': Response.objects.filter(question=q).order_by('-pub_date').order_by('-total_likes')}
@@ -453,7 +448,13 @@ Obrigado e bem vindo(a)!
 
 
 def profile(request, username):
-	u = UserProfile.objects.get(user=User.objects.get(username=username))
+	try:
+		u = UserProfile.objects.get(user=User.objects.get(username=username))
+	except:
+		return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
+		context = {'error': 'Usuário não encontrado', 'err_msg': 'Este usuário não existe ou alterou seu nome.',
+				   'redirect': return_to}
+		return render(request, 'error.html', context)
 	if request.user.username != username and request.user.username != 'Erick':
 		u.total_views += 1
 		u.save()
@@ -489,7 +490,11 @@ def ask(request):
 		last_q = Question.objects.filter(creator=UserProfile.objects.get(user=request.user))
 		last_q = last_q[last_q.count()-1] # pega a última questão feita pelo usuário.
 		if (timezone.now() - last_q.pub_date).seconds < 10:
-			return HttpResponse('<p>Você deve esperar {} segundos para perguntar novamente.'.format(20 - (timezone.now() - last_q.pub_date).seconds))
+			return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
+			context = {'error': 'Ação não autorizada',
+					   'err_msg': 'Você deve esperar {} segundos para perguntar novamente.'.format(20 - (timezone.now() - last_q.pub_date).seconds),
+					   'redirect': return_to}
+			return render(request, 'error.html', context)
 	except:
 		pass
 
@@ -809,7 +814,12 @@ def edit_profile(request, username):
 			user = authenticate(username=request.user.username, password=password)
 			if user is None:
 				if not User.objects.filter(username=request.POST.get('username')).exists():
-					return render(request, 'edit-profile.html', {'user_p': UserProfile.objects.get(user=User.objects.get(username=username)), 'password_display': 'block', 'invalid_password': ' is-invalid'})
+					try:
+						return render(request, 'edit-profile.html', {'user_p': UserProfile.objects.get(user=User.objects.get(username=username)), 'password_display': 'block', 'invalid_password': ' is-invalid'})
+					except:
+						return render(request, 'edit-profile.html',
+									  {'user_p': UserProfile.objects.get(user=User.objects.get(username=request.user.username)),
+									   'password_display': 'block', 'invalid_password': ' is-invalid'})
 			user.username = request.POST.get('username').strip()
 			user.save()
 			login(request, user)
