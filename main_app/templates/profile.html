@@ -249,7 +249,7 @@
 								{% endif %}
 								{{ response.text }}
 							</p>
-							<span class="small-text">Perguntada por <a href="/user/{{response.question.creator}}">{{response.question.creator}}</a> {{ response.question.get_naturaltime }}</span>
+							<span class="small-text">Perguntada por <a href="/user/{{response.question.creator}}">{{response.question.creator}}</a> {{ response.question.pub_date|naturalday }}</span>
 						</div>
 					</li>
 					{% endfor %}

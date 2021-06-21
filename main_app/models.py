@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
 def correct_naturaltime(naturaltime_str):
-	# Enquanto a tradução do humanize estiver sem espaços..
+	# TODO: remover quando estiver confiante que não é chamado em nenhum lugar!!
+	# TODO: se encontrar esse método sendo chamado, substituir pelo templatetag fix_naturaltime!
 	corrections = {"atrás": " atrás", "ano": " ano", "mês": " mês", "mes": " mes", "semana": " semana", "dia": " dia", "hora": " hora", "minuto": " minuto"}
 	for substr in corrections:
 		if substr in naturaltime_str:

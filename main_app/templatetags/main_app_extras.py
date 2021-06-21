@@ -121,6 +121,15 @@ def has_chosen(user, poll_choice):
         return False
 
 
+@register.simple_tag
+def fix_naturaltime(naturaltime_str):
+	# Enquanto a tradução do humanize estiver sem espaços - o que provavelmente será pra sempre
+	corrections = ('atrás', 'ano', 'mês', 'mes', 'semana', 'dia', 'hora', 'minuto')
+	for substr in corrections:
+		if substr in naturaltime_str:
+			naturaltime_str = naturaltime_str.replace(substr, ' ' + substr)
+	return naturaltime_str
+
 '''
 Retorna o total de visualizações de uma pergunta.
 '''
