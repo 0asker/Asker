@@ -13,7 +13,7 @@ from django.core.cache import cache
 
 import django_project.general_rules as general_rules
 from main_app.models import UserProfile, Question, Response, Notification, Comment, Report, Poll, PollChoice, PollVote
-
+from main_app.templatetags.main_app_extras import fix_naturaltime
 from main_app.forms import UploadFileForm
 
 from bs4 import BeautifulSoup as bs
@@ -588,7 +588,7 @@ def comments(request):
 			'id': comment.id,
 			'profile_picture': UserProfile.objects.get(user=comment.creator).avatar.url,
 			'username': comment.creator.username,
-			'posted_time': naturaltime(comment.pub_date),
+			'posted_time': fix_naturaltime(naturaltime(comment.pub_date)),
 			'text': comment.text,
 		} )
 	
@@ -626,7 +626,7 @@ def comment(request):
 		'id': c.id,
 		'profile_picture': UserProfile.objects.get(user=c.creator).avatar.url,
 		'username': c.creator.username,
-		'posted_time': naturaltime(c.pub_date),
+		'posted_time': fix_naturaltime(naturaltime(c.pub_date)),
 		'text': c.text,
 	}
 
