@@ -1062,7 +1062,7 @@ def change_email(request):
 
 
 def test(request):
-  return render(request, 'base/response-content.html', {'question': Question.objects.all().last(), 'response': Response.objects.all().last()})
+  return render(request, 'test.html')
 
 
 def adstxt(request):
