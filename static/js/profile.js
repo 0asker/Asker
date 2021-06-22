@@ -50,6 +50,12 @@ function show_more_questions(button, uid) {
 			user_id: uid,
 		},
 		complete: function(data) {
+			
+			if (data.responseText == "False") {
+				button.style.display = "none";
+				button.parentElement.innerHTML += "<p>Este usuário não fez perguntas ainda.</p>";
+			}
+			
 			data = JSON.parse(data.responseText)
 			
 			$.each(data.questions, function(i, val) {
@@ -64,7 +70,7 @@ function show_more_questions(button, uid) {
 			})
 			
 			if(!data.has_next) {
-				button.remove()
+				button.remove();
 			}
 		}
 	})

@@ -661,6 +661,7 @@ def get_more_questions(request):
 		if target.user.id != request.user.id:
 			return 'Proibido.'
 	q = Question.objects.filter(creator=target).order_by('-pub_date')
+	
 	p = Paginator(q, 10)
 
 	json = {
@@ -669,6 +670,12 @@ def get_more_questions(request):
 	json['questions'] = {}
 
 	count = 1
+	
+	try:
+		p.page(page)
+	except:
+		return HttpResponse(False)
+	
 	for q in p.page(page):
 		if target.user.id == request.user.id:
 			best_answer = q.best_answer
