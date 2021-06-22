@@ -53,7 +53,6 @@ function show_more_questions(button, uid) {
 			
 			if (data.responseText == "False") {
 				button.style.display = "none";
-				button.parentElement.innerHTML += "<p>Este usuário não fez perguntas ainda.</p>";
 			}
 			
 			data = JSON.parse(data.responseText)
