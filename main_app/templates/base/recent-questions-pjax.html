@@ -10,11 +10,11 @@
 		<p><b>{{ question.text }}</b></p>
 		</a>
 		
-		  {% if question.description != '' %}
-		  <p>
-			{{ question.description|cut_description|safe|linebreaksbr }}
-		  </p>
-		  {% endif %}
+		{% if question.description != '' %}
+			<p>
+				{{ question.description|cut_description|safe|linebreaksbr }}
+			</p>
+		{% endif %}
 		
 		<span>
 			<i class="fas fa-feather-alt"></i>
