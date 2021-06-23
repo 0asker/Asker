@@ -185,7 +185,7 @@ class Notification(models.Model):
 
 class Report(models.Model):
     type = models.TextField()
-    item = models.IntegerField()
+    item = models.IntegerField(null=True)
     reporter = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     url = models.URLField(null=True)
     text = models.TextField(null=True)

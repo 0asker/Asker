@@ -745,7 +745,10 @@ def delete_comment(request):
 
 
 def report(request):
-	if request.GET.get('type') == 'response':
+	
+	report_type = request.GET.get('type')
+	
+	if report_type == 'response':
 		if Report.objects.filter(item=request.GET.get('id')).exists():
 			return HttpResponse('OK')
 
@@ -759,6 +762,10 @@ def report(request):
 							  reporter=reporter,
 							  url='https://asker.fun/question/' + str(Response.objects.get(id=request.GET.get('id')).question.id),
 							  text='Resposta: ' + str(Response.objects.get(id=request.GET.get('id')).text))
+	elif report_type == 'ad':
+		Report.objects.create(type="ad",
+							  reporter=request.user,
+							  text=request.GET.get('text'))
 	else:
 		if UserProfile.objects.get(user=request.user).total_points < 300:
 			return HttpResponse('OK')
