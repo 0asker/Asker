@@ -9,6 +9,13 @@
 		<a href="/question/{{ question.id }}">
 		<p><b>{{ question.text }}</b></p>
 		</a>
+		
+		  {% if question.description != '' %}
+		  <p>
+			{{ question.description|cut_description|safe|linebreaksbr }}
+		  </p>
+		  {% endif %}
+		
 		<span>
 			<i class="fas fa-feather-alt"></i>
 			<small class="text-muted"> {% total_answers question.id %}</small>
@@ -17,13 +24,6 @@
 			<small class="text-muted"> {% fix_naturaltime question.pub_date|naturaltime %}</small>
 		</span>
 		<hr>
-
-      {% if question.description != '' %}
-      <p>
-        {{ question.description|cut_description|safe|linebreaksbr }}
-      </p>
-      {% endif %}
-			<!-- <small>{% total_answers question.id %} respostas <b>&nbsp;&middot;&nbsp;</b> <span class="text-muted">{% fix_naturaltime question.pub_date|naturaltime %}</span></small> -->
 		{% if user.is_authenticated %}
 				{% answered user.username question.id as ANSWERED %}
 				{% if ANSWERED %}
