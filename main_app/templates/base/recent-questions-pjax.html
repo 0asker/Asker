@@ -6,20 +6,24 @@
 	<li class="list-group-item bg-main infinite-item">
 		<div class="card-body">
 
-      <a href="/question/{{ question.id }}">
-        <p>
-          <b>
-            {{ question.text }}
-          </b>
-        </p>
-      </a>
-      
+		<a href="/question/{{ question.id }}">
+		<p><b>{{ question.text }}</b></p>
+		</a>
+		<span>
+			<i class="fas fa-feather-alt"></i>
+			<small class="text-muted"> {% total_answers question.id %}</small>
+			|
+			<i class="fas fa-clock"></i>
+			<small class="text-muted"> {% fix_naturaltime question.pub_date|naturaltime %}</small>
+		</span>
+		<hr>
+
       {% if question.description != '' %}
       <p>
         {{ question.description|cut_description|safe|linebreaksbr }}
       </p>
       {% endif %}
-			<small>{% total_answers question.id %} respostas <b>&nbsp;&middot;&nbsp;</b> <span class="text-muted">{% fix_naturaltime question.pub_date|naturaltime %}</span></small>
+			<!-- <small>{% total_answers question.id %} respostas <b>&nbsp;&middot;&nbsp;</b> <span class="text-muted">{% fix_naturaltime question.pub_date|naturaltime %}</span></small> -->
 		{% if user.is_authenticated %}
 				{% answered user.username question.id as ANSWERED %}
 				{% if ANSWERED %}
@@ -32,9 +36,9 @@
 						<form id="form-{{ question.id }}" class="response-form" onsubmit="make_answer({{ question.id }}); return false;">
 							{% csrf_token %}
 							<input name="question_id" type="hidden" value="{{ question.id }}">
-							<textarea name="text" maxlength="5000" class="form-control" placeholder="Escreva sua resposta aqui" onclick="return show_form_buttons(this.parentElement)"></textarea>
-							<input class="btn btn-outline-primary form-button" type="submit" value="Enviar">
-							<input class="btn btn-outline-primary form-button" type="submit" value="Cancelar" onclick="return hide_form_buttons(this.parentElement)">
+							<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" onclick="return show_form_buttons(this.parentElement)"></textarea>
+							<button type="submit" class="btn btn-outline-primary btn-sm form-button" style="display: none"><i class="far fa-paper-plane"></i> Enviar</button>
+							<button type="button" class="btn btn-outline-primary btn-sm form-button" onclick="return hide_form_buttons(this.parentElement)" style="display: none"><i class="far fa-window-close"></i> Cancelar</button>
 						</form>
 						<img style="display: none" id="modal-{{ question.id }}" src="/static/images/loading.gif" width="5%;">
 					{% endif %}
