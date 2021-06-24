@@ -1,0 +1,49 @@
+/* General */
+body {
+  background-color: #222;
+  color: #f8f9fa;
+}
+.bg-main {
+  background-color: #343a40 !important;
+  color: #f8f9fa;
+}
+.bg-main-tab.active {
+  background-color: #343a40 !important;
+  color: #f8f9fa !important;
+  border-color: rgba(0,0,0,.125) !important;
+}
+.bg-main-tab {
+  color: #f8f9fa !important;
+  border-color: rgba(0,0,0,.125) !important;
+}
+.bg-main-tab:hover {
+  border-color: rgba(0,0,0,.125) !important;
+  background-color: #394046 !important;
+}
+.form-control {
+  border: 1px solid rgba(0,0,0,.125);
+  background-color: #394046;
+  color: #f8f9fa;
+}
+.form-control:focus {
+  background-color: #394046;
+  color: #f8f9fa;
+}
+.text-muted {
+  color: #f8f9fa !important;
+}
+/* General-end */
+
+/* Ask */
+#poll-box {
+  background-color: #343a40 !important;
+  color: #f8f9fa !important;
+}
+.poll-choice-text {
+  background-color: #454d54 !important;
+  color: #f8f9fa !important;
+}
+.smallbtn, .smallbtn:hover {
+    color: #f8f9fa !important;
+}
+/* Ask-end */
