@@ -59,25 +59,62 @@
 }
 /* Ask-end */
 
+/* Error */
+.err-msg {
+    text-align: center;
+}
+/* Error-end */
+
+/* Profile */
+#bio {
+    width: 80%;
+}
+#center1 img {
+    max-width: 30vw;
+    max-height: 30vh;
+    display: block;
+}
+.blocked-user a {
+    float: left;
+}
+.blocked-user span {
+    float: right;
+    cursor: pointer;
+}
+#responses-section, #blocked-section {
+	display: none;
+}
+/* Profile-end */
+
 /* General */
 .card {
     margin-bottom: 2px;
 }
 #tabs {
-	width: 58%;
+	width: 98%;
     max-width: 920px;
 	padding-left: 4px;
 	padding-right: 4px;
 	margin: 1% auto;
 	margin-bottom: -1px;
+    border-bottom: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
 }
 #tabs li {
 	cursor: pointer;
+    white-space: nowrap;
 }
 .form-control {
   border: 1px solid rgba(0,0,0,.125);
 }
-section, main {
+.vertical-spaced {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: block;
+}
+main {
     width: 60%;
     max-width: 960px;
     margin: auto;
@@ -85,9 +122,13 @@ section, main {
 .left-spaced {
     margin-left: 5px;
 }
+.small-text {
+    color: #888;
+    font-size: 80%;
+}
 
 @media (min-width: 320px) and (max-width: 580px) {
-    section, main, #tabs {
+    main, #tabs {
         width: 98%;
     }
 }

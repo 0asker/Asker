@@ -1,7 +1,7 @@
 /* General */
 body {
   background-color: #222;
-  color: #f8f9fa;
+  color: #f8f9fa !important;
 }
 .bg-main {
   background-color: #343a40 !important;
@@ -20,6 +20,10 @@ body {
   border-color: rgba(0,0,0,.125) !important;
   background-color: #394046 !important;
 }
+.bg-inner {
+  background-color: #394046 !important;
+  color: #f8f9fa;
+}
 .form-control {
   border: 1px solid rgba(0,0,0,.125);
   background-color: #394046;
@@ -31,6 +35,9 @@ body {
 }
 .text-muted {
   color: #f8f9fa !important;
+}
+hr {
+    border-color: #394046;
 }
 /* General-end */
 
