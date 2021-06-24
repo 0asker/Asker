@@ -1,0 +1,94 @@
+/* Navbar */
+/*
+.navbar-round {
+    height: 45px;
+    width: 45px;
+    border-radius: 22.5px;
+    border: solid 1px #ddd;
+    border-color: #ddd !important;
+}
+.navbar-toggler {
+    padding: 11px 12px;
+}
+*/
+@media (min-width: 320px) and (max-width: 570px) {
+    .navbar-brand {
+        margin-right: 0px;
+    }
+}
+@media (min-width: 570px) and (max-width: 760px) {
+    .navbar-nav {
+        font-size: 2vw;
+        text-align: center;
+    }
+}
+/* Navbar-end */
+
+/* Index */
+#reload {
+	width: 35px;
+	height: 35px;
+}
+.spinner {
+  animation: spin-animation 1s infinite;
+  display: inline-block;
+}
+.answer-btn {
+	display: none;
+}
+@keyframes spin-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+/* Index-end */
+
+/* Ask */
+.ask-form * {
+	margin-top: 5px;
+}
+#button-container {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+#poll-box {
+  margin-bottom: 10px;
+}
+/* Ask-end */
+
+/* General */
+.card {
+    margin-bottom: 2px;
+}
+#tabs {
+	width: 58%;
+    max-width: 920px;
+	padding-left: 4px;
+	padding-right: 4px;
+	margin: 1% auto;
+	margin-bottom: -1px;
+}
+#tabs li {
+	cursor: pointer;
+}
+.form-control {
+  border: 1px solid rgba(0,0,0,.125);
+}
+section, main {
+    width: 60%;
+    max-width: 960px;
+    margin: auto;
+}
+.left-spaced {
+    margin-left: 5px;
+}
+
+@media (min-width: 320px) and (max-width: 580px) {
+    section, main, #tabs {
+        width: 98%;
+    }
+}
+/* General-end */
