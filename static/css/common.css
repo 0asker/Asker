@@ -86,7 +86,125 @@
 }
 /* Profile-end */
 
+/* Question */
+.response-image {
+  max-width: 100%;
+  max-height: 400px;
+  display: block;
+  margin: auto;
+}
+.vid-container {
+  height: 20vw;
+  max-height: 350px;
+}
+.yt-vid {
+  position: relative;
+  width: 60%;
+  height: 100%;
+  display: block;
+}
+.poster-info {
+  font-size: 80%;
+  display: flex;
+  text-decoration: none;
+}
+.poster-info:hover {
+  text-decoration: none;
+}
+.poster-container, .best-answer-badge {
+  margin-bottom: 15px;
+}
+.best-answer-badge span {
+  padding: 6px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.poster-profile-pic-container,
+.poster-text-container {
+  display: flex;
+  align-items: center;
+  padding-right: 6px;
+}
+.choice.list-group-item:first-child {
+  border-top: none;
+}
+.chooser label {
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: -6px;
+}
+.progress {
+    border: 1px solid #ccc;
+}
+.choice-show {
+    margin-bottom: 5px;
+}
+.choice.list-group-item:hover, .c {
+  background-color: rgba(0, 0, 0, 0);
+}
+.comments {
+  margin-top: 14px !important;
+  padding: 10px;
+  display: none;
+}
+.comm-card {
+  padding-top: 1.25rem;
+}
+.comm-form {
+  display: flex;
+}
+.edit-response-textarea {
+    margin-top: 12px;
+}
+#edit-response-form, #upload-photo {
+  display: none;
+}
+.heart-comment {
+  display: inline;
+}
+.hc-icon {
+  cursor: pointer;
+}
+.response-control {
+    float: right;
+}
+.recommended h3 {
+  text-align: center;
+}
+.comment-form {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+@media (min-width: 320px) and (max-width: 580px) {
+  .r-question {
+    width: 95%;
+    margin: auto;
+  }
+  .comm-form .btn {
+    margin-top: 4px;
+    flex-grow: 1;
+  }
+  .comment-form {
+    margin-right: 0px;
+  }
+  .vid-container {
+    height: 50vw;
+    max-height: 300px;
+  }
+  .yt-vid {
+    position: relative;
+    width: 90%;
+    height: 100%;
+    display: block;
+  }
+}
+/* Question-end */
+
 /* General */
+.no-horiz-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+}
 .card {
     margin-bottom: 2px;
 }
@@ -126,10 +244,25 @@ main {
     color: #888;
     font-size: 80%;
 }
+.list-group-item {
+  /*Corrige BS*/
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, .125);
+}
+
+.list-group-item:focus,
+.list-group-item:hover {
+  /*Corrige BS*/
+  z-index: 0;
+  text-decoration: none;
+}
 
 @media (min-width: 320px) and (max-width: 580px) {
     main, #tabs {
         width: 98%;
     }
+}
+.float-right {
+    float: right;
 }
 /* General-end */

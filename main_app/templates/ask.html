@@ -35,7 +35,7 @@
 					<label for="image">Imagem</label>
 					<input type="file" class="form-control-file" id="image" name="file" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
 
-					<a href="#" class="vertical-spaced" onclick="togglePoll();" style="color: #f8f9f0;">Incluir enquete</a>
+					<a href="#" class="vertical-spaced clickable" onclick="togglePoll();">Incluir enquete</a>
 
 					<div class="card" id="poll-box" style="display: none;"><div class="card-body">
 						<input id="choices-counter" type="hidden" name="choices-count" value="0">
@@ -54,8 +54,8 @@
 							</div>
 						</div>
 
-						<a href="#" class="smallbtn" style="float:left;" onclick="addPollChoice();"> Mais </a>
-						<a href="#" class="smallbtn" style="float:right;" onclick="removePollChoice();"> Remover </a>
+						<a href="#" class="clickable" style="float:left;" onclick="addPollChoice();"> Mais </a>
+						<a href="#" class="clickable" style="float:right;" onclick="removePollChoice();"> Remover </a>
 
 					</div></div>
 
