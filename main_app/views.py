@@ -240,7 +240,7 @@ def index(request):
 		user_p.ip = get_client_ip(request)
 		user_p.save()
 		context['user_p'] = user_p
-		if not UserProfile.objects.get(user=request.user).active:
+		if not user_p.active:
 			context['account_verification_alert'] = '<div class="alert alert-info"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div>'.format(request.user.email)
 
 	if request.GET.get('new_user', 'false') == 'true':
