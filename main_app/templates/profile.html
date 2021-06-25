@@ -14,11 +14,12 @@
 		</style>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
 		<link href="https://fonts.googleapis.com/css?family=Raleway:400,500,500i,700,800i" rel="stylesheet">
+		<link rel="stylesheet" href="/static/css/common.css?v=2">
 		<script src="/static/js/cookieman.js?v=1"></script>
 		<script>
-			var cssfn = 'profile.css';
-			var cssversion = '?v=6';
-			if (getDarkCookie() == 'true') { cssfn = 'profile-d.css';}
+			var cssfn = 'light.css';
+			var cssversion = '?v=2';
+			if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
 			var link = document.createElement('link');
 			link.rel = 'stylesheet';
 			link.type = 'text/css';
@@ -45,76 +46,6 @@
 				});
 			});
 		</script>
-		<style>
-			#center1 img {
-				max-width: 30vw;
-				max-height: 30vh;
-				display: block;
-			}
-
-			#bio {
-				width: 80%;
-			}
-
-            .table {
-                width: 50%;
-                margin: 0 auto;
-            }
-
-            #tabs {
-				width: 48%;
-				margin: auto;
-			}
-
-			#edit-profile, section, #uinfo {
-				width: 50%;
-				margin: auto;
-			}
-
-			#edit-profile {
-				margin-top: 10px;
-				margin-bottom: 10px;
-			}
-			.small-text {
-				color: #888;
-				font-size: 80%;
-			}
-			.blocked-user a {
-				float: left;
-			}
-			.blocked-user span {
-				float: right;
-				cursor: pointer;
-			}
-
-			@media (min-width: 320px) and (max-width: 480px) {
-				#edit-profile {
-					width: 95%;
-				}
-
-				#tabs {
-					width: 94%;
-				}
-				.table {
-				    width: 98%;
-				}
-
-				#bio {
-					width: 90%;
-				}
-
-				section, #uinfo {
-					width: 95%;
-				}
-				#qs, #rs {
-					width: 100%;
-				}
-				.question.card-body, .response.card-body {
-					padding-left: 0px;
-					padding-right: 0px;
-				}
-			}
-		</style>
 	</head>
 	<body>
 	{% include "includes/navbar.html" %}
@@ -126,19 +57,19 @@
 			<p id="bio">{{ user_p.bio|linebreaksbr }}</p>{% endif %}
 		</center>
 		<div class="card-group">
-			<div class="card bg-inner">
+			<div class="card bg-inner-when-dark">
 				<div class="card-body">
 					<h5>Perguntas</h5>
 					<p>{{user_p.total_questions}}</p>
 				</div>
 			</div>
-			<div class="card bg-inner">
+			<div class="card bg-inner-when-dark">
 				<div class="card-body">
 					<h5>Respostas</h5>
 					<p>{{user_p.total_responses}}</p>
 				</div>
 			</div>
-			<div class="card bg-inner">
+			<div class="card bg-inner-when-dark">
 				<div class="card-body">
 					<h5>Pontos</h5>
 					<p>{{user_p.total_points}}</p>
@@ -199,7 +130,7 @@
 		</script>
 
 		{% if user_p.user.username == user.username %}
-		<div id="edit-profile"><a href="/user/{{ user.username }}/edit">Editar perfil</a></div>
+		<div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit">Editar perfil</a></div>
 		{% else %}
 		<br>
 		{% endif %}
