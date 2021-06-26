@@ -5,6 +5,18 @@ import zlib
 
 register = template.Library()
 
+
+'''
+Número aleatório:
+'''
+import random
+@register.simple_tag
+def random_int(a, b=None):
+	if b is None:
+		a, b = 0, a
+	return random.randint(a, b)
+
+
 @register.simple_tag
 def MINIMUM_POINTS_FOR_POSTING_IMAGES():
 	return general_rules.MINIMUM_POINTS_FOR_POSTING_IMAGES
