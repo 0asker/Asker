@@ -44,33 +44,3 @@
         </ul>
     </div>
 </nav>
-
-{% if user.is_authenticated %}
-  <!-- Javascript para usuários autenticados (sistema de notificações) -->
-  <!-- Envia solicitação para o servidor a cada x segundos para testar se tem
-       novas notificações para o usuário. Se tem, mostra o badge de notificação
-       para o usuário. -->
-  <!-- Observação: precisa de jQuery para funcionar. -->
-  <script>
-    var get_notif = function() {
-      clearInterval(interval);
-      
-      /* Ajax para verificar se tem novas notificações */
-      /*$.ajax({
-        url: "/have-new-notif",
-        type: "get",
-        complete: function(data) {
-          result = data.responseText;
-          
-          if (result == "True") {
-            document.getElementById("notif-badge").style.display = "inline-block";
-          }
-        },
-      });*/
-      
-      interval = setInterval(get_notif, 10000);
-    };
-    
-    var interval = setInterval(get_notif, 0);
-  </script>
-{% endif %}
