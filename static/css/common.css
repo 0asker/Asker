@@ -265,4 +265,7 @@ main {
 .float-right {
     float: right;
 }
+.inline {
+    display: inline;
+}
 /* General-end */
