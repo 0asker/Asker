@@ -281,15 +281,6 @@ def question(request, question_id):
 		context['poll_choices'] = PollChoice.objects.filter(poll=context['poll'])
 		context['poll_votes'] = PollVote.objects.filter(poll=context['poll'])
 
-	'''
-	Se o usuário entrou nessa questão a partir da notificação, a notificação é marcada como lida.
-	'''
-	notification_id = request.GET.get('n')
-	if notification_id is not None:
-		notification = Notification.objects.get(id=notification_id)
-		notification.read = True
-		notification.save()
-
 	return render(request, 'question.html', context)
 
 
