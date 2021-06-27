@@ -52,26 +52,37 @@ SUCCESS_ACCOUNT_VERIFICATION = '''
 
 
 def search_questions(query):
-  all_questions = Question.objects.all()
-  
-  result_list = []
-  
   queries = query.split()
   
-  reputation = 0
+  all_questions = Question.objects.all()
+  
+  result = {'questions': []}
   
   for question in all_questions:
+    reputation = 0
     for query in queries:
-      if query in question.text:
+      if query in question.text or query in question.description:
         reputation += 1
     
-    '''
-    reputation tem que ser pelo menos 60% de len(queries)
-    '''
-    if (reputation / len(queries)) * 100 > 60:
-      result_list.append(question.id)
+    precision = (reputation / len(queries)) * 100
+    if precision >= 70:
+      result['questions'].append({
+        'title': question.text,
+        'description': question.description,
+        'id': question.id,
+        'precision': precision,
+      })
   
-  result = Question.objects.filter(id__in=result_list).order_by('-pub_date')
+  '''
+    {
+      ['title': 'título da pergunta',
+      'description': 'descrição da pergunta',
+      'id': 'id da pergunta',
+      'precision': 'precisão da pergunta baseado na consulta do usuário',]
+    }
+  '''
+  
+  
   
   return result
 
