@@ -51,6 +51,20 @@ SUCCESS_ACCOUNT_VERIFICATION = '''
 '''
 
 
+def search_questions(query):
+  all_questions = Question.objects.all()
+  
+  result_list = []
+  
+  for question in all_questions:
+    if query in question.text:
+      result_list.append(question.id)
+  
+  result = Question.objects.filter(id__in=result_list).order_by('-pub_date')
+  
+  return result
+
+
 @pjax()
 def pjax_questions(request):
 	context = {}
@@ -1070,11 +1084,12 @@ def change_email(request):
 
 
 def test(request):
-  return render(request, 'test.html')
-
-
-def adstxt(request):
-  return render(request, 'ads.html')
+  
+  context = {
+    'result': search_questions(request.GET.get('query')),
+  }
+  
+  return render(request, 'test.html', context)
 
 
 def activity(request):
