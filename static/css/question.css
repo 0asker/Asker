@@ -227,11 +227,6 @@ main {
   display: none;
 }
 
-.recommended {
-  width: 50%;
-  margin: auto;
-}
-
 .recommended h3 {
   text-align: center;
 }
@@ -256,9 +251,6 @@ main {
 @media (max-width:281px) {
   main {
     width: 98%;
-  }
-  .recommended {
-    width: 100%;
   }
   .r-question {
     width: 95%;

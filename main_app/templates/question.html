@@ -15,7 +15,7 @@
 		<script src="/static/js/cookieman.js?v=1"></script>
 		<script>
 			var cssfn = 'question.css';
-			var cssversion = '?v=14';
+			var cssversion = '?v=14.1';
 			if (getDarkCookie() == 'true') { cssfn = 'question-d.css';}
 			var link = document.createElement('link');
 			link.rel = 'stylesheet';
@@ -96,10 +96,10 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 					{% if question.has_poll %}
 						{% voted user poll as VOTED %}
 						{% if not VOTED and poll.may_vote and user.is_authenticated %}
-							<div class="card poll poll-chooser">
+							<div class="card poll poll-chooser bg-inner">
 								<ul class="list-group list-group-flush">
 								{% for choice in poll_choices %}
-									<li class="choice list-group-item">
+									<li class="choice list-group-item bg-inner-when-dark">
 										<div class="chooser">
 											<label>
 												{% if poll.multichoice %}
@@ -107,7 +107,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 												{% else %}
 													<input class="poll-option" type="radio" name="poll-option" value="{{ choice.id }}">
 												{% endif %}
-												<span>{{ choice.text }}</span>
+												<span class="left-spaced">{{ choice.text }}</span>
 											</label>
 										</div>
 									</li>
@@ -115,12 +115,12 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 								</ul>
 								<div class="card-footer">
 									<button class="btn btn-primary" onclick="voteOnPoll();" >Votar</button>
-									<span class="clickable" onclick="openShower();">Ver resultados</span>
+									<span class="clickable left-spaced" onclick="openShower();">Ver resultados</span>
 								</div>
 							</div>
 						{% endif %}
 
-						<div class="card poll-shower"><div class="card-body">
+						<div class="card poll-shower bg-inner"><div class="card-body">
 							<input type="hidden" name="qpoll" value="{{ poll.id }}">
 							{% for choice in poll_choices %}
 								<div class="choice-show">
@@ -145,9 +145,9 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 							<div class="card-footer">
 							{% if poll.may_vote %}
 								{% if not VOTED and user.is_authenticated %}
-									<span class="clickable" onclick="openChooser();">Votar</span>
+									<span class="clickable left-spaced" onclick="openChooser();">Votar</span>
 								{% elif user.is_authenticated %}
-									<span class="clickable" onclick="undoVote();">Retirar voto</span>
+									<span class="clickable left-spaced" onclick="undoVote();">Retirar voto</span>
 								{% else %}
 									<span>Faça login ou crie uma conta para responder à enquete.</span>
 								{% endif %}
@@ -205,76 +205,6 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 			{% else %}
 				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder esta pergunta.</p>
 			{% endif %}
-		</main>
-		
-<!-- Ad -->
-<div id="ad-reported" style="display: none;">
-	<center>
-		<hr>
-		<small>Anúncio reportado.</small>
-		<hr>
-	</center>
-</div>
-<div id="ad">
-<hr>
-<center>
-<div>
-	<script>
-	(function(__htas){
-	var d = document,
-		s = d.createElement('script'),
-		l = d.scripts[d.scripts.length - 1];
-	s.settings = __htas || {};
-	s.src = "\/\/apprefaculty.pro\/aPWtZ.ygQO2\/9okoZ\/T\/9P6obA2O5ol\/SbWtQw9LNPDJIS0-MFj\/cv4BMcSC0F0iMajRQMyeNhz\/gOy\/J\/nfBy1bcR2vhdaTbl2C5Ql\/SUWdQY9LNqDlIf0\/Mdj\/cz4\/M\/SG0F0tMXjFQTyzNgzrg\/y_";
-	l.parentNode.insertBefore(s, l);
-	})({})
-	</script>
-	<img id="report-loader" src="/static/images/loading.gif" width="10%" style="display: none;">
-	<br>
-	<small><a href="#" id="report-ad">report ad</a></small>
-	<form class="form-inline" id="report-ad-form" style="display: none;">
-		<input type="hidden" name="type" value="ad"> <!-- Tipo de denúncia: anúncio (ad) -->
-		<textarea class="form-control" placeholder="Detalhes:" required name="text"></textarea>
-		&nbsp;<input class="btn btn-outline-primary" type="submit" value="Enviar denúncia">
-	</form>
-
-	<script>
-		document.getElementById("report-ad").onclick = function () {
-			report_ad_form = document.getElementById("report-ad-form");
-			report_loader = document.getElementById("report-loader");
-			report_ad = document.getElementById("report-ad");
-			
-			report_form = document.getElementById("report-ad-form");
-			if (report_form.style.display == "block")
-				report_form.style.display = "none";
-			else
-				document.getElementById("report-ad-form").style.display = "block";
-			
-			report_ad_form.onsubmit = function () {
-				report_ad_form.style.display = "none";
-				report_ad.style.display = "none";
-				report_loader.style.display = "block";
-				
-				$.ajax({
-					url: "/report",
-					type: "GET",
-					data: $(report_ad_form).serialize(),
-					complete: function(data) {
-						document.getElementById("ad").remove();
-						document.getElementById("ad-reported").style.display = "block";
-					}
-				});
-				
-				return false;
-			}
-		}
-	</script>
-</div>
-</center>
-<hr>
-</div>
-<!-- !Ad -->
-		
 		
 		<div class="recommended">
 			<hr>
@@ -288,7 +218,9 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 			</div>
 			{% endfor %}
 		</div>
-		
+
+	</main>
+
 <script src="/static/js/question.js?v=12.7"></script>
 <script>
 var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
