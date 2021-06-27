@@ -56,8 +56,19 @@ def search_questions(query):
   
   result_list = []
   
+  queries = query.split()
+  
+  reputation = 0
+  
   for question in all_questions:
-    if query in question.text:
+    for query in queries:
+      if query in question.text:
+        reputation += 1
+    
+    '''
+    reputation tem que ser pelo menos 60% de len(queries)
+    '''
+    if (reputation / len(queries)) * 100 > 60:
       result_list.append(question.id)
   
   result = Question.objects.filter(id__in=result_list).order_by('-pub_date')
