@@ -87,6 +87,12 @@
 {% endif %}
 	</main>
 <script>
+if (getDarkCookie() == 'true') {
+	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+}
+</script>
+<script>
 	var pollChoices = 2;
 
 	function addPollChoice() {
