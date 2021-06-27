@@ -193,7 +193,7 @@ function make_comment(form) {
         form.parentElement.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'none';
         
         var comment_template = `
-        <li class="list-group-item c">
+        <li class="list-group-item c no-horiz-padding">
             <div class="comm-card">
                 <div class="poster-container">
                     <a class="poster-info" href="` + data['username'] + `">
@@ -275,7 +275,7 @@ function show_comments(element, response_id, jaAbriu, usuario_logado) {
                 }
                 
                 var comment_template = `
-                <li class="list-group-item c">
+                <li class="list-group-item c no-horiz-padding">
                     <div class="comm-card">
                         <div class="poster-container">
                             <a class="poster-info" href="/user/` + comments[comment]['username'] + `">

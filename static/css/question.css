@@ -5,7 +5,7 @@
  * ░░████╔═████║░██╔══██║██╔══██╗██║╚████║██║██║╚████║██║░░╚██╗
  * ░░╚██╔╝░╚██╔╝░██║░░██║██║░░██║██║░╚███║██║██║░╚███║╚██████╔╝
  * ░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝╚═╝░░╚══╝░╚═════╝░
- * 
+ *
  * Sempre que este arquivo for atualizado, atualizar a versão dele em TODOS os templates.
  * Por exemplo:
  *  de:   /static/css/question.css?version=1
@@ -206,7 +206,7 @@ main .card {
   display: inline;
 }
 
-.icon {
+.icon, .hc-icon {
   cursor: pointer;
 }
 
