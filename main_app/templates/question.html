@@ -15,7 +15,7 @@
 		<script src="/static/js/cookieman.js?v=1"></script>
 		<script>
 			var cssfn = 'question.css';
-			var cssversion = '?v=14.1';
+			var cssversion = '?v=14';
 			if (getDarkCookie() == 'true') { cssfn = 'question-d.css';}
 			var link = document.createElement('link');
 			link.rel = 'stylesheet';
@@ -96,10 +96,10 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 					{% if question.has_poll %}
 						{% voted user poll as VOTED %}
 						{% if not VOTED and poll.may_vote and user.is_authenticated %}
-							<div class="card poll poll-chooser bg-inner">
+							<div class="card poll poll-chooser">
 								<ul class="list-group list-group-flush">
 								{% for choice in poll_choices %}
-									<li class="choice list-group-item bg-inner-when-dark">
+									<li class="choice list-group-item">
 										<div class="chooser">
 											<label>
 												{% if poll.multichoice %}
@@ -107,7 +107,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 												{% else %}
 													<input class="poll-option" type="radio" name="poll-option" value="{{ choice.id }}">
 												{% endif %}
-												<span class="left-spaced">{{ choice.text }}</span>
+												<span>{{ choice.text }}</span>
 											</label>
 										</div>
 									</li>
@@ -115,12 +115,12 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 								</ul>
 								<div class="card-footer">
 									<button class="btn btn-primary" onclick="voteOnPoll();" >Votar</button>
-									<a href="#" class="clickable left-spaced" onclick="openShower();">Ver resultados</a>
+									<span class="clickable" onclick="openShower();">Ver resultados</span>
 								</div>
 							</div>
 						{% endif %}
 
-						<div class="card poll-shower bg-inner"><div class="card-body">
+						<div class="card poll-shower"><div class="card-body">
 							<input type="hidden" name="qpoll" value="{{ poll.id }}">
 							{% for choice in poll_choices %}
 								<div class="choice-show">
@@ -145,9 +145,9 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 							<div class="card-footer">
 							{% if poll.may_vote %}
 								{% if not VOTED and user.is_authenticated %}
-									<a href="#" class="clickable left-spaced" onclick="openChooser();">Votar</a>
+									<span class="clickable" onclick="openChooser();">Votar</span>
 								{% elif user.is_authenticated %}
-									<a href="#" class="clickable left-spaced" onclick="undoVote();">Retirar voto</a>
+									<span class="clickable" onclick="undoVote();">Retirar voto</span>
 								{% else %}
 									<span>Faça login ou crie uma conta para responder à enquete.</span>
 								{% endif %}
@@ -205,6 +205,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 			{% else %}
 				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder esta pergunta.</p>
 			{% endif %}
+		</main>
 		
 <!-- Ad -->
 <div id="ad-reported" style="display: none;">
@@ -287,7 +288,6 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 			</div>
 			{% endfor %}
 		</div>
-	</main>
 		
 <script src="/static/js/question.js?v=12.7"></script>
 <script>
