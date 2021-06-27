@@ -159,7 +159,7 @@ para ser salva (no banco de dados).
 '''
 def save_answer(request):
 	if request.method != 'POST':
-		return HttpResponse('Proibido.');
+		return HttpResponse('Proibido.')
 
 	question_id = request.POST.get('question_id')
 	question = Question.objects.get(id=question_id)

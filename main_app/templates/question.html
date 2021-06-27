@@ -43,12 +43,12 @@ $(function() {
 	$('#response-form').ajaxForm(function(data) {
 		responses = document.getElementsByClassName('responses')[0];
 		responses.innerHTML += data;
-		
+
 		/* Desativa o ícone de carregamento já que a resposta (teoricamente)
 		 * já foi carregada na página.
 		 */
 		document.getElementById('response-loading-gif').style.display = 'none';
-		
+
 		/* Oculta o formulário de responder a pergunta porque a pergunta já foi respondida. */
 		document.getElementById('response-form').style.display = 'none';
 	});
@@ -193,7 +193,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 								<input class="btn btn-outline-primary" type="submit" value="Enviar" id="send-response-btn">
 								<label for="upload-photo"><img src="/static/images/camera.png?version=3" width="25px"> <span id="upload-photo-text"></span></label>
 								<input type="file" accept="image/*" name="file" id="upload-photo" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
-								<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon"><span>
+								<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon">
 							</form>
 							<img src="/static/images/loading.gif" width="30px" style="display: none;" id="response-loading-gif">
 						{% else %}
@@ -222,7 +222,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 
 	</main>
 
-<script src="/static/js/question.js?v=12.7"></script>
+<script src="/static/js/question.js?v=13"></script>
 <script>
 var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
 var commentformbgcolor='bg-white'; var commentbgcolor='bg-light';
