@@ -69,4 +69,8 @@ hr {
 .poster-info:hover {
   color: white;
 }
+.progress {
+  background-color: #454d54 !important;
+  border: none;
+}
 /* Question-end */
