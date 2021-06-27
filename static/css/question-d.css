@@ -223,7 +223,7 @@ main .card {
   display: inline;
 }
 
-.icon {
+.icon, .hc-icon {
   cursor: pointer;
 }
 
