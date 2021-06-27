@@ -5,7 +5,7 @@
  * ░░████╔═████║░██╔══██║██╔══██╗██║╚████║██║██║╚████║██║░░╚██╗
  * ░░╚██╔╝░╚██╔╝░██║░░██║██║░░██║██║░╚███║██║██║░╚███║╚██████╔╝
  * ░░░╚═╝░░░╚═╝░░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝╚═╝╚═╝░░╚══╝░╚═════╝░
- * 
+ *
  * Sempre que este arquivo for atualizado, atualizar a versão dele em TODOS os templates.
  * Por exemplo:
  *  de:   /static/css/question.css?version=1
@@ -206,7 +206,7 @@ main .card {
   display: inline;
 }
 
-.icon {
+.icon, .hc-icon {
   cursor: pointer;
 }
 
@@ -225,11 +225,6 @@ main {
 
 #edit-response-form {
   display: none;
-}
-
-.recommended {
-  width: 50%;
-  margin: auto;
 }
 
 .recommended h3 {
@@ -256,9 +251,6 @@ main {
 @media (max-width:281px) {
   main {
     width: 98%;
-  }
-  .recommended {
-    width: 100%;
   }
   .r-question {
     width: 95%;
