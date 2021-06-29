@@ -340,13 +340,14 @@ def like(request):
         q.total_likes += 1
         q.save()
         
-        # cria uma notificação para o like (quem recebeu o like será notificado):
-        n = Notification.objects.create(receiver=r.creator.user,
-                                        type='like-in-response',
-                                        liker=request.user,
-                                        response=r)
-        n.set_text(answer_id)
-        n.save()
+        if not Notification.objects.filter(type='like-in-response', liker=request.user, response=r).exists():
+            # cria uma notificação para o like (quem recebeu o like será notificado):
+            n = Notification.objects.create(receiver=Response.objects.get(id=answer_id).creator.user,
+                                            type='like-in-response',
+                                            liker=request.user,
+                                            response=r)
+            n.set_text(answer_id)
+            n.save()
 
     return HttpResponse('OK')
 
