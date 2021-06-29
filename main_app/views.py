@@ -91,7 +91,7 @@ def search_questions(query):
 def pjax_questions(request):
 	context = {}
 	q = Question.objects.order_by('-pub_date')
-	p = Paginator(q, 20)
+	p = Paginator(q, 15)
 	questions = p.page(1)
 	context['questions'] = questions
 	try:
@@ -256,7 +256,7 @@ def index(request):
 
 	# pega as perguntas da mais nova para a mais velha:
 	q = Question.objects.order_by('-pub_date')
-	p = Paginator(q, 20)
+	p = Paginator(q, 15)
 	page = request.GET.get('page', 1)
 	questions = p.page(page)
 	context['questions'] = questions
