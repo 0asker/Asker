@@ -288,7 +288,6 @@ def index(request):
 def question(request, question_id):
 	try:
 		q = Question.objects.get(id=question_id)
-
 		q.total_views += 1
 		q.save()
 	except:
@@ -298,22 +297,36 @@ def question(request, question_id):
 				   'redirect': return_to}
 		return render(request, 'error.html', context)
 
+	responses = Response.objects.filter(question=q).order_by('-pub_date').order_by('-total_likes')
+
 	context = {'question': q,
-			   'responses': Response.objects.filter(question=q).order_by('-pub_date').order_by('-total_likes')}
+			   'responses': responses}
 
 	if not request.user.is_anonymous:
 		context['user_p'] = UserProfile.objects.get(user=request.user)
-		context['answered'] = Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=q).exists()
+		context['answered'] = False
+		for response in responses:
+			if response.id == request.user.id:
+				context['answered'] = True
+				break
 
-	# questões recomendadas:
-	qs = Question.objects.all().order_by('-pub_date')[:50]
-	qs_list = list(qs)
-	shuffle(qs_list)
+	'''
+	Questões recomendadas.
+	Elas ficam no cache por 5 minutos até se atualizarem.
+	
+	Dica: organizar ordem das questões em JavaScript no lado do cliente para
+	evitar processamento desnecessário no servidor.
+	'''
+	recommended_questions = cache.get('recommended_questions')
+	if not recommended_questions:
+		cache.set('recommended_questions', list(Question.objects.order_by('-pub_date')[:15]))
+		recommended_questions = cache.get('recommended_questions')
+	shuffle(recommended_questions)
+	context['recommended_questions'] = recommended_questions
 
-	context['recommended_questions'] = qs_list[:20]
 
 	if q.has_poll():
-		context['poll'] = Poll.objects.filter(question=q)[0]
+		context['poll'] = Poll.objects.get(question=q)
 		context['poll_choices'] = PollChoice.objects.filter(poll=context['poll'])
 		context['poll_votes'] = PollVote.objects.filter(poll=context['poll'])
 
@@ -325,9 +338,6 @@ def like(request):
     answer_id = request.GET.get('answer_id')
 
     r = Response.objects.get(id=answer_id)
-
-    if r.creator.blocked_users.filter(username=request.user.username).exists():
-        return HttpResponse('OK')
 
     q = r.question
     if r.likes.filter(username=request.user.username).exists():
