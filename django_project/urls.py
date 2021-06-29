@@ -27,7 +27,6 @@ urlpatterns = [
   path('news', views.index, name='index'),
   path('popular', views.index, name='index'),
   path('question/<int:question_id>', views.question, name='question'),
-  path('pjax-questions', views.pjax_questions, name='pjax_questions'),
   path('answer/like', views.like, name='like'), # quando uma resposta recebe um like, é usado esse padrão de URL.
   path('answer/choose', views.choose_best_answer, name="choose_best_answer"),
   path('delete_response', views.delete_response, name='delete_response'), # esse padrão de URL é usado para deletar respostas.

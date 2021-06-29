@@ -87,19 +87,6 @@ def search_questions(query):
   return result
 
 
-@pjax()
-def pjax_questions(request):
-	context = {}
-	q = Question.objects.order_by('-pub_date')
-	p = Paginator(q, 15)
-	questions = p.page(1)
-	context['questions'] = questions
-	try:
-		return TemplateResponse(request, "base/recent-questions.html", context)
-	except:
-		return redirect('/')
-
-
 def replace_url_to_link(value):
     urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)", re.MULTILINE|re.UNICODE)
     value = urls.sub(r'<a href="\1" target="_blank">\1</a>', value)
@@ -266,7 +253,7 @@ def index(request):
 	'''
 	p_questions = cache.get('p_questions')
 	if not p_questions:
-		p_questions = Paginator(sorted(q[:100], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list
+		p_questions = Paginator(sorted(q[:100], key=lambda o: o.total_likes, reverse=True), 15).page(1).object_list
 		cache.set('p_questions', p_questions)
 
 	context['popular_questions'] = p_questions
