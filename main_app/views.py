@@ -322,11 +322,9 @@ def question(request, question_id):
 
 def like(request):
 
-    answer_id = request.GET.get('answer_id')
-
-    r = Response.objects.get(id=answer_id)
-
+    r = Response.objects.get(id=request.GET.get('answer_id'))
     q = r.question
+    
     if r.likes.filter(username=request.user.username).exists():
         r.likes.remove(request.user)
         r.total_likes = r.likes.count()
@@ -341,15 +339,14 @@ def like(request):
         # aumenta total de likes da pergunta:
         q.total_likes += 1
         q.save()
-
-        if not Notification.objects.filter(type='like-in-response', liker=request.user, response=r).exists():
-            # cria uma notificação para o like (quem recebeu o like será notificado):
-            n = Notification.objects.create(receiver=Response.objects.get(id=answer_id).creator.user,
-                                            type='like-in-response',
-                                            liker=request.user,
-                                            response=r)
-            n.set_text(answer_id)
-            n.save()
+        
+        # cria uma notificação para o like (quem recebeu o like será notificado):
+        n = Notification.objects.create(receiver=r.creator.user,
+                                        type='like-in-response',
+                                        liker=request.user,
+                                        response=r)
+        n.set_text(answer_id)
+        n.save()
 
     return HttpResponse('OK')
 
