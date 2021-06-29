@@ -210,6 +210,8 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 		<div class="recommended">
 			<hr>
 			<h3 class="text-secondary">— Responda também —</h3>
+			<hr>
+			
 			{% for question in recommended_questions %}
 			<div class="r-question">
 				<a href="/question/{{ question.id }}"><b>{{ question.text }}</b></a>
