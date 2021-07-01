@@ -34,6 +34,16 @@
 	{% include "includes/navbar.html" %}
 	{{ account_verification_alert|safe }}
 	<main>
+		
+		{% if request.META.HTTP_HOST == "asker.pythonanywhere.com" %}
+			<div class="alert alert-success">
+				<div class="alert-heading">
+					<h3>Aviso!</h3>
+				</div>
+				<p>O Asker está agora disponível no domínio <a href="https://br.asker.fun">br.asker.fun</a>. Ou, mais fácil: <a href="http://asker.fun">asker.fun</a></p>
+			</div>
+		{% endif %}
+		
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
 				<span class="nav-link main-tab bg-main-tab" id="popular">Popular</span>
