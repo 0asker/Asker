@@ -55,7 +55,9 @@
         <b>{{ user_p.user.username }}</b>
 			{% if user_p.user.username == "Erick" %}<p id="bio">{{ user_p.bio|safe }}</p>{% else %}
 			<p id="bio">{{ user_p.bio|linebreaksbr }}</p>{% endif %}
+			<hr>
 			<p>No Asker desde <span class="font-italic">{{ user_p.user.date_joined.date }}.</span></p>
+			<hr>
 		</center>
 		<div class="card-group">
 			<div class="card bg-inner-when-dark">
@@ -164,7 +166,11 @@
 					</li>
 					{% endfor %}
 				</ul>
-				<button class="btn btn-outline-primary" onclick="show_more_questions(this, {{ user_p.user.id }})">mais</button>
+				{% if user_p.total_questions > 0 %}
+					<button class="btn btn-outline-primary" onclick="show_more_questions(this, {{ user_p.user.id }})">mais</button>
+				{% else %}
+					<p align="center">{{ user_p.user.username }} ainda não fez perguntas!</p>
+				{% endif %}
 			</div>
 		</section>
 
