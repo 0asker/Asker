@@ -254,7 +254,6 @@ def index(request):
 	p_questions = cache.get('p_questions')
 	if not p_questions:
 		p_questions = Paginator(sorted(q[:100], key=lambda o: o.total_likes, reverse=True), 15).page(1).object_list
-		p_questions = Paginator(questions, 15).page(1).object_list
 		cache.set('p_questions', p_questions)
 
 	context['popular_questions'] = p_questions
