@@ -33,11 +33,12 @@
 .popular-question-img {
 	display: block;
 	max-width: 60%;
+	margin: auto;
 }
 
 @media (min-width: 320px) and (max-width: 480px) {
 	.popular-question-img {
-		max-width: 80%;
+		max-width: 90%;
 	}
 }
 </style>
@@ -94,7 +95,7 @@
           {% endif %}
           
           {% if question.image %}
-						<img src="{{ question.image.url }}" class="popular-question-img">
+						<img src="https://br.asker.fun/media/questions/RWZFF2PPUQmensagem-101.jpg" class="popular-question-img">
 						<br>
           {% endif %}
           
