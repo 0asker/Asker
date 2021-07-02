@@ -253,7 +253,54 @@ def index(request):
 	'''
 	p_questions = cache.get('p_questions')
 	if not p_questions:
-		p_questions = Paginator(sorted(q[:100], key=lambda o: o.total_likes, reverse=True), 15).page(1).object_list
+		
+		''' Antes: '''
+		#p_questions = Paginator(sorted(q[:100], key=lambda o: o.total_likes, reverse=True), 15).page(1).object_list
+		''' !antes. '''
+		
+		questions = Question.objects.order_by('-pub_date')[:750] # pega as últimas 750 perguntas postadas
+		
+		likes = 0 # essa variável guarda o total de likes da pergunta com mais likes
+		for q in questions:
+			if q.total_likes > likes:
+				likes = q.total_likes
+		
+		responses = 0 # essa variável guarda o total de respostas da pergunta com mais respostas
+		for q in questions:
+			if q.total_responses > responses:
+				responses = q.total_responses
+		
+		views = 0 # essa variável guarda o total de visualizações da pergunta com mais visualizações
+		for q in questions:
+			if q.total_views > views:
+				views = q.total_views
+		
+		perguntas = []
+		for q in questions:
+			# aumenta os pontos de acordo com o total de likes:
+			perguntas.append([q.total_likes / likes * 100, q.id])
+			
+			# aumenta os pontos de acordo com o total de respostas:
+			perguntas[-1][0] += q.total_responses / responses * 100
+			
+			# TODO: aumenta os pontos de acordo com o total de comentários:
+			
+			# aumenta os pontos de acordo com o total de visualizações:
+			perguntas[-1][0] += q.total_views / views * 100
+		
+		'''
+		ordena as perguntas por qual tem mais pontuação.
+		'''
+		perguntas = sorted(perguntas, key=lambda perguntas: perguntas[0])
+		
+		id_list = []
+		for p in perguntas:
+			id_list.append(p[1])
+		
+		questions = Question.objects.filter(id__in=id_list)
+		
+		p_questions = Paginator(questions, 15).page(1).object_list
+		
 		cache.set('p_questions', p_questions)
 
 	context['popular_questions'] = p_questions
