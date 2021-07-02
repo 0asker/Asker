@@ -28,6 +28,20 @@
 
 	document.getElementById('wait').remove();
 </script>
+
+<style>
+.popular-question-img {
+	display: block;
+	max-width: 60%;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+	.popular-question-img {
+		max-width: 80%;
+	}
+}
+</style>
+
 </head>
 
 	<body>
@@ -78,7 +92,13 @@
               {{ question.description|cut_description|safe|linebreaksbr }}
             </p>
           {% endif %}
-				<small>{% total_answers question.id %} respostas <b>&middot; </b> <span class="text-muted"><img src="/static/images/white-heart.png?version=3" width="15px"> {{ question.total_likes }}</span></small>&nbsp;|&nbsp;<small>{% question_total_views question.id %} visualizações</small>
+          
+          {% if question.image %}
+						<img src="{{ question.image.url }}" class="popular-question-img">
+						<br>
+          {% endif %}
+          
+				<small>{% total_answers question.id %} respostas <b>&nbsp;|&nbsp;</b> <span class="text-muted"><img src="/static/images/white-heart.png?version=3" width="15px"> {{ question.total_likes }}</span></small><small><b>&nbsp;|&nbsp;</b></small><small>{% question_total_views question.id %} visualizações</small>
 				{% if user.is_authenticated %}
 					{% answered user.username question.id as ANSWERED %}
 					{% if ANSWERED %}
