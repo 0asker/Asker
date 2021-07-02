@@ -55,6 +55,7 @@
         <b>{{ user_p.user.username }}</b>
 			{% if user_p.user.username == "Erick" %}<p id="bio">{{ user_p.bio|safe }}</p>{% else %}
 			<p id="bio">{{ user_p.bio|linebreaksbr }}</p>{% endif %}
+			<p>No Asker desde <span class="font-italic">{{ user_p.user.date_joined.date }}.</span></p>
 		</center>
 		<div class="card-group">
 			<div class="card bg-inner-when-dark">
