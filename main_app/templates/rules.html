@@ -4,26 +4,63 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Regras do Asker</title>
+    <style id="wait">
+        body {
+            visibility: hidden;
+            opacity: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/common.css?v=4">
+    <script src="/static/js/cookieman.js?v=1"></script>
+    <script>
+        var cssfn = 'light.css';
+        var cssversion = '?v=2';
+        if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '/static/css/' + cssfn + cssversion;
+        document.head.appendChild(link);
+
+	    document.getElementById('wait').remove();
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/shortcuts/infinite.min.js"></script>
   </head>
   <body>
-    
-    <header>
-      <a href="/">Página inicial</a>
-    </header>
-    
-    <p>Se você tem um motivo para não seguir alguma regra ou tem alguma sugestão de regra, <a href="mailto:minha.ccontta@gmail.com">envie-me um email</a>.</p>
-    <p>As regras são usadas para manter a ordem no Asker. Aqui estão elas:</p>
-    
-    <ol>
-      <li>É proibido se auto-pontuar usando várias contas próprias;</li>
-      <li>É proibido fazer spam;</li>
-      <li>É proibido postar pornografia, gore.</li>
-    </ol>
-    
-    <h3><q>O que acontece se eu não respeitar as regras?</q></h3>
-    <p>Você pode perder pontos, ser banido ou alguma outra atitude será tomada.</p>
-    <p>As regras foram criadas para tornar o Asker um lugar melhor. Se você acha que alguma regra deve ser removida ou modificada, sua sugestão por <a href="mailto:minha.ccontta@gmail.com">email</a> será muito bem-vinda!<br>Obrigado pela compreensão! :)</p>
-    <p><a href="/">#Asker</a></p>
-    
+	{% include "includes/navbar.html" %}
+
+    <main>
+        <div class="card bg-main">
+            <div class="card-body">
+              <h5><b>Regras do Asker</b></h5>
+              <p>Se você tem um motivo para não seguir alguma regra ou tem alguma sugestão de regra, <a href="mailto:minha.ccontta@gmail.com">envie-me um email</a>.</p>
+              <p>As regras são usadas para manter a ordem no Asker. Aqui estão elas:</p>
+
+              <ol>
+                <li>É proibido se auto-pontuar usando várias contas próprias;</li>
+                <li>É proibido fazer spam;</li>
+                <li>É proibido postar pornografia, gore.</li>
+              </ol>
+
+              <h5><b>O que acontece se eu não respeitar as regras?</b></h5>
+              <p>Você pode perder pontos, ser banido ou alguma outra atitude será tomada.</p>
+              <p>As regras foram criadas para tornar o Asker um lugar melhor. Se você acha que alguma regra deve ser removida ou modificada, sua sugestão por <a href="mailto:minha.ccontta@gmail.com">email</a> será muito bem-vinda!<br>Obrigado pela compreensão! :)</p>
+
+            </div>
+        </div>
+    </main>
+    <script>
+        if (getDarkCookie() == 'true') {
+            document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+            document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+        }
+	</script>
+
   </body>
 </html>

@@ -151,9 +151,6 @@
 .comm-card {
   padding-top: 1.25rem;
 }
-.comm-form {
-  display: flex;
-}
 .edit-response-textarea {
     margin-top: 12px;
 }
@@ -172,21 +169,10 @@
 .recommended h3 {
   text-align: center;
 }
-.comment-form {
-  flex-grow: 1;
-  margin-right: 10px;
-}
 @media (min-width: 320px) and (max-width: 580px) {
   .r-question {
     width: 95%;
     margin: auto;
-  }
-  .comm-form .btn {
-    margin-top: 4px;
-    flex-grow: 1;
-  }
-  .comment-form {
-    margin-right: 0px;
   }
   .vid-container {
     height: 50vw;
@@ -200,6 +186,15 @@
   }
 }
 /* Question-end */
+
+/* Rank */
+.ranked-u-stats {
+    display: flex;
+}
+.ranked-u-stats div {
+    flex-grow: 1;
+}
+/* Rank-end */
 
 /* General */
 .no-horiz-padding {
@@ -233,13 +228,16 @@
     margin-bottom: 10px;
     display: block;
 }
+.left-spaced {
+    margin-left: 5px;
+}
+.right-spaced {
+    margin-right: 10px;
+}
 main {
     width: 60%;
     max-width: 960px;
     margin: auto;
-}
-.left-spaced {
-    margin-left: 5px;
 }
 .small-text {
     color: #888;
@@ -256,16 +254,46 @@ main {
   z-index: 0;
   text-decoration: none;
 }
-
-@media (min-width: 320px) and (max-width: 580px) {
-    main, #tabs {
-        width: 98%;
-    }
-}
 .float-right {
     float: right;
 }
 .inline {
     display: inline;
+}
+.comment-form {
+  /* TODO: deletar em ver. futura, substituir por form.inline-input à la reset-pw-1-part */
+  flex-grow: 1;
+  margin-right: 10px;
+}
+.comm-form {
+  /* TODO: deletar em ver. futura, substituir por form.inline-input à la reset-pw-1-part */
+  display: flex;
+}
+
+.inline-input .left-input {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+@media (min-width: 320px) and (max-width: 580px) {
+  .comm-form .btn {
+  /* TODO: deletar em ver. futura, substituir por form.inline-input à la reset-pw-1-part */
+    margin-top: 4px;
+    flex-grow: 1;
+  }
+  .comment-form {
+  /* TODO: deletar em ver. futura, substituir por form.inline-input à la reset-pw-1-part */
+    margin-right: 0px;
+  }
+  .inline-input .left-input {
+    margin-right: 0px;
+  }
+  .inline-input .btn {
+    margin-top: 4px;
+    flex-grow: 1;
+  }
+  main, #tabs {
+      width: 98%;
+  }
 }
 /* General-end */
