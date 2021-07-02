@@ -192,7 +192,11 @@
 					</li>
 					{% endfor %}
 				</ul>
-				<button class="btn btn-outline-primary" onclick="show_more_responses(this, {{ user_p.user.id }})">mais</button>
+				{% if user_p.total_responses != 0 %}
+					<button class="btn btn-outline-primary" onclick="show_more_responses(this, {{ user_p.user.id }})">mais</button>
+				{% else %}
+					<p align="center">{{ user_p.user.username }} ainda não respondeu nenhuma pergunta!</p>
+				{% endif %}
 			</div>
 		</section>
 
