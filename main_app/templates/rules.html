@@ -62,5 +62,17 @@
         }
 	</script>
 
+{% if user.is_authenticated %}
+	<script>
+		/* Este script manda a última hora que o usuário logado atual foi visto online. Ele é enviado a cada x segundos. */
+		setInterval(function() {
+			$.ajax({
+				url: "/i-am-online",
+				type: "get",
+			});
+		}, 30000);
+	</script>
+{% endif %}
+
   </body>
 </html>

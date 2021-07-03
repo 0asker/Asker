@@ -103,7 +103,21 @@
 		<p><a href="/delete-account">Clique aqui</a> para excluir sua conta.</p>
 		{% endif %}
 
-	</main></body>
+	</main>
+
+{% if user.is_authenticated %}
+	<script>
+		/* Este script manda a última hora que o usuário logado atual foi visto online. Ele é enviado a cada x segundos. */
+		setInterval(function() {
+			$.ajax({
+				url: "/i-am-online",
+				type: "get",
+			});
+		}, 30000);
+	</script>
+{% endif %}
+
+	</body>
     <script src="/static/js/cookieman.js?v=1"></script>
 	<script>
 		darkcheckbox = document.getElementById('dark-mode');

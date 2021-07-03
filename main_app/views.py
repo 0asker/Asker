@@ -454,21 +454,26 @@ def signup(request):
 
 		new_user_profile = UserProfile.objects.create(user=u)
 		new_user_profile.ip = get_client_ip(request)
-		new_user_profile.active = False
+		new_user_profile.active = True
 		new_user_profile.verification_code = RANDOM_CODE
 		new_user_profile.save()
 
-		subject = 'Asker.fun: confirmação de conta'
-		message = '''Olá {}! Obrigado por criar uma conta no Asker.fun.
+		'''
+		Cria status de online ou offline para o novo usuário.
+		'''
+		from main_app.models import UserStatus
+		UserStatus.objects.create(user=u)
 
-Para continuar, verifique seu endereço de email usando o link:
-https://asker.pythonanywhere.com/account/verify?user={}&code={}
-
-Obrigado e bem vindo(a)!
-'''.format(username, sha256(bytes(username, 'utf-8')).hexdigest(), RANDOM_CODE)
-		recipient = [email]
-
-		print(send_mail(subject, message, EMAIL_HOST_USER, recipient, fail_silently=False))
+		#subject = 'Asker.fun: confirmação de conta'
+		#message = '''Olá {}! Obrigado por criar uma conta no Asker.fun.
+#
+#Para continuar, verifique seu endereço de email usando o link:
+#https://asker.pythonanywhere.com/account/verify?user={}&code={}
+#
+#Obrigado e bem vindo(a)!
+#'''.format(username, sha256(bytes(username, 'utf-8')).hexdigest(), RANDOM_CODE)
+#		recipient = [email]
+#		print(send_mail(subject, message, EMAIL_HOST_USER, recipient, fail_silently=False))
 
 		return redirect(r)
 
@@ -1181,5 +1186,14 @@ def undo_vote_on_poll(request):
 	return HttpResponse('Ok.')
 
 
-def sw_js(request):
-    return render(request, 'base/sw.js')
+'''
+Configura o status do usuário para online.
+'''
+from main_app.models import UserStatus
+def set_status(request):
+	
+	user_status = UserStatus.objects.get(user=request.user)
+	user_status.last_seen = timezone.now()
+	user_status.save()
+	
+	return HttpResponse('OK')

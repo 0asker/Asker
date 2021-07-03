@@ -129,6 +129,19 @@ if (getDarkCookie() == 'true') {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+{% if user.is_authenticated %}
+	<script>
+		/* Este script manda a última hora que o usuário logado atual foi visto online. Ele é enviado a cada x segundos. */
+		setInterval(function() {
+			$.ajax({
+				url: "/i-am-online",
+				type: "get",
+			});
+		}, 30000);
+	</script>
+{% endif %}
+
 	</body>
 </html>
 {% endspaceless %}

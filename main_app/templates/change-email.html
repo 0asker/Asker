@@ -10,4 +10,18 @@
     <input name="email" type="email" placeholder="Novo email">
     <button>Trocar</button>
   </form>
+
+<script>
+	/* script para mandar confirmação de online para o servidor a cada x segundos. */
+	/* a confirmação é enviada via ajax. */
+	/* é recomendado colocar este script em todas as páginas, menos na página de login ou */
+	/* de criar conta, por exemplo. */
+	setInterval(function() {
+		$.ajax({
+			url: "/i-am-online",
+			type: "get",
+		});
+	}, 30000);
+</script>
+
 </body>

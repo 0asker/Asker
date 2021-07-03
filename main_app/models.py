@@ -211,3 +211,8 @@ class PollVote(models.Model):
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 	choice = models.ForeignKey(PollChoice, on_delete=models.CASCADE)
 	voter = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class UserStatus(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	last_seen = models.DateTimeField(default=timezone.now) # última vez que o usuário foi visto.

@@ -72,7 +72,7 @@ urlpatterns = [
   path('have-new-notif', views.have_new_notif, name='have_new_notif'),
   path('mark-notifications-as-viewed', views.mark_notifications_as_viewed, name='mark_notifications_as_viewed'),
   
-  path('sw.js', views.sw_js, name='sw_js'), # ad
+  path('i-am-online', views.set_status, name='set_status'),
   
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
