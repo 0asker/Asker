@@ -315,7 +315,7 @@ def index(request):
 			
 			p_questions.append(question)
 		
-		cache.set('p_questions', p_questions)
+		cache.set('p_questions', p_questions[:20])
 
 	context['popular_questions'] = p_questions
 
