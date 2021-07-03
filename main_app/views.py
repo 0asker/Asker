@@ -458,12 +458,6 @@ def signup(request):
 		new_user_profile.verification_code = RANDOM_CODE
 		new_user_profile.save()
 
-		'''
-		Cria status de online ou offline para o novo usuário.
-		'''
-		from main_app.models import UserStatus
-		UserStatus.objects.create(user=u)
-
 		#subject = 'Asker.fun: confirmação de conta'
 		#message = '''Olá {}! Obrigado por criar uma conta no Asker.fun.
 #
@@ -1189,11 +1183,9 @@ def undo_vote_on_poll(request):
 '''
 Configura o status do usuário para online.
 '''
-from main_app.models import UserStatus
 def set_status(request):
 	
-	user_status = UserStatus.objects.get(user=request.user)
-	user_status.last_seen = timezone.now()
-	user_status.save()
+	user_profile = UserProfile.objects.get(user=request.user)
+	user_profile.last_seen = timezone.now()
 	
 	return HttpResponse('OK')

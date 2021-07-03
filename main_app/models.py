@@ -65,6 +65,8 @@ class UserProfile(models.Model):
 
 	hide_activity = models.BooleanField(default=True)
 	
+	last_seen = models.DateTimeField(null=True)
+	
 	'''
 	O campo abaixo vai ser usado para saber se
 	o usuário já pegou ou não a recompensa por adicionar o site
@@ -211,8 +213,3 @@ class PollVote(models.Model):
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 	choice = models.ForeignKey(PollChoice, on_delete=models.CASCADE)
 	voter = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-class UserStatus(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	last_seen = models.DateTimeField(default=timezone.now) # última vez que o usuário foi visto.

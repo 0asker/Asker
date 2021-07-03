@@ -1,4 +1,4 @@
-from main_app.models import UserStatus
+from main_app.models import UserProfile
 from django.utils import timezone
 
 def main_middleware(get_response):
@@ -9,9 +9,9 @@ def main_middleware(get_response):
 			'''
 			Seta o último visto:
 			'''
-			us = UserStatus.objects.get(user=request.user)
-			us.last_seen = timezone.now()
-			us.save()
+			user_profile = UserProfile.objects.get(user=request.user)
+			user_profile.last_seen = timezone.now()
+			user_profile.save()
 
 		return response
 	return middleware
