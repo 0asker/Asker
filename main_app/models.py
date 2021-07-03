@@ -65,8 +65,6 @@ class UserProfile(models.Model):
 
 	hide_activity = models.BooleanField(default=True)
 	
-	last_seen = models.DateTimeField(null=True)
-	
 	'''
 	O campo abaixo vai ser usado para saber se
 	o usuário já pegou ou não a recompensa por adicionar o site
