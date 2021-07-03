@@ -315,9 +315,9 @@ def index(request):
 			
 			p_questions.append(question)
 		
-		cache.set('p_questions', p_questions[:20])
+		cache.set('p_questions', p_questions)
 
-	context['popular_questions'] = p_questions
+	context['popular_questions'] = p_questions[:20]
 
 	if request.user.is_authenticated:
 		user_p = UserProfile.objects.get(user=request.user)
