@@ -249,11 +249,72 @@ def index(request):
 	context['questions'] = questions
 
 	'''
-	Perguntas populares:
+	Pegando as perguntas populares:
+	Pega as últimas 250 perguntas;
+	Pega o total de likes da pergunta com mais likes (dessas últimas 250);
+	Compara cada pergunta (uma por uma) com esse total de likes, por exemplo: a pergunta com mais likes tem 100 likes, se a pergunta x tem 50 likes, então a pergunta x ganha 50 pontos (50%: o cálculo é feito com base na porcentagem);
+	No final, organiza as perguntas por total de likes e guarda o ID delas em uma lista para consultar as perguntas novamente no banco de dados (Question.objects.filter(id__in=IDS_EM_ORDEM_DE_QUAL_PERGUNTA_TEM_MAIS_PONTOS)).
 	'''
+	
 	p_questions = cache.get('p_questions')
+	
 	if not p_questions:
-		p_questions = Paginator(sorted(q[:100], key=lambda o: o.total_likes, reverse=True), 15).page(1).object_list
+		last_questions = Question.objects.order_by('-pub_date')[:250]
+		
+		'''
+		Essa variável guarda, dentro, as perguntas e seus totais de pontos.
+		Por exemplo: questions[0][0] é o total de pontos. questions[0][1] é o ID da pergunta.
+		'''
+		questions = []
+		
+		'''
+		Calculando o total de likes da pergunta com mais likes:
+		'''
+		likes = 0
+		for q in last_questions:
+			if q.total_likes > likes:
+				likes = q.total_likes
+		
+		'''
+		Calculando o total de respostas da pergunta com mais respostas:
+		'''
+		responses = 0
+		for q in last_questions:
+			if q.total_responses > responses:
+				responses = q.total_responses
+		
+		'''
+		Adicionando as perguntas na variável questions e inicializando os pontos de acordo com o tempo de likes.
+		'''
+		for q in last_questions:
+			questions.append([q.total_likes / likes * 100, q.id])
+
+		'''
+		Incrementando pontos de acordo com o total de respostas.
+		'''
+		for question in last_questions:
+			for q in questions:
+				if q[1] == question.id:
+					q[0] += question.total_responses / responses * 100
+
+		questions = sorted(questions, key=lambda questions: questions[0], reverse=True) # ordenação: com mais pontos para menos pontos.
+		ids = []
+		for q in questions:
+			ids.append(q[1])
+
+		'''
+		Adicionando as questões numa lista de JSON.
+		'''
+		p_questions = []
+		for id in ids:
+			
+			try:
+				question = Question.objects.get(id=id)
+			except:
+				continue
+			
+			p_questions.append(question)
+		
 		cache.set('p_questions', p_questions)
 
 	context['popular_questions'] = p_questions
