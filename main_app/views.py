@@ -156,7 +156,7 @@ def get_client_ip(request):
 
 
 def calculate_popular_questions():
-	last_questions = Question.objects.order_by('-pub_date')[:300]
+	last_questions = Question.objects.order_by('-pub_date')[:100]
 	
 	'''
 	Essa variável guarda, dentro, as perguntas e seus totais de pontos.
