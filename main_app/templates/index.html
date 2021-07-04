@@ -75,46 +75,11 @@
 
 <!-- Questões populares -->
 <section class="card bg-main" id="p_questions">
-	<ul class="list-group list-group-flush infinite-container">
-		{% for question in popular_questions %}
-		<li class="list-group-item bg-main">
-			<div class="card-body">
-
-        <a href="/question/{{ question.id }}">
-          <p>
-            <b>
-              {{ question.text }}
-            </b>
-          </p>
-        </a>
-
-					{% if question.description != '' %}
-            <p>
-              {{ question.description|cut_description|safe|linebreaksbr }}
-            </p>
-          {% endif %}
-          
-          {% if question.image %}
-						<img src="{{ question.image.url }}" class="popular-question-img">
-						<br>
-          {% endif %}
-          
-				<small>{% total_answers question.id %} respostas <b>&nbsp;|&nbsp;</b> <span class="text-muted"><img src="/static/images/white-heart.png?version=3" width="15px"> {{ question.total_likes }}</span></small><small><b>&nbsp;|&nbsp;</b></small><small>{% question_total_views question.id %} visualizações</small>
-				{% if user.is_authenticated %}
-					{% answered user.username question.id as ANSWERED %}
-					{% if ANSWERED %}
-				<span style="display: block"><b>Sua resposta:</b></span> {% answer user.username question.id %}
-					{% else %}
-				<a style="display: block" href="/question/{{ question.id }}"><button class="btn btn-outline-primary">Responder</button></a>
-					{% endif %}
-				{% else %}
-				<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.</p>
-			{% endif %}
-			</div>
-		</li>
-		{% endfor %}
+	<ul class="list-group list-group-flush infinite-container" id="popular-questions-ul">
+		{% include "base/popular-question.html" %}
 	</ul>
-	<h5>Fim! <a href="/news">Clique aqui</a> para ver as novas perguntas.</h5>
+	<button class="btn btn-outline-primary btn-sm" onclick="show_more_popular_questions(this)">Carregar mais</button>
+	<img src="/static/images/loading.gif" id="loading_popular_questions-icon" width="6%" style="display: none">
 </section>
 <!-- !Questões populares -->
 	</main>
@@ -133,6 +98,39 @@ if (getDarkCookie() == 'true') {
 <!-- Info Links ads -->
 <script type="text/javascript"> var infolinks_pid = 3334159; var infolinks_wsid = 0; </script> <script type="text/javascript" src="//resources.infolinks.com/js/infolinks_main.js"></script>
 <!-- !Info Links ads -->
+
+<script>
+	/* Carrega mais questões populares. */
+	next_popular_questions_page = 2; /* próxima página a ser pega das questões populares. É incrementado a cada AJAX. */
+	function show_more_popular_questions(load_more_button) {
+		load_more_button.style.display = "none";
+		document.getElementById("loading_popular_questions-icon").style.display = "inline";
+		$.ajax({
+			url: "get-popular-questions",
+			data: {
+				"popular_page": next_popular_questions_page,
+			},
+			complete: function(data) {
+				
+				if (data.responseText == "EmptyPage") {
+					load_more_button.remove();
+					
+					html = `
+<br><p align="center"><i class="far fa-sad-cry"></i> Fim! Veja as novas perguntas <a href="/news">aqui.</a></p>
+`
+					
+					document.getElementById("p_questions").innerHTML += html;
+				} else {
+					document.getElementById("popular-questions-ul").innerHTML += data.responseText;
+				}
+				
+				next_popular_questions_page++;
+				load_more_button.style.display = "inline-block";
+				document.getElementById("loading_popular_questions-icon").style.display = "none";
+			}
+		});
+	}
+</script>
 
 	</body>
 </html>

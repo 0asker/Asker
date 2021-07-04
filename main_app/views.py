@@ -1,7 +1,12 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
-from django.core.paginator import Paginator
+
+'''
+Paginação:
+'''
+from django.core.paginator import Paginator, EmptyPage
+
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
@@ -150,6 +155,66 @@ def get_client_ip(request):
     return ip
 
 
+def calculate_popular_questions():
+	last_questions = Question.objects.order_by('-pub_date')[:300]
+	
+	'''
+	Essa variável guarda, dentro, as perguntas e seus totais de pontos.
+	Por exemplo: questions[0][0] é o total de pontos. questions[0][1] é o ID da pergunta.
+	'''
+	questions = []
+	
+	'''
+	Calculando o total de likes da pergunta com mais likes:
+	'''
+	likes = 0
+	for q in last_questions:
+		if q.total_likes > likes:
+			likes = q.total_likes
+	
+	'''
+	Calculando o total de respostas da pergunta com mais respostas:
+	'''
+	responses = 0
+	for q in last_questions:
+		if q.total_responses > responses:
+			responses = q.total_responses
+	
+	'''
+	Adicionando as perguntas na variável questions e inicializando os pontos de acordo com o tempo de likes.
+	'''
+	for q in last_questions:
+		questions.append([q.total_likes / likes * 100, q.id])
+
+	'''
+	Incrementando pontos de acordo com o total de respostas.
+	'''
+	for question in last_questions:
+		for q in questions:
+			if q[1] == question.id:
+				q[0] += question.total_responses / responses * 100
+
+	questions = sorted(questions, key=lambda questions: questions[0], reverse=True) # ordenação: com mais pontos para menos pontos.
+	ids = []
+	for q in questions:
+		ids.append(q[1])
+
+	'''
+	Adicionando as questões numa lista de JSON.
+	'''
+	p_questions = []
+	for id in ids:
+		
+		try:
+			question = Question.objects.get(id=id)
+		except:
+			continue
+		
+		p_questions.append(question)
+	
+	return p_questions
+
+
 '''
  Essa função salva uma resposta. Sempre quando um usuário
 envia uma resposta para uma pergunta, a resposta passa por aqui
@@ -259,65 +324,16 @@ def index(request):
 	p_questions = cache.get('p_questions')
 	
 	if not p_questions:
-		last_questions = Question.objects.order_by('-pub_date')[:250]
-		
-		'''
-		Essa variável guarda, dentro, as perguntas e seus totais de pontos.
-		Por exemplo: questions[0][0] é o total de pontos. questions[0][1] é o ID da pergunta.
-		'''
-		questions = []
-		
-		'''
-		Calculando o total de likes da pergunta com mais likes:
-		'''
-		likes = 0
-		for q in last_questions:
-			if q.total_likes > likes:
-				likes = q.total_likes
-		
-		'''
-		Calculando o total de respostas da pergunta com mais respostas:
-		'''
-		responses = 0
-		for q in last_questions:
-			if q.total_responses > responses:
-				responses = q.total_responses
-		
-		'''
-		Adicionando as perguntas na variável questions e inicializando os pontos de acordo com o tempo de likes.
-		'''
-		for q in last_questions:
-			questions.append([q.total_likes / likes * 100, q.id])
-
-		'''
-		Incrementando pontos de acordo com o total de respostas.
-		'''
-		for question in last_questions:
-			for q in questions:
-				if q[1] == question.id:
-					q[0] += question.total_responses / responses * 100
-
-		questions = sorted(questions, key=lambda questions: questions[0], reverse=True) # ordenação: com mais pontos para menos pontos.
-		ids = []
-		for q in questions:
-			ids.append(q[1])
-
-		'''
-		Adicionando as questões numa lista de JSON.
-		'''
-		p_questions = []
-		for id in ids:
-			
-			try:
-				question = Question.objects.get(id=id)
-			except:
-				continue
-			
-			p_questions.append(question)
-		
+		p_questions = calculate_popular_questions()
 		cache.set('p_questions', p_questions)
 
-	context['popular_questions'] = p_questions[:20]
+
+	'''
+	Paginação das perguntas populares:
+	'''
+	page = request.GET.get('p_page', 1)
+	p_questions = Paginator(p_questions, 15)
+	context['popular_questions'] = p_questions.page(page)
 
 	if request.user.is_authenticated:
 		user_p = UserProfile.objects.get(user=request.user)
@@ -1250,3 +1266,19 @@ def set_status(request):
 	user_profile.last_seen = timezone.now()
 	
 	return HttpResponse('OK')
+
+
+def get_popular_questions(request):
+	p_questions = cache.get('p_questions')
+	
+	if not p_questions:
+		p_questions = calculate_popular_questions()
+		cache.set('p_questions', p_questions)
+	
+	paginator = Paginator(p_questions, 15)
+	page = request.GET.get('popular_page', 2)
+	
+	try:
+		return render(request, 'base/popular-question.html', {'popular_questions': paginator.page(page)})
+	except EmptyPage:
+		return HttpResponse('EmptyPage')

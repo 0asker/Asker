@@ -1,0 +1,38 @@
+{% load main_app_extras %}
+{% for question in popular_questions %}
+		<li class="list-group-item bg-main">
+			<div class="card-body">
+
+        <a href="/question/{{ question.id }}">
+          <p>
+            <b>
+              {{ question.text }}
+            </b>
+          </p>
+        </a>
+
+					{% if question.description != '' %}
+            <p>
+              {{ question.description|cut_description|safe|linebreaksbr }}
+            </p>
+          {% endif %}
+          
+          {% if question.image %}
+						<img src="{{ question.image.url }}" class="popular-question-img">
+						<br>
+          {% endif %}
+          
+				<small>{% total_answers question.id %} respostas <b>&nbsp;|&nbsp;</b> <span class="text-muted"><img src="/static/images/white-heart.png?version=3" width="15px"> {{ question.total_likes }}</span></small><small><b>&nbsp;|&nbsp;</b></small><small>{% question_total_views question.id %} visualizações</small>
+				{% if user.is_authenticated %}
+					{% answered user.username question.id as ANSWERED %}
+					{% if ANSWERED %}
+				<span style="display: block"><b>Sua resposta:</b></span> {% answer user.username question.id %}
+					{% else %}
+				<a style="display: block" href="/question/{{ question.id }}"><button class="btn btn-outline-primary">Responder</button></a>
+					{% endif %}
+				{% else %}
+				<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.</p>
+			{% endif %}
+			</div>
+		</li>
+{% endfor %}
