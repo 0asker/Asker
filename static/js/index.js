@@ -68,3 +68,37 @@ function make_answer(qid) {
 		},
 	});
 }
+
+
+function show_or_hide_response_form(form) {
+	$(form).toggle(200);
+}
+
+
+function send_response_to_popular_question(form) {
+	form.parentElement.style.display = 'none';
+	form.parentElement.parentElement.getElementsByClassName('p-q-loading-icon')[0].style.display = 'block';
+	
+	$.ajax({
+		url: '/save_answer',
+		type: 'post',
+		data: $(form).serialize(),
+		complete: function() {
+			form.parentElement.parentElement.getElementsByClassName('p-q-loading-icon')[0].style.display = 'none';
+			
+			html = `
+<div class="p-q-user-answer"> <!-- popular question user answer -->
+	<hr>
+	<label>
+		Sua resposta:
+	</label>
+	<p>
+		` + form.text.value + `
+	</p>
+</div>
+`
+			
+			form.parentElement.parentElement.innerHTML += html;
+		}
+	});
+}

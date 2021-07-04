@@ -16,18 +16,23 @@
 			</p>
 		{% endif %}
 		
-		<span>
-			<i class="far fa-edit"></i>
-			<small class="text-muted"> {% total_answers question.id %}</small>
-			|
-			<i class="far fa-clock"></i>
-			<small class="text-muted"> {% fix_naturaltime question.pub_date|naturaltime %}</small>
-		</span>
+		<small class="recent-question-statistics">
+			<div>
+				<i class="far fa-edit"></i>
+				{% total_answers question.id %}
+				&middot;
+				<i class="far fa-clock"></i>
+				{% fix_naturaltime question.pub_date|naturaltime %}
+			</div>
+		</small>
 		<hr>
 		{% if user.is_authenticated %}
 				{% answered user.username question.id as ANSWERED %}
 				{% if ANSWERED %}
-				<span style="display: block"><b>Sua resposta:</b></span> {% answer user.username question.id %}
+					<label class="answer-label">Sua resposta:</label>
+					<p>
+						{% answer user.username question.id %}
+					</p>
 				{% else %}
 					{% ablockb question.creator.user.username user.username as BLOCKED %}
 					{% if BLOCKED %}
@@ -44,7 +49,7 @@
 					{% endif %}
 				{% endif %}
 		{% else %}
-		<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.</p>
+			<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
 		{% endif %}
 		</div>
 	</li>

@@ -11,16 +11,54 @@
     padding: 11px 12px;
 }
 */
+
+/*
+ * CSS de imagens que ficam na página inicial em questões populares. */
+.popular-question-image {
+	max-width: 50%;
+	display: block;
+}
+
+.p-q-info {
+	background-image: linear-gradient(to right, #bfc0c2, #cfcfd1, #dfdfe0, #efefef, #ffffff);
+}
+
+.p-q-user-answer label {
+	color: black;
+}
+
+.p-q-answer-field span {
+	color: #007bff;
+	cursor: pointer;
+}
+
+.p-q-answer-field form {
+	display: none;
+}
+
+.p-q-loading-icon {
+	display: none;
+}
+
+.p-q-loading-icon img {
+	max-width: 5%;
+}
+
 @media (min-width: 320px) and (max-width: 570px) {
-    .navbar-brand {
-        margin-right: 0px;
-    }
+
+	.popular-question-image {
+		max-width: 80%;
+	}
+
+	.navbar-brand {
+		margin-right: 0px;
+	}
 }
 @media (min-width: 570px) and (max-width: 760px) {
-    .navbar-nav {
-        font-size: 2vw;
-        text-align: center;
-    }
+	.navbar-nav {
+		font-size: 2vw;
+		text-align: center;
+	}
 }
 /* Navbar-end */
 
@@ -44,6 +82,11 @@
   100% {
     transform: rotate(359deg);
   }
+}
+
+.answer-label {
+	display: block;
+	color: black;
 }
 /* Index-end */
 
@@ -205,16 +248,16 @@
     margin-bottom: 2px;
 }
 #tabs {
-	width: 98%;
-    max-width: 920px;
-	padding-left: 4px;
-	padding-right: 4px;
+	width: 100%;
+	max-width: 920px;
+	padding-left: 0px;
+	padding-right: 0px;
 	margin: 1% auto;
 	margin-bottom: -1px;
-    border-bottom: none;
-    overflow-x: auto;
-    overflow-y: hidden;
-    flex-wrap: nowrap;
+	border-bottom: none;
+	overflow-x: auto;
+	overflow-y: hidden;
+	flex-wrap: nowrap;
 }
 #tabs li {
 	cursor: pointer;

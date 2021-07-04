@@ -18,21 +18,64 @@
           {% endif %}
           
           {% if question.image %}
-						<img src="{{ question.image.url }}" class="popular-question-img">
-						<br>
+						<center>
+							<hr>
+							<img src="{{ question.image.url }}" class="popular-question-image">
+							<hr>
+						</center>
           {% endif %}
           
-				<small>{% total_answers question.id %} respostas <b>&nbsp;|&nbsp;</b> <span class="text-muted"><img src="/static/images/white-heart.png?version=3" width="15px"> {{ question.total_likes }}</span></small><small><b>&nbsp;|&nbsp;</b></small><small>{% question_total_views question.id %} visualizações</small>
+          <small class="p-q-info"> <!-- popular-question-info -->
+						<span class="p-q-info-total_answers">
+							{% total_answers question.id %} respostas
+						</span>
+						<span>&middot;</span>
+						<span class="p-q-info-total_likes">
+							{{ question.total_likes }}
+						</span>
+						<span>&middot;</span>
+						<span class="p-q-info-total_views">
+							{% question_total_views question.id %} visualizações
+						</span>
+					</small>
+					
 				{% if user.is_authenticated %}
 					{% answered user.username question.id as ANSWERED %}
 					{% if ANSWERED %}
-				<span style="display: block"><b>Sua resposta:</b></span> {% answer user.username question.id %}
+						<div class="p-q-user-answer"> <!-- popular question user answer -->
+							<hr>
+							<label>
+								Sua resposta:
+							</label>
+							<p>
+								{% answer user.username question.id %}
+							</p>
+						</div>
 					{% else %}
-				<a style="display: block" href="/question/{{ question.id }}"><button class="btn btn-outline-primary">Responder</button></a>
+						<div class="p-q-answer-field">
+							<span onclick="show_or_hide_response_form(this.nextElementSibling);">responder</span>
+							<form onsubmit="send_response_to_popular_question(this); return false;">
+								{% csrf_token %}
+								<input name="question_id" type="hidden" value="{{ question.id }}">
+								<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
+								<button type="submit" class="btn btn-outline-primary btn-sm">
+									<i class="far fa-paper-plane"></i>
+									Enviar
+								</button>
+							</form>
+						</div>
+						
+						<center class="p-q-loading-icon">
+							<img src="/static/images/loading.gif">
+						</center>
 					{% endif %}
 				{% else %}
-				<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.</p>
-			{% endif %}
+					<hr>
+					<p>
+						<a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder está pergunta.
+					</p>
+					<hr>
+				{% endif %}
 			</div>
 		</li>
 {% endfor %}
