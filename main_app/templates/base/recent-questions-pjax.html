@@ -25,29 +25,50 @@
 				{% fix_naturaltime question.pub_date|naturaltime %}
 			</div>
 		</small>
-		<hr>
+		
 		{% if user.is_authenticated %}
-				{% answered user.username question.id as ANSWERED %}
-				{% if ANSWERED %}
-					<label class="answer-label">Sua resposta:</label>
-					<p>
-						{% answer user.username question.id %}
-					</p>
-				{% else %}
-					{% ablockb question.creator.user.username user.username as BLOCKED %}
-					{% if BLOCKED %}
-						<span><br>Pergunta indisponível.</span>
+		
+					{% answered user.username question.id as ANSWERED %}
+					{% if ANSWERED %}
+						<div>
+							<hr>
+							<p>
+								<font color="black">Sua resposta:</font><br>
+								{% answer user.username question.id %}
+							</p>
+						</div>
 					{% else %}
-						<form id="form-{{ question.id }}" class="response-form" onsubmit="make_answer({{ question.id }}); return false;">
-							{% csrf_token %}
-							<input name="question_id" type="hidden" value="{{ question.id }}">
-							<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" onclick="return show_form_buttons(this.parentElement)"></textarea>
-							<button type="submit" class="btn btn-outline-primary btn-sm form-button" style="display: none"><i class="far fa-paper-plane"></i> Enviar</button>
-							<button type="button" class="btn btn-outline-primary btn-sm form-button" onclick="return hide_form_buttons(this.parentElement)" style="display: none"><i class="far fa-window-close"></i> Cancelar</button>
-						</form>
-						<img style="display: none" id="modal-{{ question.id }}" src="/static/images/loading.gif" width="5%;">
+						{% if render_directly %}
+							<div class="form-responder-pergunta" data-questionid="{{ question.id }}">
+								<div class="campo-responder-pergunta">
+									<div class="botao-mostrar-ou-ocultar-formulario" onclick="mostrar_formulario_de_resposta(this.nextElementSibling.getElementsByTagName('form')[0]);">
+										<a>responder</a>
+										<i class="far fa-edit"></i>
+									</div>
+									
+									<div>
+										<form class="formulario-responder-pergunta" onsubmit="enviar_resposta(this); return false;">
+											{% csrf_token %}
+											<input name="question_id" type="hidden" value="{{ question.id }}">
+											<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
+											<button type="submit" class="btn btn-outline-primary btn-sm">
+												<i class="far fa-paper-plane"></i>
+												Enviar
+											</button>
+										</form>
+									</div>
+									
+									<div class="icone-carregando">
+										<img src="/static/images/loading.gif">
+									</div>
+								</div>
+							</div>
+						{% else %}
+							<div class="form-responder-pergunta" data-questionid="{{ question.id }}">
+							</div>
+						{% endif %}
 					{% endif %}
-				{% endif %}
+		
 		{% else %}
 			<p><a href="/signin?redirect=/question/{{ question.id }}">Faça login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
 		{% endif %}

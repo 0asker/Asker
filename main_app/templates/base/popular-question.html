@@ -31,7 +31,7 @@
 						</span>
 						<span>&middot;</span>
 						<span class="p-q-info-total_likes">
-							{{ question.total_likes }}
+							{{ question.total_likes }} likes
 						</span>
 						<span>&middot;</span>
 						<span class="p-q-info-total_views">
@@ -42,32 +42,43 @@
 				{% if user.is_authenticated %}
 					{% answered user.username question.id as ANSWERED %}
 					{% if ANSWERED %}
-						<div class="p-q-user-answer"> <!-- popular question user answer -->
+						<div>
 							<hr>
-							<label>
-								Sua resposta:
-							</label>
 							<p>
+								<font color="black">Sua resposta:</font><br>
 								{% answer user.username question.id %}
 							</p>
 						</div>
 					{% else %}
-						<div class="p-q-answer-field">
-							<span onclick="show_or_hide_response_form(this.nextElementSibling);">responder</span>
-							<form onsubmit="send_response_to_popular_question(this); return false;">
-								{% csrf_token %}
-								<input name="question_id" type="hidden" value="{{ question.id }}">
-								<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
-								<button type="submit" class="btn btn-outline-primary btn-sm">
-									<i class="far fa-paper-plane"></i>
-									Enviar
-								</button>
-							</form>
-						</div>
-						
-						<center class="p-q-loading-icon">
-							<img src="/static/images/loading.gif">
-						</center>
+						{% if render_directly %}
+							<div class="form-responder-pergunta" data-questionid="{{ question.id }}">
+								<div class="campo-responder-pergunta">
+									<div class="botao-mostrar-ou-ocultar-formulario" onclick="mostrar_formulario_de_resposta(this.nextElementSibling.getElementsByTagName('form')[0]);">
+										<a>responder</a>
+										<i class="far fa-edit"></i>
+									</div>
+									
+									<div>
+										<form class="formulario-responder-pergunta" onsubmit="enviar_resposta(this); return false;">
+											{% csrf_token %}
+											<input name="question_id" type="hidden" value="{{ question.id }}">
+											<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
+											<button type="submit" class="btn btn-outline-primary btn-sm">
+												<i class="far fa-paper-plane"></i>
+												Enviar
+											</button>
+										</form>
+									</div>
+									
+									<div class="icone-carregando">
+										<img src="/static/images/loading.gif">
+									</div>
+								</div>
+							</div>
+						{% else %}
+							<div class="form-responder-pergunta" data-questionid="{{ question.id }}">
+							</div>
+						{% endif %}
 					{% endif %}
 				{% else %}
 					<hr>

@@ -308,7 +308,7 @@ def index(request):
 
 	# pega as perguntas da mais nova para a mais velha:
 	q = Question.objects.order_by('-pub_date')
-	p = Paginator(q, 15)
+	p = Paginator(q, 20)
 	page = request.GET.get('page', 1)
 	questions = p.page(page)
 	context['questions'] = questions
@@ -332,7 +332,7 @@ def index(request):
 	Paginação das perguntas populares:
 	'''
 	page = request.GET.get('p_page', 1)
-	p_questions = Paginator(p_questions, 15)
+	p_questions = Paginator(p_questions, 20)
 	context['popular_questions'] = p_questions.page(page)
 
 	if request.user.is_authenticated:
@@ -1076,7 +1076,7 @@ def reset_password(request):
 		u_p.verification_code = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
 		u_p.save()
 
-		send_mail('Asker: trocar senha', 'Para alterar sua senha do Asker, use o link: https://asker.pythonanywhere.com/reset-password?type=get-form&username={}&code={}\nEntre em contato por este email caso ocorra algum erro.'.format(u_p.user.username.replace(' ', '%20'), u_p.verification_code), EMAIL_HOST_USER, [u_p.user.email], fail_silently=False)
+		send_mail('Asker: trocar senha', 'Para alterar sua senha do Asker, use o link: https://br.asker.fun/reset-password?type=get-form&username={}&code={}\nEntre em contato por este email caso ocorra algum erro.'.format(u_p.user.username.replace(' ', '%20'), u_p.verification_code), EMAIL_HOST_USER, [u_p.user.email], fail_silently=False)
 
 		return HttpResponse('Email de verificação enviado. Por favor, verifique seus emails, caso não encontre, verifique a pasta de spam.')
 	elif request.GET.get('type', None) == 'get-form':
@@ -1275,10 +1275,10 @@ def get_popular_questions(request):
 		p_questions = calculate_popular_questions()
 		cache.set('p_questions', p_questions)
 	
-	paginator = Paginator(p_questions, 15)
+	paginator = Paginator(p_questions, 20)
 	page = request.GET.get('popular_page', 2)
 	
 	try:
-		return render(request, 'base/popular-question.html', {'popular_questions': paginator.page(page)})
+		return render(request, 'base/popular-question.html', {'popular_questions': paginator.page(page), 'render_directly': True})
 	except EmptyPage:
 		return HttpResponse('EmptyPage')

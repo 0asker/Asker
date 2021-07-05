@@ -61,10 +61,23 @@ function make_answer(qid) {
 	$.ajax({
 		url: '/save_answer',
 		type: 'post',
-		data: $('#form-' + qid).serialize(),
+		data: $(form).serialize(),
 		complete: function() {
 			modal.style.display = 'none';
-			div.innerHTML += '<span style="display: block"><b>Sua resposta:</b></span> ' + form.text.value;
+			
+			html = `
+<div>
+	<hr>
+	<label style="color: black">
+		Sua resposta:
+	</label>
+	<p>
+		` + form.text.value + `
+	</p>
+</div>
+`
+			
+			div.innerHTML += html;
 		},
 	});
 }
