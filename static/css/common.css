@@ -232,6 +232,16 @@
 }
 /* Rank-end */
 
+/* Notification */
+.page-btn-container {
+    display: flex;
+    padding: 2px;
+}
+.page-btn-container a {
+    margin: 2px;
+}
+/* Notification-end */
+
 /* General */
 .no-horiz-padding {
     padding-left: 0px;
@@ -276,7 +286,6 @@ main {
     margin: auto;
 }
 .small-text {
-    color: #888;
     font-size: 80%;
 }
 .list-group-item {

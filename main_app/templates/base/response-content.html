@@ -25,8 +25,7 @@
 		{% endif %}
 
 		<div class="heart-comment" id="like-counter-{{ response.id }}" onclick="like(this, {{ response.id }})">
-			<!-- TODO: icon class na img.hc-icon por compatibilidade! Remover a classe icon e manter apenas hc-icon quando trocar question.css por common.css -->
-			<img width="18px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="icon hc-icon">
+			<img width="18px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="hc-icon">
 			<span>{{ response.total_likes }}</span>
 		</div>
 		&nbsp;&nbsp;

@@ -8,25 +8,27 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 		
 		<title>Apagar sua conta</title>
-		
-		<style>
-			body {
-				width: 50%;
-				margin: auto;
-			}
-			
-			@media (min-width: 320px) and (max-width: 480px) {
-				body {
-					width: 90%;
-				}
-			}
-		</style>
+
+		<link rel="stylesheet" href="/static/css/common.css?v=5">
+		<script src="/static/js/cookieman.js?v=1"></script>
+		<script>
+			var cssfn = 'light.css';
+			var cssversion = '?v=4';
+			if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
+			var link = document.createElement('link');
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = '/static/css/' + cssfn + cssversion;
+			document.head.appendChild(link);
+		</script>
 	</head>
-	<body>
-		<p>Olá {{ user.username }}, é realmente uma pena sua decisão de deixar o Asker, você é muito importante para nós. Caso você volte, ficaremos muito felizes!</p>
+	<body><main><br><div class="card bg-main"><div class="card-body">
+		<p><b>Apagar sua conta</b></p>
+		<p>Olá {{ user.username }}, é realmente uma pena sua decisão de deixar o Asker. Você é muito importante para nós. Caso você volte, ficaremos muito felizes!</p>
 		<p>Use o botão abaixo para excluir sua conta.</p>
 		
 		<button id="delete-account-button" class="btn btn-danger" onclick="delete_question()">Excluir minha conta</button>
+		</div></div></main>
 		
 		<script>
 			function delete_question() {

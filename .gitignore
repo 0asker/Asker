@@ -6,6 +6,7 @@ __pycache__
 db.sqlite3
 media
 django_project/settings.py
+main_app/migrations/*
 
 # Backup files # 
 *.bak 
