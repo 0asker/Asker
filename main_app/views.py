@@ -36,24 +36,16 @@ import io
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
 
 
-SUCCESS_ACCOUNT_VERIFICATION = '''
-<style>
-			/* Estilos para a div abaixo. */
-			#alert-email-activation {
-				width: 50%;
-				margin: auto;
-			}
-
-			@media (min-width: 320px) and (max-width: 480px) {
-				#alert-email-activation {
-					width: 98%;
-				}
-			}
-		</style>
-		<div id="alert-email-activation" class="alert alert-success" role="alert">
-			<p>Conta verificada com sucesso!</p>
-		</div>
+import re
 '''
+Retorna True se a requisição vier de um dispositivo mobile.
+'''
+def mobile(request):
+	MOBILE_AGENT_RE=re.compile(r".*(iphone|mobile|androidtouch)",re.IGNORECASE)
+	
+	if MOBILE_AGENT_RE.match(request.META['HTTP_USER_AGENT']):
+		return True
+	return False
 
 
 def search_questions(query):
@@ -653,7 +645,8 @@ def ask(request):
 
 		return redirect('/question/' + str(q.id))
 
-	return render(request, 'ask.html', {'user_p': UserProfile.objects.get(user=request.user)})
+	return render(request, 'ask.html', {'user_p': UserProfile.objects.get(user=request.user),
+																			'is_mobile': mobile(request)})
 
 
 def logout(request):
