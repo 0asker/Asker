@@ -173,6 +173,14 @@ def calculate_popular_questions():
 			responses = q.total_responses
 	
 	'''
+	Calculando o total de visualizações da pergunta com mais visualizações.
+	'''
+	views = 0
+	for q in last_questions:
+		if q.total_views > views:
+			views = q.total_views
+	
+	'''
 	Adicionando as perguntas na variável questions e inicializando os pontos de acordo com o tempo de likes.
 	'''
 	for q in last_questions:
@@ -185,6 +193,16 @@ def calculate_popular_questions():
 		for q in questions:
 			if q[1] == question.id:
 				q[0] += question.total_responses / responses * 100
+
+	print(questions[-1])
+
+	'''
+	Incrementando pontos de acordo com o total de visualizações.
+	'''
+	for question in last_questions:
+		for q in questions:
+			if q[1] == question.id:
+				q[0] += question.total_views / views * 100
 
 	questions = sorted(questions, key=lambda questions: questions[0], reverse=True) # ordenação: com mais pontos para menos pontos.
 	ids = []
