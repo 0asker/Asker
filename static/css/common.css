@@ -231,6 +231,8 @@
     flex-grow: 1;
 }
 /* Rank-end */
+
+/* Notification */
 .page-btn-container {
     display: flex;
     padding: 2px;
@@ -238,7 +240,7 @@
 .page-btn-container a {
     margin: 2px;
 }
-/*  */
+/* Notification-end */
 
 /* General */
 .no-horiz-padding {
