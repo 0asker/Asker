@@ -46,6 +46,9 @@ hr {
 .clickable, .clickable:hover {
     color: #f8f9fa !important;
 }
+.small-text, .light-text {
+    color: #888;
+}
 /* General-end */
 
 /* Ask */

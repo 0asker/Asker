@@ -231,6 +231,14 @@
     flex-grow: 1;
 }
 /* Rank-end */
+.page-btn-container {
+    display: flex;
+    padding: 2px;
+}
+.page-btn-container a {
+    margin: 2px;
+}
+/*  */
 
 /* General */
 .no-horiz-padding {
@@ -276,7 +284,6 @@ main {
     margin: auto;
 }
 .small-text {
-    color: #888;
     font-size: 80%;
 }
 .list-group-item {
