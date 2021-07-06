@@ -597,10 +597,10 @@ def ask(request):
 	try:
 		last_q = Question.objects.filter(creator=UserProfile.objects.get(user=request.user))
 		last_q = last_q[last_q.count()-1] # pega a última questão feita pelo usuário.
-		if (timezone.now() - last_q.pub_date).seconds < 10:
+		if (timezone.now() - last_q.pub_date).seconds < 25:
 			return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
 			context = {'error': 'Ação não autorizada',
-					   'err_msg': 'Você deve esperar {} segundos para perguntar novamente.'.format(20 - (timezone.now() - last_q.pub_date).seconds),
+					   'err_msg': 'Você deve esperar {} segundos para perguntar novamente.'.format(25 - (timezone.now() - last_q.pub_date).seconds),
 					   'redirect': return_to}
 			return render(request, 'error.html', context)
 	except:

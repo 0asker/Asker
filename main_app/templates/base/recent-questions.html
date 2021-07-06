@@ -27,7 +27,7 @@
 				<div class="recent-question-info">
 					<span><span class="response-counter" data-iddapergunta="{{ question.id }}">{% total_answers question.id %}</span> resp.</span>
 					<span>&nbsp;&middot;&nbsp;</span>
-					<span>postado {% fix_naturaltime question.pub_date|naturaltime %}</span>
+					<span>perguntado {% fix_naturaltime question.pub_date|naturaltime %}</span>
 				</div>
 				
 				{% if user.is_authenticated %}
