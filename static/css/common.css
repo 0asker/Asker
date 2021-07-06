@@ -23,20 +23,6 @@
 	background-image: linear-gradient(to right, #bfc0c2, #cfcfd1, #dfdfe0, #efefef, #ffffff);
 }
 
-/* Formulário de responder perguntas direto pela página inicial: */
-.botao_responder {
-	cursor: pointer;
-}
-
-.icone-carregamento-pergunta-popular {
-	display: none;
-}
-
-.form-enviar-resposta {
-	display: none;
-}
-/* Fim: Formulário de responder perguntas direto pela página inicial: */
-
 @media (min-width: 320px) and (max-width: 570px) {
 
 	.popular-question-image {
@@ -77,9 +63,18 @@
   }
 }
 
-.answer-label {
-	display: block;
-	color: black;
+.recent-question-info {
+	font-size: smaller;
+}
+
+.question-title {
+	font-size: 1em;
+	font-weight: bold;
+}
+
+.end {
+	font-size: larger;
+	text-align: center;
 }
 /* Index-end */
 

@@ -38,80 +38,43 @@ news.onclick = function () {
 }
 
 
-function hide_form_buttons(form) {
-	form.getElementsByClassName('form-button')[0].style.display = 'none'
-	form.getElementsByClassName('form-button')[1].style.display = 'none'
-	return false
-}
-
-function show_form_buttons(form) {
-	form.getElementsByClassName('form-button')[0].style.display = 'inline'
-	form.getElementsByClassName('form-button')[1].style.display = 'inline'
-	return false
-}
-
-function make_answer(qid) {
-	form = document.getElementById('form-' + qid);
-	div = form.parentElement;
-	modal = document.getElementById('modal-' + qid);
+function enviar_resposta_pergunta_aba_recentes(form) {
 	
-	form.style.display = 'none';
-	modal.style.display = 'block';
+	form.style.opacity = 0.5;
+	form.submit_btn.disabled = true;
 	
 	$.ajax({
 		url: '/save_answer',
 		type: 'post',
 		data: $(form).serialize(),
 		complete: function() {
-			modal.style.display = 'none';
-			
-			html = `
-<div>
-	<hr>
-	<label style="color: black">
-		Sua resposta:
-	</label>
-	<p>
-		` + form.text.value + `
-	</p>
-</div>
+			for (let key in document.getElementsByClassName('user-response')) {
+				if (document.getElementsByClassName('user-response')[key].dataset['iddapergunta'] == form.question_id.value) {
+					
+					/* Aumenta o total de likes no contador de likes da pergunta. */
+					all_response_counter = document.getElementsByClassName('response-counter');
+					for (let index in all_response_counter) {
+						try {
+							if (all_response_counter[index].dataset['iddapergunta'] == form.question_id.value) {
+								all_response_counter[index].innerText = Number(all_response_counter[index].innerText) + 1;
+								break;
+							}
+						} catch {
+						}
+					}
+					
+					new_html = `
+<hr>
+<p>
+	<font color="black">Sua resposta:</font><br>
+		`+form.text.value+`
+</p>
 `
-			
-			div.innerHTML += html;
-		},
-	});
-}
-
-
-function show_or_hide_response_form(form) {
-	$(form).toggle(200);
-}
-
-
-function send_response_to_popular_question(form) {
-	form.parentElement.style.display = 'none';
-	form.parentElement.parentElement.getElementsByClassName('p-q-loading-icon')[0].style.display = 'block';
-	
-	$.ajax({
-		url: '/save_answer',
-		type: 'post',
-		data: $(form).serialize(),
-		complete: function() {
-			form.parentElement.parentElement.getElementsByClassName('p-q-loading-icon')[0].style.display = 'none';
-			
-			html = `
-<div class="p-q-user-answer"> <!-- popular question user answer -->
-	<hr>
-	<label>
-		Sua resposta:
-	</label>
-	<p>
-		` + form.text.value + `
-	</p>
-</div>
-`
-			
-			form.parentElement.parentElement.innerHTML += html;
+					document.getElementsByClassName('user-response')[key].innerHTML = new_html;
+				}
+			}
 		}
 	});
+	
+	return false;
 }

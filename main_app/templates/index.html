@@ -17,7 +17,7 @@
 	}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="/static/css/common.css?v=3.28">
+<link rel="stylesheet" href="/static/css/common.css?v=6">
 <script src="/static/js/cookieman.js?v=1"></script>
 <script>
 	var cssfn = 'light.css';
@@ -45,7 +45,7 @@
 	}
 }
 </style>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 	<body>
@@ -62,17 +62,19 @@
 		</ul>
 <!-- Questões recentes -->
 <section class="card bg-main" id="n_questions">
-{% include "base/recent-questions-pjax.html" %}
+{% include "base/recent-questions.html" %}
 </section>
 <!-- !Questões recentes -->
 
 <!-- Questões populares -->
 <section class="card bg-main" id="p_questions">
 	<ul class="list-group list-group-flush infinite-container" id="popular-questions-ul">
-		{% include "base/popular-question.html" %}
+		{% include "base/popular-questions.html" %}
 	</ul>
-	<button class="btn btn-outline-primary btn-sm" onclick="show_more_popular_questions(this)">Carregar mais</button>
-	<img src="/static/images/loading.gif" id="loading_popular_questions-icon" width="6%" style="display: none">
+	
+	<div class="end">
+		<p>Fim! <i class="far fa-sad-cry"></i> Veja as <a href="/news">perguntas recentes.</a></p>
+	</div>
 </section>
 <!-- !Questões populares -->
 	</main>
@@ -82,145 +84,10 @@ if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
 }
 		</script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
-<!-- Info Links ads -->
-<script type="text/javascript"> var infolinks_pid = 3334159; var infolinks_wsid = 0; </script> <script type="text/javascript" src="//resources.infolinks.com/js/infolinks_main.js"></script>
-<!-- !Info Links ads -->
-
-<script>
-	/* Carrega mais questões populares. */
-	next_popular_questions_page = 2; /* próxima página a ser pega das questões populares. É incrementado a cada AJAX. */
-	function show_more_popular_questions(load_more_button) {
-		load_more_button.style.display = "none";
-		document.getElementById("loading_popular_questions-icon").style.display = "inline";
-		$.ajax({
-			url: "get-popular-questions",
-			data: {
-				"popular_page": next_popular_questions_page,
-			},
-			complete: function(data) {
-				
-				if (data.responseText == "EmptyPage") {
-					load_more_button.remove();
-					
-					html = `
-<br><p align="center"><i class="far fa-sad-cry"></i> Fim! Veja as novas perguntas <a href="/news">aqui.</a></p>
-`
-					
-					document.getElementById("p_questions").innerHTML += html;
-				} else {
-					document.getElementById("popular-questions-ul").innerHTML += data.responseText;
-				}
-				
-				next_popular_questions_page++;
-				load_more_button.style.display = "inline-block";
-				document.getElementById("loading_popular_questions-icon").style.display = "none";
-			}
-		});
-	}
-</script>
-
-<script>
-	var csrf_token = "{{ csrf_token }}";
-</script>
-
-<script src="/static/js/index.js?v=9.19"></script>
-
-
-<!-- Estilização do campo de responder perguntas. -->
-<style>
-	.campo-responder-pergunta .botao-mostrar-ou-ocultar-formulario a {
-		color: #007bff;
-	}
-	
-	.botao-mostrar-ou-ocultar-formulario {
-		cursor: pointer;
-	}
-	
-	.icone-carregando img {
-		max-width: 5%;
-		display: none;
-	}
-	
-	.formulario-responder-pergunta {
-		display: none;
-	}
-</style>
-
-
-<!-- JavaScript necessário no final da página (index.html). -->
-<script>
-	/* Adiciona, em cada pergunta, o formulário. */
-	campo_perguntas = document.getElementsByClassName("form-responder-pergunta");
-	
-	for (let index in campo_perguntas) {
-		
-		try {
-			question_id = campo_perguntas[index].dataset["questionid"];
-		} catch {
-		}
-		
-		campo_perguntas[index].innerHTML += `
-<div class="campo-responder-pergunta">
-	<div class="botao-mostrar-ou-ocultar-formulario" onclick="mostrar_formulario_de_resposta(this.nextElementSibling.getElementsByTagName('form')[0]);">
-		<a>responder</a>
-		<i class="far fa-edit"></i>
-	</div>
-	
-	<div>
-		<form class="formulario-responder-pergunta" onsubmit="enviar_resposta(this); return false;">
-			<input type="hidden" name="csrfmiddlewaretoken" value="`+csrf_token+`">
-			<input name="question_id" type="hidden" value="`+question_id+`">
-			<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
-			<button type="submit" class="btn btn-outline-primary btn-sm">
-				<i class="far fa-paper-plane"></i>
-				Enviar
-			</button>
-		</form>
-	</div>
-	
-	<div class="icone-carregando">
-		<img src="/static/images/loading.gif">
-	</div>
-</div>
-`;
-	}
-	
-	function mostrar_formulario_de_resposta(form) {
-		$(form).toggle(150);
-	}
-	
-	function enviar_resposta(form) {
-		/* Ativa ícone de carregamento: */
-		form.style.display = "none";
-		form.parentElement.nextElementSibling.getElementsByTagName("img")[0].style.display = "block";
-		
-		$.ajax({
-			url: "save_answer",
-			type: "post",
-			data: $(form).serialize(),
-			complete: function() {
-				
-				form.parentElement.parentElement.style.display = "none";
-				
-				new_html = `
-<div>
-	<hr>
-	<p>
-		<font color="black">Sua resposta:</font><br>
-		`+form.text.value+`
-	</p>
-</div>
-`
-				
-				form.parentElement.parentElement.parentElement.parentElement.innerHTML += new_html;
-			}
-		});
-	}
-</script>
+<script src="/static/js/index.js?v=10"></script>
 
 	</body>
 </html>

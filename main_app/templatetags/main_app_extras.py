@@ -93,15 +93,11 @@ def last_response(question_id):
 
 @register.filter(name='cut_description')
 def cut_description(description):
-	if len(description) < 300:
+	if len(description) <= 300:
 		return description
-
-	pt1 = description[:300]
-	pt2 = description[300:]
-	s=''
-	if len(pt2) > 0:
-		s = '{}<span style="color: #007bff; cursor: pointer;" onclick="this.nextSibling.style.display=`inline`; this.style.display=`none`; this.nextSibling.nextSibling.style.display=`inline`">...Mostrar mais</span><span style="display: none">{}</span><span style="display: none; color: #007bff; cursor: pointer;" onclick="this.previousSibling.style.display=`none`; this.style.display=`none`; this.previousSibling.previousSibling.style.display=`inline`"> Mostrar menos</span>'.format(pt1, pt2)
-	return s.replace('\n', '<br>')
+	
+	description = '<span>' + description[:300] + '<font onclick="$(this).toggle(0); $(this.parentElement.nextElementSibling).toggle(0);" style="cursor: pointer; color: #007bff">... Mostrar mais</font></span><span style="display: none">' + description[300:] + ' <font onclick="$(this.parentElement).toggle(0); $(this.parentElement.previousElementSibling.getElementsByTagName(`font`)[0]).toggle(0);" style="cursor: pointer; color: #007bff">&nbsp;Mostrar menos</font></span>'
+	return description
 
 
 @register.filter(name='blocked')
