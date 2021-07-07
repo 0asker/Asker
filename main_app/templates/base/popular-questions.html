@@ -18,11 +18,11 @@
 					</p>
 				{% endif %}
 				
-				<div class="text-muted recent-question-info">
+				<small class="text-muted">
 					<span><span class="response-counter" data-iddapergunta="{{ question.id }}">{% total_answers question.id %}</span> resp.</span>
 					<span>&nbsp;&middot;&nbsp;</span>
 					<span>perguntado {% fix_naturaltime question.pub_date|naturaltime %}</span>
-				</div>
+				</small>
 				
 				{% if user.is_authenticated %}
 					{% answered user.username question.id as ANSWERED %}
@@ -48,7 +48,7 @@
 							</div>
 							
 							<div style="display: none">
-								<form onsubmit="return enviar_resposta_pergunta_aba_recentes(this);">
+								<form onsubmit="return enviar_resposta_pergunta(this);">
 									{% csrf_token %}
 									<input name="question_id" type="hidden" value="{{ question.id }}">
 									<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>

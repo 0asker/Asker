@@ -18,7 +18,7 @@
 					</p>
 				{% endif %}
 				
-				<div class="text-muted recent-question-info">
+				<small class="text-muted">
 					<span><span class="response-counter" data-iddapergunta="{{ question.id }}">{% total_answers question.id %}</span> resp.</span>
 					<span>&nbsp;&middot;&nbsp;</span>
 					<span>perguntado {% fix_naturaltime question.pub_date|naturaltime %}</span>
@@ -32,7 +32,7 @@
 							<hr>
 							<p>
 								<font color="black">Sua resposta:</font><br>
-									{% answer user.username question.id %}
+									{% answer user.username q.id %}
 							</p>
 						</div>
 						

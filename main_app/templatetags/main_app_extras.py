@@ -7,6 +7,11 @@ register = template.Library()
 
 
 @register.simple_tag
+def format_question_description_for_json(description):
+	return description.replace('`', '\`')
+
+
+@register.simple_tag
 def MINIMUM_POINTS_FOR_POSTING_IMAGES():
 	return general_rules.MINIMUM_POINTS_FOR_POSTING_IMAGES
 

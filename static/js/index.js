@@ -38,7 +38,7 @@ news.onclick = function () {
 }
 
 
-function enviar_resposta_pergunta_aba_recentes(form) {
+function enviar_resposta_pergunta(form) {
 	
 	form.style.opacity = 0.5;
 	form.submit_btn.disabled = true;
@@ -64,7 +64,6 @@ function enviar_resposta_pergunta_aba_recentes(form) {
 					}
 					
 					new_html = `
-<hr>
 <p>
 	<font color="black">Sua resposta:</font><br>
 		`+form.text.value+`
@@ -78,3 +77,84 @@ function enviar_resposta_pergunta_aba_recentes(form) {
 	
 	return false;
 }
+
+
+/* Renderiza as questões recentes. */
+recent_questions_list = document.getElementById("n_questions-list");
+
+for (let index in recent_questions) {
+	
+	question = recent_questions[index]
+	
+	new_html = `
+	<li class="list-group-item bg-main">
+		<div class="card-body">
+			<h2 class="question-title">
+				<a href="/question/`+question["id"]+`">
+					`+question["text"]+`
+				</a>
+			</h2>`
+
+	if (question["description"] != "") {
+		
+		if (question["description"].length > 300) {
+			/* Mostrar mais e mostrar menos. */
+			new_html += "<p><span>" + question["description"].slice(0, 300) + '<font onclick="$(this).toggle(0); $(this.parentElement.nextElementSibling).toggle(0);" style="cursor: pointer; color: #007bff">... Mostrar mais</font></span><span style="display: none">' + question["description"].slice(300) + ' <font onclick="$(this.parentElement).toggle(0); $(this.parentElement.previousElementSibling.getElementsByTagName(`font`)[0]).toggle(0);" style="cursor: pointer; color: #007bff">Mostrar menos</font></span></p>';
+		} else {
+			new_html += "<p>" + question["description"].replaceAll("\n", "<br>") + "</p>";
+		}
+	}
+
+	new_html += `
+		<small class="text-muted">
+			<span>respostas: <span class="response-counter" data-iddapergunta="`+question["id"]+`">`+question["total_answers"]+`</span></span>
+			<span>&nbsp;&middot;&nbsp;</span>
+			<span>perguntado `+question['pub_date']+`</span>
+		</small>
+		<hr>
+	`
+
+	if (question["user_response"] != "null") {
+		/* Caso o usuário logado tenha respondido a pergunta, renderiza a resposta. */
+		new_html += `
+			<div class="user-response" data-iddapergunta="`+question["id"]+`">
+			<p>
+				<font color="black">Sua resposta:</font><br>
+				`+question["user_response"]+`
+			</p>
+		`
+	} else {
+		/* Caso o usuário logado não tenha respondido a pergunta, renderiza o formulário para responder. */
+		new_html += `
+			<div class="user-response" data-iddapergunta="`+question["id"]+`">
+				<div>
+					<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(100); $(this.parentElement.nextElementSibling).toggle(100);">
+						<i class="fas fa-share"></i>
+						responder
+					</button>
+				</div>
+				
+				<div style="display: none">
+					<form onsubmit="return enviar_resposta_pergunta(this);">
+						<input name="csrfmiddlewaretoken" type="hidden" value="`+csrf_token+`">
+						<input name="question_id" type="hidden" value="`+question["id"]+`">
+						<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
+						<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">
+							<i class="far fa-paper-plane"></i>
+							Enviar
+						</button>
+					</form>
+				</div>
+			</div>
+		`
+	}
+
+	new_html += `
+		</div>
+	</li>
+`;
+	recent_questions_list.innerHTML += new_html;
+}
+
+$(recent_questions_list).toggle(0);
+$("n_questions").toggle(0);

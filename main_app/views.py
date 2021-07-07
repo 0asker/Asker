@@ -622,7 +622,9 @@ def ask(request):
 			return render(request, 'ask.html', {'error': '<p>Pergunta inválida.</p>'})
 
 		description = bs(request.POST.get('description'), 'html.parser').text
-		text = bs(request.POST.get('question'), 'html.parser').text
+		description = description.replace('\r', '')
+		
+		text = request.POST.get('question')
 		description = replace_url_to_link(description) # transforma links (http, https, etc) em âncoras.
 
 		if not is_a_valid_question(text, description):
