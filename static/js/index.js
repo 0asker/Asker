@@ -1,3 +1,8 @@
+if (getDarkCookie() == 'true') {
+	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+}
+
 popular = document.getElementById('popular')
 news = document.getElementById('news')
 logo = document.getElementById('logo')
