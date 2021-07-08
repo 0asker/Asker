@@ -37,7 +37,7 @@ function delete_response(response_button_dom_el, response_id) {
     			response_id: response_id,
     		},
     		complete: function() {
-    			response_button_dom_el.parentElement.parentElement.parentElement.parentElement.remove();
+    			response_button_dom_el.parentElement.parentElement.parentElement.remove();
     		}
     	})
     }
