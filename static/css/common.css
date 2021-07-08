@@ -12,23 +12,14 @@
 }
 */
 
-/*
- * CSS de imagens que ficam na página inicial em questões populares. */
-.popular-question-image {
-	max-width: 50%;
-	display: block;
-}
 
-.p-q-info {
-	background-image: linear-gradient(to right, #bfc0c2, #cfcfd1, #dfdfe0, #efefef, #ffffff);
+/* Formulário de responder perguntas em question/x */
+textarea.large-compact {
+	height: 65px;
+	transition: all 0.3s ease-out;
 }
 
 @media (min-width: 320px) and (max-width: 570px) {
-
-	.popular-question-image {
-		max-width: 80%;
-	}
-
 	.navbar-brand {
 		margin-right: 0px;
 	}

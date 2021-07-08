@@ -31,15 +31,10 @@
 		&nbsp;&nbsp;
 
 		{% if response.creator.user.username == user.username %}
-		<div class="dropdown btn-group dropup response-control" id="options-dropdown">
-		  <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			  Opções
-		  </button>
-		  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-			<button class="dropdown-item" onclick="delete_response(this, {{ response.id }})">Apagar</button>
-			<button class="dropdown-item" onclick="document.getElementById('edit-response-form').style.display='block'">Editar</button>
-		  </div>
-		</div>
+			<div class="btn-group" role="group" style="float: right;">
+				<button class="btn btn-outline-primary" onclick="delete_response(this, {{ response.id }})"><i class="fas fa-trash"></i>&nbsp;Apagar</button>
+				<button class="btn btn-outline-primary" onclick="document.getElementById('edit-response-form').style.display='block'"><i class="fas fa-edit"></i>&nbsp;Editar</button>
+			</div>
 		{% elif question.creator.user.username == user.username %}
 			{% if question.may_choose_answer %}
 			<button class="btn btn-primary btn-sm response-control choose-answer-btn" type="button" onclick="chooseAnswer({{ response.id }})">
