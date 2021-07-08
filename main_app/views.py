@@ -194,8 +194,6 @@ def calculate_popular_questions():
 			if q[1] == question.id:
 				q[0] += question.total_responses / responses * 100
 
-	print(questions[-1])
-
 	'''
 	Incrementando pontos de acordo com o total de visualizações.
 	'''
