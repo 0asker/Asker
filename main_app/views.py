@@ -84,13 +84,6 @@ def search_questions(query):
   return result
 
 
-def replace_url_to_link(value):
-    urls = re.compile(r"((https?):((//)|(\\\\))+[\w\d:#@%/;$()~_?\+-=\\\.&]*)", re.MULTILINE|re.UNICODE)
-    value = urls.sub(r'<a href="\1" target="_blank">\1</a>', value)
-    urls = re.compile(r"([\w\-\.]+@(\w[\w\-]+\.)+[\w\-]+)", re.MULTILINE|re.UNICODE)
-    value = urls.sub(r'<a href="mailto:\1">\1</a>', value)
-    return value
-
 def compress_animated(bio, max_size, max_frames):
 	im = Image.open(bio)
 	frames = list()
@@ -623,7 +616,6 @@ def ask(request):
 		description = description.replace('\r', '')
 		
 		text = request.POST.get('question')
-		description = replace_url_to_link(description) # transforma links (http, https, etc) em âncoras.
 
 		if not is_a_valid_question(text, description):
 			return HttpResponse('Proibido.')
