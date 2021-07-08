@@ -39,7 +39,7 @@ for (let index in recent_questions) {
 			/* Mostrar mais e mostrar menos. */
 			new_html += "<p><span>" + question["description"].slice(0, 300) + '<font onclick="$(this).toggle(0); $(this.parentElement.nextElementSibling).toggle(0);" style="cursor: pointer; color: #007bff">... Mostrar mais</font></span><span style="display: none">' + question["description"].slice(300) + ' <font onclick="$(this.parentElement).toggle(0); $(this.parentElement.previousElementSibling.getElementsByTagName(`font`)[0]).toggle(0);" style="cursor: pointer; color: #007bff">Mostrar menos</font></span></p>';
 		} else {
-			new_html += "<p>" + question["description"].replaceAll("\n", "<br>") + "</p>";
+			new_html += "<p class='description'>" + question["description"].replaceAll("\n", "<br>") + "</p>";
 		}
 	}
 
@@ -117,7 +117,7 @@ for (let index in popular_questions) {
 			/* Mostrar mais e mostrar menos. */
 			new_html += "<p><span>" + question["description"].slice(0, 300) + '<font onclick="$(this).toggle(0); $(this.parentElement.nextElementSibling).toggle(0);" style="cursor: pointer; color: #007bff">... Mostrar mais</font></span><span style="display: none">' + question["description"].slice(300) + ' <font onclick="$(this.parentElement).toggle(0); $(this.parentElement.previousElementSibling.getElementsByTagName(`font`)[0]).toggle(0);" style="cursor: pointer; color: #007bff">Mostrar menos</font></span></p>';
 		} else {
-			new_html += "<p>" + question["description"].replaceAll("\n", "<br>") + "</p>";
+			new_html += "<p class='description'>" + question["description"].replaceAll("\n", "<br>") + "</p>";
 		}
 	}
 
@@ -252,3 +252,9 @@ function enviar_resposta_pergunta(form) {
 	
 	return false;
 }
+
+
+/* Linkify */
+$('.description').linkify({
+	target: "_blank"
+});
