@@ -66,14 +66,22 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 		<main>
 			<div class="card bg-main">
 				<div class="card-body">
+					
 					<div class="poster-container">
-					<a class="poster-info" href="/user/{{ question.creator.user.username }}">
-						<div class="poster-profile-pic-container">
-              <img class="poster-profile-pic-popover" width="45px" src="{{ question.creator.avatar.url }}" alt="{{ question.creator.user.username }}">
-            </div>
-						<div class="poster-text-container"><div><span>{{ question.creator.user.username }}</span><br><span title="{{ question.pub_date }}" class="post-pub-date"> {% fix_naturaltime question.pub_date|naturaltime %}</span></div></div>
-					</a>
+						<a class="poster-info" href="/user/{{ question.creator.user.username }}">
+							<div class="poster-profile-pic-container">
+								<img class="poster-profile-pic-popover" width="45px" src="{{ question.creator.avatar.url }}" alt="{{ question.creator.user.username }}">
+							</div>
+							<div class="poster-text-container">
+								<div>
+									<span>{{ question.creator.user.username }}</span>
+									<br>
+									<span title="{{ question.pub_date }}" class="post-pub-date">{% fix_naturaltime question.pub_date|naturaltime %}</span>
+								</div>
+							</div>
+						</a>
 					</div>
+					
 					<h3>{{ question.text }}</h3>
 					{% if question.description != '' %}
 					<hr>
