@@ -301,3 +301,9 @@ function show_comments(element, response_id, jaAbriu, usuario_logado) {
         }
     });
 }
+
+
+/* Linkify */
+$(".q-description").linkify({
+	target: "_blank"
+});
