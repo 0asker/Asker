@@ -2,68 +2,47 @@
 {% load main_app_extras %}
 <!doctype html>
 <html lang="pt-br">
-<head>
-<title>Asker | Página inicial</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+	<head>
+		<title>Asker | Página inicial</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Faça e responda perguntas na melhor e mais divertida comunidade de perguntas e respostas!">
+		<meta name="keywords" content="br.asker.fun, asker.fun, perguntas, respostas, asker">
 
-<meta name="description" content="Faça e responda perguntas na melhor e mais divertida comunidade de perguntas e respostas!">
-<meta name="keywords" content="br.asker.fun, asker.fun, perguntas, respostas, asker">
+		<style id="wait">
+			body {
+				visibility: hidden;
+				opacity: 0;
+			}
+		</style>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/static/css/common.css?v=6">
+		<script src="/static/js/cookieman.js?v=1"></script>
+		<script>
+			var cssfn = 'light.css';
+			var cssversion = '?v=3';
+			if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
+			var link = document.createElement('link');
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = '/static/css/' + cssfn + cssversion;
+			document.head.appendChild(link);
 
-<style id="wait">
-	body {
-		visibility: hidden;
-		opacity: 0;
-	}
-</style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="/static/css/common.css?v=6">
-<script src="/static/js/cookieman.js?v=1"></script>
-<script>
-	var cssfn = 'light.css';
-	var cssversion = '?v=3';
-	if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
-	var link = document.createElement('link');
-	link.rel = 'stylesheet';
-	link.type = 'text/css';
-	link.href = '/static/css/' + cssfn + cssversion;
-	document.head.appendChild(link);
+			document.getElementById('wait').remove();
+		</script>
 
-	document.getElementById('wait').remove();
-</script>
-
-<style>
-.popular-question-img {
-	display: block;
-	max-width: 60%;
-	margin: auto;
-}
-
-@media (min-width: 320px) and (max-width: 480px) {
-	.popular-question-img {
-		max-width: 90%;
-	}
-}
-</style>
-<script data-ad-client="ca-pub-4483250714447468" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-var csrf_token = "{{ csrf_token }}";
-</script>
-</head>
+		<script data-ad-client="ca-pub-4483250714447468" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+			var csrf_token = "{{ csrf_token }}";
+		</script>
+	</head>
 
 	<body>
 	{% include "includes/navbar.html" %}
 	{{ account_verification_alert|safe }}
 	<main>
-		<ul class="nav nav-tabs" id="tabs">
-			<li class="nav-item">
-				<span class="nav-link bg-main-tab" id="popular">Popular</span>
-			</li>
-			<li class="nav-item">
-				<span class="nav-link bg-main-tab" id="news">Novas perguntas</span>
-			</li>
-		</ul>
+		<!-- Barra de navegação (popular / novas perguntas) é adicionada via JavaScript. -->
 <!-- Questões recentes -->
 <section class="card bg-main" id="n_questions" style="display: none">
 	<ul class="list-group list-group-flush" id="n_questions-list">
@@ -90,7 +69,7 @@ recent_questions=[{% for q in questions %}{"id":{{ q.id }},"text":"{{ q.text }}"
 popular_questions=[{% for q in popular_questions %}{"id":{{ q.id }},"text":"{{ q.text }}","description":`{% format_question_description_for_json q.description %}`,"pub_date":"{% fix_naturaltime q.pub_date|naturaltime %}","total_answers":{% total_answers q.id %},"user_response":`{% answer user.username q.id %}`},{% endfor %}];
 </script>
 
-<script src="/static/js/index.js?v=20"></script>
+<script src="/static/js/index.js?v=22"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 	</body>

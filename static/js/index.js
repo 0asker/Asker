@@ -3,7 +3,19 @@ if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
 }
 
-
+/* Renderiza a barra de navegação (popular / novas perguntas) */
+new_html = `
+<ul class="nav nav-tabs" id="tabs">
+	<li class="nav-item">
+		<span class="nav-link bg-main-tab" id="popular">Popular</span>
+	</li>
+	<li class="nav-item">
+		<span class="nav-link bg-main-tab" id="news">Novas perguntas</span>
+	</li>
+</ul>
+`;
+main = document.getElementsByTagName("main")[0];
+main.innerHTML = new_html + main.innerHTML;
 
 /* Renderiza as questões recentes. */
 recent_questions_list = document.getElementById("n_questions-list");
@@ -19,7 +31,7 @@ for (let index in recent_questions) {
 				<a href="/question/`+question["id"]+`">
 					`+question["text"]+`
 				</a>
-			</h2>`
+			</h2>`;
 
 	if (question["description"] != "") {
 		
@@ -38,7 +50,7 @@ for (let index in recent_questions) {
 			<span>perguntado `+question['pub_date']+`</span>
 		</small>
 		<hr>
-	`
+	`;
 
 	if (question["user_response"] != "null") {
 		/* Caso o usuário logado tenha respondido a pergunta, renderiza a resposta. */
@@ -48,7 +60,7 @@ for (let index in recent_questions) {
 				<font color="black">Sua resposta:</font><br>
 				`+question["user_response"]+`
 			</p>
-		`
+		`;
 	} else {
 		/* Caso o usuário logado não tenha respondido a pergunta, renderiza o formulário para responder. */
 		new_html += `
@@ -72,7 +84,7 @@ for (let index in recent_questions) {
 					</form>
 				</div>
 			</div>
-		`
+		`;
 	}
 
 	new_html += `
@@ -97,7 +109,7 @@ for (let index in popular_questions) {
 				<a href="/question/`+question["id"]+`">
 					`+question["text"]+`
 				</a>
-			</h2>`
+			</h2>`;
 
 	if (question["description"] != "") {
 		
@@ -116,7 +128,7 @@ for (let index in popular_questions) {
 			<span>perguntado `+question['pub_date']+`</span>
 		</small>
 		<hr>
-	`
+	`;
 
 	if (question["user_response"] != "null") {
 		/* Caso o usuário logado tenha respondido a pergunta, renderiza a resposta. */
@@ -126,7 +138,7 @@ for (let index in popular_questions) {
 				<font color="black">Sua resposta:</font><br>
 				`+question["user_response"]+`
 			</p>
-		`
+		`;
 	} else {
 		/* Caso o usuário logado não tenha respondido a pergunta, renderiza o formulário para responder. */
 		new_html += `
@@ -150,7 +162,7 @@ for (let index in popular_questions) {
 					</form>
 				</div>
 			</div>
-		`
+		`;
 	}
 
 	new_html += `
@@ -161,44 +173,43 @@ for (let index in popular_questions) {
 }
 
 
+popular = document.getElementById('popular');
+news = document.getElementById('news');
+logo = document.getElementById('logo');
 
-popular = document.getElementById('popular')
-news = document.getElementById('news')
-logo = document.getElementById('logo')
-
-p_tab = document.getElementById('p_questions')
-n_tab = document.getElementById('n_questions')
+p_tab = document.getElementById('p_questions');
+n_tab = document.getElementById('n_questions');
 
 if (window.location.href.indexOf('news') == -1) {
-	popular.classList.add('active')
-	logo.href = '/popular'
-	p_tab.style.display = 'block'
-	n_tab.style.display = 'none'
+	popular.classList.add('active');
+	logo.href = '/popular';
+	p_tab.style.display = 'block';
+	n_tab.style.display = 'none';
 } else {
-	news.classList.add('active')
-	logo.href = '/news'
-	p_tab.style.display = 'none'
-	n_tab.style.display = 'block'
+	news.classList.add('active');
+	logo.href = '/news';
+	p_tab.style.display = 'none';
+	n_tab.style.display = 'block';
 }
 
 
 // controlando cliques em <li> da <ul> de ID = tabs
 popular.onclick = function () {
-	popular.classList.add('active')
-	news.classList.remove('active')
+	popular.classList.add('active');
+	news.classList.remove('active');
 	window.history.pushState("object or string", "Title", "/popular");
-	logo.href = '/popular'
-	p_tab.style.display = 'block'
-	n_tab.style.display = 'none'
+	logo.href = '/popular';
+	p_tab.style.display = 'block';
+	n_tab.style.display = 'none';
 }
 
 news.onclick = function () {
-	news.classList.add('active')
-	popular.classList.remove('active')
+	news.classList.add('active');
+	popular.classList.remove('active');
 	window.history.pushState("object or string", "Title", "/news");
-	logo.href = '/news'
-	p_tab.style.display = 'none'
-	n_tab.style.display = 'block'
+	logo.href = '/news';
+	p_tab.style.display = 'none';
+	n_tab.style.display = 'block';
 }
 
 
@@ -223,7 +234,7 @@ function enviar_resposta_pergunta(form) {
 								all_response_counter[index].innerText = Number(all_response_counter[index].innerText) + 1;
 								break;
 							}
-						} catch {
+						} catch (e) {
 						}
 					}
 					
@@ -232,7 +243,7 @@ function enviar_resposta_pergunta(form) {
 	<font color="black">Sua resposta:</font><br>
 		`+form.text.value+`
 </p>
-`
+`;
 					document.getElementsByClassName('user-response')[key].innerHTML = new_html;
 				}
 			}
