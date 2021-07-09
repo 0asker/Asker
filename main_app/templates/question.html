@@ -82,7 +82,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 						</a>
 					</div>
 					
-					<h3>{{ question.text }}</h3>
+					<h2 style="font-size: 1.5em">{{ question.text }}</h2>
 					{% if question.description != '' %}
 					<hr>
 					<p class="q-description">{{ question.description|cut_description|safe|linebreaksbr }}</p>
