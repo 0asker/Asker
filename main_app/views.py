@@ -366,6 +366,10 @@ def question(request, question_id):
 
 	context = {'question': q,
 			   'responses': responses}
+	
+	if mobile(request) and random.choice([1,2,3,4]) == 4:
+		print('oi' * 1000)
+		context['MOBILE_ADS'] = True
 
 	if not request.user.is_anonymous:
 		context['user_p'] = UserProfile.objects.get(user=request.user)

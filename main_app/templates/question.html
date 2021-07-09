@@ -185,6 +185,18 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 				</div>
 			</div>
 
+{% if MOBILE_ADS %}
+	<style>
+		#adsterra {
+			max-width: 40%;
+		}
+	</style>
+	<div id="adsterra">
+		<script async="async" data-cfasync="false" src="//pl16405437.alternativecpmgate.com/a5a82325576f4300f3eeba835c04e59a/invoke.js"></script>
+		<div id="container-a5a82325576f4300f3eeba835c04e59a"></div>
+	</div>
+{% endif %}
+
 			<section class="card bg-main" id="responses">
   				<div class="card-header">
     				{{ question.total_responses }} respostas
