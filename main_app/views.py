@@ -42,7 +42,7 @@ Retorna True se a requisição vier de um dispositivo mobile.
 '''
 def mobile(request):
 	MOBILE_AGENT_RE=re.compile(r".*(iphone|mobile|androidtouch)",re.IGNORECASE)
-	
+
 	if MOBILE_AGENT_RE.match(request.META['HTTP_USER_AGENT']):
 		return True
 	return False
@@ -50,17 +50,17 @@ def mobile(request):
 
 def search_questions(query):
   queries = query.split()
-  
+
   all_questions = Question.objects.all()
-  
+
   result = {'questions': []}
-  
+
   for question in all_questions:
     reputation = 0
     for query in queries:
       if query in question.text or query in question.description:
         reputation += 1
-    
+
     precision = (reputation / len(queries)) * 100
     if precision >= 70:
       result['questions'].append({
@@ -69,7 +69,7 @@ def search_questions(query):
         'id': question.id,
         'precision': precision,
       })
-  
+
   '''
     {
       ['title': 'título da pergunta',
@@ -78,9 +78,9 @@ def search_questions(query):
       'precision': 'precisão da pergunta baseado na consulta do usuário',]
     }
   '''
-  
-  
-  
+
+
+
   return result
 
 
@@ -142,13 +142,13 @@ def get_client_ip(request):
 
 def calculate_popular_questions():
 	last_questions = Question.objects.order_by('-pub_date')[:100]
-	
+
 	'''
 	Essa variável guarda, dentro, as perguntas e seus totais de pontos.
 	Por exemplo: questions[0][0] é o total de pontos. questions[0][1] é o ID da pergunta.
 	'''
 	questions = []
-	
+
 	'''
 	Calculando o total de likes da pergunta com mais likes:
 	'''
@@ -156,7 +156,7 @@ def calculate_popular_questions():
 	for q in last_questions:
 		if q.total_likes > likes:
 			likes = q.total_likes
-	
+
 	'''
 	Calculando o total de respostas da pergunta com mais respostas:
 	'''
@@ -164,7 +164,7 @@ def calculate_popular_questions():
 	for q in last_questions:
 		if q.total_responses > responses:
 			responses = q.total_responses
-	
+
 	'''
 	Calculando o total de visualizações da pergunta com mais visualizações.
 	'''
@@ -172,7 +172,7 @@ def calculate_popular_questions():
 	for q in last_questions:
 		if q.total_views > views:
 			views = q.total_views
-	
+
 	'''
 	Adicionando as perguntas na variável questions e inicializando os pontos de acordo com o tempo de likes.
 	'''
@@ -205,14 +205,14 @@ def calculate_popular_questions():
 	'''
 	p_questions = []
 	for id in ids:
-		
+
 		try:
 			question = Question.objects.get(id=id)
 		except:
 			continue
-		
+
 		p_questions.append(question)
-	
+
 	return p_questions
 
 
@@ -321,9 +321,9 @@ def index(request):
 	Compara cada pergunta (uma por uma) com esse total de likes, por exemplo: a pergunta com mais likes tem 100 likes, se a pergunta x tem 50 likes, então a pergunta x ganha 50 pontos (50%: o cálculo é feito com base na porcentagem);
 	No final, organiza as perguntas por total de likes e guarda o ID delas em uma lista para consultar as perguntas novamente no banco de dados (Question.objects.filter(id__in=IDS_EM_ORDEM_DE_QUAL_PERGUNTA_TEM_MAIS_PONTOS)).
 	'''
-	
+
 	p_questions = cache.get('p_questions')
-	
+
 	if not p_questions:
 		p_questions = calculate_popular_questions()
 		cache.set('p_questions', p_questions)
@@ -366,13 +366,6 @@ def question(request, question_id):
 
 	context = {'question': q,
 			   'responses': responses}
-	
-	from main_app.models import IP
-	ip = get_client_ip(request)
-	if not IP.objects.filter(ip=ip).exists() and request.user.is_anonymous:
-		context['SHOW_AD'] = True
-		ip = IP.objects.create(ip=ip)
-		ip.save()
 
 	if not request.user.is_anonymous:
 		context['user_p'] = UserProfile.objects.get(user=request.user)
@@ -385,7 +378,7 @@ def question(request, question_id):
 	'''
 	Questões recomendadas.
 	Elas ficam no cache por 5 minutos até se atualizarem.
-	
+
 	Dica: organizar ordem das questões em JavaScript no lado do cliente para
 	evitar processamento desnecessário no servidor.
 	'''
@@ -621,7 +614,7 @@ def ask(request):
 
 		description = bs(request.POST.get('description'), 'html.parser').text
 		description = description.replace('\r', '')
-		
+
 		text = request.POST.get('question')
 
 		if not is_a_valid_question(text, description):
@@ -694,12 +687,12 @@ def deleteQuestion(request):
 
 def comments(request):
 	from django.contrib.humanize.templatetags.humanize import naturaltime
-	
+
 	response_id = request.GET.get('response_id')
 	response = Response.objects.get(id=response_id)
-	
+
 	comments = []
-	
+
 
 	for comment in Comment.objects.filter(response=response):
 		comments.append( {
@@ -709,7 +702,7 @@ def comments(request):
 			'posted_time': fix_naturaltime(naturaltime(comment.pub_date)),
 			'text': comment.text,
 		} )
-	
+
 	return JsonResponse(comments, safe=False)
 
 
@@ -779,7 +772,7 @@ def get_more_questions(request):
 		if target.user.id != request.user.id:
 			return 'Proibido.'
 	q = Question.objects.filter(creator=target).order_by('-pub_date')
-	
+
 	p = Paginator(q, 10)
 
 	json = {
@@ -788,12 +781,12 @@ def get_more_questions(request):
 	json['questions'] = {}
 
 	count = 1
-	
+
 	try:
 		p.page(page)
 	except:
 		return HttpResponse(False)
-	
+
 	for q in p.page(page):
 		if target.user.id == request.user.id:
 			best_answer = q.best_answer
@@ -840,7 +833,7 @@ def get_more_responses(request):
 		count += 1
 
 	json['has_next'] = p.page(page).has_next()
-	
+
 	print(json)
 
 	return JsonResponse(json)
@@ -865,9 +858,9 @@ def delete_comment(request):
 
 
 def report(request):
-	
+
 	report_type = request.GET.get('type')
-	
+
 	if report_type == 'response':
 		if Report.objects.filter(item=request.GET.get('id')).exists():
 			return HttpResponse('OK')
@@ -1189,11 +1182,11 @@ def change_email(request):
 
 
 def test(request):
-  
+
   context = {
     'result': search_questions(request.GET.get('query')),
   }
-  
+
   return render(request, 'test.html', context)
 
 
@@ -1271,23 +1264,23 @@ def undo_vote_on_poll(request):
 Configura o status do usuário para online.
 '''
 def set_status(request):
-	
+
 	user_profile = UserProfile.objects.get(user=request.user)
 	user_profile.last_seen = timezone.now()
-	
+
 	return HttpResponse('OK')
 
 
 def get_popular_questions(request):
 	p_questions = cache.get('p_questions')
-	
+
 	if not p_questions:
 		p_questions = calculate_popular_questions()
 		cache.set('p_questions', p_questions)
-	
+
 	paginator = Paginator(p_questions, 20)
 	page = request.GET.get('popular_page', 2)
-	
+
 	try:
 		return render(request, 'base/popular-question.html', {'popular_questions': paginator.page(page), 'render_directly': True})
 	except EmptyPage:
