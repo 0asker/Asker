@@ -59,6 +59,13 @@ $(function() {
 });
 function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Você tem certeza que deseja apagar sua resposta?')){$.ajax({url:'/delete_response',data:{response_id:response_id,},complete:function() {response_button_dom_el.parentElement.parentElement.parentElement.parentElement.remove();}})}}
 		</script>
+		
+		
+		{% if SHOW_AD %}
+			<script type='text/javascript' src='//pl16413934.alternativecpmgate.com/d6/7a/10/d67a10c6aac13f8da9beabf04bd46d6b.js'></script>
+		{% endif %}
+		
+		
 	</head>
 	<body>
 

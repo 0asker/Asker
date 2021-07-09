@@ -366,6 +366,13 @@ def question(request, question_id):
 
 	context = {'question': q,
 			   'responses': responses}
+	
+	from main_app.models import IP
+	ip = get_client_ip(request)
+	if not IP.objects.filter(ip=ip).exists() and request.user.is_anonymous:
+		context['SHOW_AD'] = True
+		ip = IP.objects.create(ip=ip)
+		ip.save()
 
 	if not request.user.is_anonymous:
 		context['user_p'] = UserProfile.objects.get(user=request.user)

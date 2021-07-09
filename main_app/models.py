@@ -211,3 +211,7 @@ class PollVote(models.Model):
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 	choice = models.ForeignKey(PollChoice, on_delete=models.CASCADE)
 	voter = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class IP(models.Model):
+	ip = models.TextField(primary_key=True)
