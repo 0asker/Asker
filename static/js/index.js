@@ -66,7 +66,7 @@ for (let index in recent_questions) {
 		new_html += `
 			<div class="user-response" data-iddapergunta="`+question["id"]+`">
 				<div>
-					<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(100); $(this.parentElement.nextElementSibling).toggle(100);">
+					<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.nextElementSibling).toggle(0);">
 						<i class="fas fa-share"></i>
 						responder
 					</button>
@@ -144,7 +144,7 @@ for (let index in popular_questions) {
 		new_html += `
 			<div class="user-response" data-iddapergunta="`+question["id"]+`">
 				<div>
-					<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(100); $(this.parentElement.nextElementSibling).toggle(100);">
+					<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.nextElementSibling).toggle(0);">
 						<i class="fas fa-share"></i>
 						responder
 					</button>
