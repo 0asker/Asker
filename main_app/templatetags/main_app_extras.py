@@ -1,9 +1,43 @@
 from django_project import general_rules
 from django import template
 from main_app.models import User, UserProfile, Question, Response, Comment, Poll, PollChoice, PollVote
+from django.contrib.humanize.templatetags.humanize import naturaltime
 import zlib
 
 register = template.Library()
+
+
+@register.filter(name='list_comments')
+def list_comments(response_id):
+	comment_template = '''
+		<li class="list-group-item c no-horiz-padding">
+				<div class="comm-card">
+						<div class="poster-container">
+								<a class="poster-info" href="/user/{}">
+										<div class="poster-profile-pic-container">
+												<img src="{}" width="40px">
+										</div>
+										<div class="poster-text-container">
+												<span>{}</span>
+												&nbsp;|&nbsp;
+												<span class="post-pub-date">{}</span>
+										</div>
+								</a>
+						</div>
+						<p>{}</p>
+				</div>
+		</li>
+		'''
+	
+	comments = Comment.objects.filter(response=Response.objects.get(id=response_id))
+	
+	if comments.exists():
+		comments_page = ''
+		for comment in comments:
+			comments_page += comment_template.format(comment.creator.username, UserProfile.objects.get(user=comment.creator).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.text)
+		return comments_page
+	
+	return ''
 
 
 @register.simple_tag
@@ -87,7 +121,6 @@ def last_response_pub_date(question_id):
 
 @register.filter(name='last_response')
 def last_response(question_id):
-	from django.contrib.humanize.templatetags.humanize import naturaltime
 	from ..models import correct_naturaltime
 	try:
 		r = Response.objects.filter(question=Question.objects.get(id=question_id)).order_by('-pub_date')

@@ -25,7 +25,9 @@
 		{% endif %}
 
 		<div class="heart-comment" id="like-counter-{{ response.id }}" onclick="like(this, {{ response.id }})">
-			<img width="18px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="hc-icon">
+			<i>
+				<img width="18px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="hc-icon">
+			</i>
 			<span>{{ response.total_likes }}</span>
 		</div>
 		&nbsp;&nbsp;
@@ -45,30 +47,23 @@
 
 
 		<div class="heart-comment">
-			   <script>
-				   var jaAbriu{{ response.id }} = false;
-			   </script>
-			<img width="18px" src="/static/images/comments.png?version=3" class="icon hc-icon" onclick="try { show_comments(this.parentElement, {{ response.id }}, jaAbriu{{ response.id }}, `{{ user.username }}`); if(jaAbriu{{ response.id }} == false) {jaAbriu{{ response.id }} = true} } catch { show_comments(this.parentElement, {{ response.id }}, 'undefined', `{{ user.username }}`); }">
+			<i>
+				<img width="18px" src="/static/images/comments.png?version=3" class="icon hc-icon" onclick="$(this.parentElement.nextElementSibling.nextElementSibling).toggle(200);">
+			</i>
 			<span class="comment">{{ response.id|total_comments }}</span>
 			<!-- Comentários -->
-			<div class="card comments bg-inner" id="comments-response-{{ response.id }}">
+			<div class="card comments bg-inner" style="display: none">
 				<ul class="comments-ul list-group list-group-flush">
-
+					{{ response.id|list_comments|safe }}
 				</ul>
 
-				<center>
-					<img src="/static/images/loading.gif" width="10%" class="comment-loader" style="display: none">
-				</center>
-
-				<form class="form-inline comm-form" onsubmit="make_comment(this); return false">
-					<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+				<form class="form-inline comm-form" onsubmit="make_comment(this); return false;">
+					{% csrf_token %}
 					<input type="hidden" name="response_id" value="{{ response.id }}">
 					<input type="hidden" name="question_id" value="{{ question.id }}">
 					<input type="text" maxlength="300" autocomplete="off" class="form-control comment-form bg-innermost-when-dark" name="text" placeholder="Escreva seu comentário" required>
 					<input class="btn btn-primary" type="submit" value="Comentar">
 				</form>
-					
-					
 			</div>
 				
 		</div>

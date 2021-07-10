@@ -689,63 +689,12 @@ def deleteQuestion(request):
 	return HttpResponse('OK')
 
 
-def comments(request):
-	from django.contrib.humanize.templatetags.humanize import naturaltime
-
-	response_id = request.GET.get('response_id')
-	response = Response.objects.get(id=response_id)
-
-	comments = []
-
-
-	for comment in Comment.objects.filter(response=response):
-		comments.append( {
-			'id': comment.id,
-			'profile_picture': UserProfile.objects.get(user=comment.creator).avatar.url,
-			'username': comment.creator.username,
-			'posted_time': fix_naturaltime(naturaltime(comment.pub_date)),
-			'text': comment.text,
-		} )
-
-	return JsonResponse(comments, safe=False)
-
-
-'''
-Faz um comentário para uma resposta.
-'''
 def comment(request):
-
-	response_id = request.POST.get('response_id')
-	text = request.POST.get('text')
-
-	'''
-	Verifica se está tudo certo para comentar:
-	'''
-	if request.method != 'POST' or (not is_a_valid_comment(text)):
-		return HttpResponse('ERRO.')
-
-	r = Response.objects.get(id=response_id)
-	c = Comment.objects.create(response=r, creator=request.user, text=bs(text, "lxml").text) # cria o comentário da resposta.
-
-	'''
-	Cria a notificação do novo comentário:
-	'''
-	if request.user != r.creator.user:
-		n = Notification.objects.create(receiver=r.creator.user, type='comment-in-response')
-		n.set_text(r.id, comment_id=c.id)
-		n.save()
-
-	from django.contrib.humanize.templatetags.humanize import naturaltime
-
-	comment = {
-		'id': c.id,
-		'profile_picture': UserProfile.objects.get(user=c.creator).avatar.url,
-		'username': c.creator.username,
-		'posted_time': fix_naturaltime(naturaltime(c.pub_date)),
-		'text': c.text,
-	}
-
-	return JsonResponse(comment)
+	Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
+												 creator=request.user,
+												 text=request.POST.get('text'),
+												 pub_date=timezone.now())
+	return HttpResponse('')
 
 
 def rank(request):

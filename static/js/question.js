@@ -181,125 +181,39 @@ if (document.getElementsByClassName('poll-chooser').length == 1) {
  * Faz um comentário.
  */
 function make_comment(form) {
-    
-    form.parentElement.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'block';
-    
-    formValues = $(form).serialize();
-    
-    form.text.value = '';
-    
-    $.post("/comment", formValues, function(data) {
-        
-        form.parentElement.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'none';
-        
-        var comment_template = `
-        <li class="list-group-item c no-horiz-padding">
-            <div class="comm-card">
-                <div class="poster-container">
-                    <a class="poster-info" href="` + data['username'] + `">
-                        <div class="poster-profile-pic-container">
-                            <img src="` + data['profile_picture'] + `" width="40px">
-                        </div>
-                        <div class="poster-text-container">
-                            <span>` + data['username'] + `</span>
-                            &nbsp;|&nbsp;
-                            <span class="post-pub-date">` + data['posted_time'] + `</span>
-                        </div>
-                    </a>
-                    <i class="fas fa-trash" onclick="delete_comment(` + data['id'] + `); this.parentElement.parentElement.parentElement.remove()" style="float: right; cursor: pointer;"></i>
-                </div>
-                <p>` + data['text'] + `</p>
-            </div>
-        </li>
-        `;
-        
-        var ul = form.parentElement.getElementsByTagName('ul')[0];
-        ul.innerHTML += comment_template;
-    });
-}
-
-
-function show_comments(element, response_id, jaAbriu, usuario_logado) {
-    
-    comments = document.getElementById('comments-response-' + response_id);
-    
-    if (typeof(jaAbriu) == 'undefined') {
-		if (comments.style.display == 'block') {
-			comments.style.display = 'none';
-		} else {
-			comments.style.display = 'block';
+	
+	formData = $(form).serialize();
+	
+	$.ajax({
+		url: '/comment',
+		type: 'post',
+		data: formData,
+		complete: function() {
+			
+			new_comment = `
+		<li class="list-group-item c no-horiz-padding">
+				<div class="comm-card">
+						<div class="poster-container">
+								<a class="poster-info" href="/user/`+current_user['username']+`">
+										<div class="poster-profile-pic-container">
+												<img src="`+current_user['profile_picture_url']+`" width="40px">
+										</div>
+										<div class="poster-text-container">
+												<span>`+current_user['username']+`</span>
+												&nbsp;|&nbsp;
+												<span class="post-pub-date">agora</span>
+										</div>
+								</a>
+						</div>
+						<p>`+form.text.value+`</p>
+				</div>
+		</li>
+`
+			
+			form.parentElement.getElementsByTagName('ul')[0].innerHTML += new_comment;
+			form.text.value = '';
 		}
-		
-		return false;
-	}
-    
-	if (jaAbriu) {
-		if (comments.style.display == 'block') {
-			comments.style.display = 'none';
-		} else {
-			comments.style.display = 'block';
-		}
-		
-		return false;
-	}
-    
-    element.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'block'; /* ícone de carregamento de comentários */
-    
-    if (window.getComputedStyle(comments, null).display == 'none')
-        comments.style.display = 'block';
-    else {
-        comments.style.display = 'none';
-        return false;
-    }
-    
-    $.ajax({
-        type: 'get',
-        url: '/comments',
-        dataType: 'json',
-        data: {
-            response_id: response_id,
-        },
-        complete: function(data) {
-            element.getElementsByTagName('center')[0].getElementsByTagName('img')[0].style.display = 'none'; /* ícone de carregamento de comentários */
-            
-            comments = JSON.parse(data.responseText);
-            
-            for (comment in comments) {
-                
-                adminOrNot = '';
-                
-                if (comments[comment]['username'] == usuario_logado) {
-                    adminOrNot = '<i class="fas fa-trash" onclick="delete_comment(' + comments[comment]['id'] + '); this.parentElement.parentElement.parentElement.remove()" style="float: right; cursor: pointer;"></i>';
-                } else {
-                    adminOrNot = '';
-                }
-                
-                var comment_template = `
-                <li class="list-group-item c no-horiz-padding">
-                    <div class="comm-card">
-                        <div class="poster-container">
-                            <a class="poster-info" href="/user/` + comments[comment]['username'] + `">
-                                <div class="poster-profile-pic-container">
-                                    <img src="` + comments[comment]['profile_picture'] + `" width="40px">
-                                </div>
-                                <div class="poster-text-container">
-                                    <span>` + comments[comment]['username'] + `</span>
-                                    &nbsp;|&nbsp;
-                                    <span class="post-pub-date">` + comments[comment]['posted_time'] + `</span>
-                                </div>
-                            </a>` +
-                            adminOrNot +
-                            `
-                        </div>
-                        <p>` + comments[comment]['text'] + `</p>
-                    </div>
-                </li>
-                `;
-                
-                element.getElementsByTagName('ul')[0].innerHTML += comment_template;
-            }
-        }
-    });
+	});
 }
 
 
