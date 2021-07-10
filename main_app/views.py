@@ -905,8 +905,10 @@ def edit_profile(request, username):
 			form = UploadFileForm(request.POST, request.FILES)
 			if form.is_valid():
 				f = request.FILES['file']
-				file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-				file_name += str(f)
+				'''
+				Nome da imagem do usuário no sistema de arquivos: nome de usuário atual, data de alteração e horário da alteração.
+				'''
+				file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(), timezone.now().time())
 
 				success = save_img_file(f, 'django_project/media/avatars/' + file_name, (192, 192))
 				if not success:
