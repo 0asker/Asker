@@ -188,7 +188,9 @@ function make_comment(form) {
 		url: '/comment',
 		type: 'post',
 		data: formData,
-		complete: function() {
+		complete: function(data) {
+			
+			comment_id = data.responseText;
 			
 			new_comment = `
 		<li class="list-group-item c no-horiz-padding">
@@ -206,6 +208,7 @@ function make_comment(form) {
 								</a>
 						</div>
 						<p>`+form.text.value+`</p>
+						<i class="far fa-trash-alt" style="float: right" onclick="delete_comment(`+comment_id+`); this.parentElement.parentElement.remove();"></i>
 				</div>
 		</li>
 `

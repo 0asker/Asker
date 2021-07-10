@@ -690,11 +690,11 @@ def deleteQuestion(request):
 
 
 def comment(request):
-	Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
+	comment = Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
 												 creator=request.user,
 												 text=request.POST.get('text'),
 												 pub_date=timezone.now())
-	return HttpResponse('')
+	return HttpResponse(comment.id)
 
 
 def rank(request):
