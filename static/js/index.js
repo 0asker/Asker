@@ -76,7 +76,7 @@ for (let index in recent_questions) {
 					<form onsubmit="return enviar_resposta_pergunta(this);">
 						<input name="csrfmiddlewaretoken" type="hidden" value="`+csrf_token+`">
 						<input name="question_id" type="hidden" value="`+question["id"]+`">
-						<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
+						<textarea onclick="$(this).css('height', '120px');" name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
 						<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">
 							<i class="far fa-paper-plane"></i>
 							Enviar
@@ -154,7 +154,7 @@ for (let index in popular_questions) {
 					<form onsubmit="return enviar_resposta_pergunta(this);">
 						<input name="csrfmiddlewaretoken" type="hidden" value="`+csrf_token+`">
 						<input name="question_id" type="hidden" value="`+question["id"]+`">
-						<textarea name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
+						<textarea onclick="$(this).css('height', '120px');" name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
 						<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">
 							<i class="far fa-paper-plane"></i>
 							Enviar
