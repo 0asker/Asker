@@ -43,7 +43,7 @@ function delete_response(response_button_dom_el, response_id) {
     }
 }
 
-function delete_comment(comment_id, csrf_token) {
+function delete_comment(comment_id) {
 	$.ajax({
 		url: '/delete_comment',
 		type: 'get',

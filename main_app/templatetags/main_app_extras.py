@@ -8,7 +8,8 @@ register = template.Library()
 
 
 @register.filter(name='list_comments')
-def list_comments(response_id):
+def list_comments(response_id, request):
+	print(request)
 	comment_template = '''
 		<li class="list-group-item c no-horiz-padding">
 				<div class="comm-card">
@@ -29,12 +30,36 @@ def list_comments(response_id):
 		</li>
 		'''
 	
+	comment_creator_template = '''
+		<li class="list-group-item c no-horiz-padding">
+				<div class="comm-card">
+						<div class="poster-container">
+								<a class="poster-info" href="/user/{}">
+										<div class="poster-profile-pic-container">
+												<img src="{}" width="40px">
+										</div>
+										<div class="poster-text-container">
+												<span>{}</span>
+												&nbsp;|&nbsp;
+												<span class="post-pub-date">{}</span>
+										</div>
+								</a>
+						</div>
+						<p>{}</p>
+						<i class="far fa-trash-alt" style="float: right" onclick="delete_comment({}); this.parentElement.parentElement.remove();"></i>
+				</div>
+		</li>
+		'''
+	
 	comments = Comment.objects.filter(response=Response.objects.get(id=response_id))
 	
 	if comments.exists():
 		comments_page = ''
 		for comment in comments:
-			comments_page += comment_template.format(comment.creator.username, UserProfile.objects.get(user=comment.creator).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.text)
+			if request.user == comment.creator:
+				comments_page += comment_creator_template.format(comment.creator.username, UserProfile.objects.get(user=comment.creator).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.text, comment.id)
+			else:
+				comments_page += comment_template.format(comment.creator.username, UserProfile.objects.get(user=comment.creator).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.text)
 		return comments_page
 	
 	return ''

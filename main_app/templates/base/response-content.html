@@ -54,7 +54,7 @@
 			<!-- Comentários -->
 			<div class="card comments bg-inner" style="display: none">
 				<ul class="comments-ul list-group list-group-flush">
-					{{ response.id|list_comments|safe }}
+					{{ response.id|list_comments:request|safe }}
 				</ul>
 
 				<form class="form-inline comm-form" onsubmit="make_comment(this); return false;">
