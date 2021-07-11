@@ -694,6 +694,11 @@ def comment(request):
 												 creator=request.user,
 												 text=request.POST.get('text'),
 												 pub_date=timezone.now())
+	
+	Notification.objects.create(receiver=comment.response.creator.user,
+															type='comment-in-response',
+															text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"Que user você era no yahoo?"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id))
+	
 	return HttpResponse(comment.id)
 
 
