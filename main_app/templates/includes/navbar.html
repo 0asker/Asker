@@ -1,14 +1,17 @@
 <nav class="navbar navbar-expand-sm navbar-light">
     {% if user.is_authenticated %}
-    <a class="navbar-toggler" href="/ask">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16" style="margin: 2px;">
-            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
-        </svg></a>
+    <a class="navbar-round navbar-toggler bg-main" id="nav-ask" href="/ask">
+        <i class="fas fa-edit"></i>
     {% endif %}
     <a id="logo" href="/" class="navbar-brand"><img src="/static/images/asker.png" height="40px" alt="Asker"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+
+    {% if user.is_authenticated %}
+    <button class="navbar-avatar navbar-round navbar-toggler bg-main" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation" style='background: url("/media/{{ user.userprofile.avatar }}") no-repeat center; background-size: contain;'></button>
+    {% else %}
+    <button class="navbar-toggler navbar-round bg-main" id="nav-menu" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fa fa-unlock-alt"></i>
     </button>
+    {% endif %}
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             {% if user.is_authenticated %}
