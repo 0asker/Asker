@@ -169,7 +169,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 
 					{% if question.creator.user.username == user.username %}
 					{% else %}
-					<i class="far fa-flag" id="question-popover" data-toggle="popover" data-content="<p>Para denunciar esta pergunta, use o botão abaixo. Use apenas quando necessário.</p><button class='btn btn-outline-danger' onclick='report_question({{ question.id }}, this)'>Denunciar</button>"></i>
+					<i class="far fa-flag" id="question-popover" data-toggle="popover" data-content="<p>Para denunciar essa pergunta, use o botão abaixo. Use apenas quando necessário.</p><button class='btn btn-outline-danger' onclick='report_question({{ question.id }}, this)'>Denunciar</button>"></i>
 					{% endif %}
 
 					{% if question.creator.user.username == user.username %}
@@ -224,7 +224,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 					<p>Confirme seu email para responder está pergunta.</p>
 				{% endif %}
 			{% else %}
-				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder esta pergunta.</p>
+				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
 			{% endif %}
 		
 		<div class="recommended">
