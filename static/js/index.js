@@ -258,3 +258,15 @@ function enviar_resposta_pergunta(form) {
 $('.description').linkify({
 	target: "_blank"
 });
+
+
+/* Paginação */
+var url = new URL(window.location.href);
+var current_page = url.searchParams.get('page');
+
+if (current_page == null)
+	next_page = '2';
+else
+	next_page = Number(current_page) + 1;
+
+document.getElementById('next_page_recent_questions').href += next_page;

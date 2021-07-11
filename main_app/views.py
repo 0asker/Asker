@@ -306,23 +306,16 @@ def save_answer(request):
 def index(request):
 
 	context = {}
-
-	# pega as perguntas da mais nova para a mais velha:
+	
 	q = Question.objects.order_by('-pub_date')
-<<<<<<< HEAD
-	p = Paginator(q, 20)
-	page = request.GET.get('page', 1)
-	questions = p.page(page)
-=======
 	page = int(request.GET.get('page', 1))
 	if page == 1:
 		questions = q[:20]
 	else:
 		questions = q[(page * 20) - 20:(page * 20)]
 	
->>>>>>> 79fd38aafb60c3aae65be0081d942b082fa9ed8d
 	context['questions'] = questions
-
+	
 	'''
 	Pegando as perguntas populares:
 	Pega as últimas 250 perguntas;
