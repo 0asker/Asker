@@ -326,14 +326,8 @@ def index(request):
 	if not p_questions:
 		p_questions = calculate_popular_questions()
 		cache.set('p_questions', p_questions)
-
-
-	'''
-	Paginação das perguntas populares:
-	'''
-	page = request.GET.get('p_page', 1)
-	p_questions = Paginator(p_questions, 20)
-	context['popular_questions'] = p_questions.page(page)
+	
+	context['popular_questions'] = p_questions[:20]
 
 	if request.user.is_authenticated:
 		user_p = UserProfile.objects.get(user=request.user)
