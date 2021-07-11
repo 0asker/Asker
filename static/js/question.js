@@ -187,31 +187,11 @@ function make_comment(form) {
 	$.ajax({
 		url: '/comment',
 		type: 'post',
+		dataType: 'json',
 		data: formData,
 		complete: function(data) {
 			
-			comment_id = data.responseText;
-			
-			new_comment = `
-		<li class="list-group-item c no-horiz-padding">
-				<div class="comm-card">
-						<div class="poster-container">
-								<a class="poster-info" href="/user/`+current_user['username']+`">
-										<div class="poster-profile-pic-container">
-												<img src="`+current_user['profile_picture_url']+`" width="40px">
-										</div>
-										<div class="poster-text-container">
-												<span>`+current_user['username']+`</span>
-												&nbsp;|&nbsp;
-												<span class="post-pub-date">agora</span>
-										</div>
-								</a>
-						</div>
-						<p>`+form.text.value+`</p>
-						<i class="far fa-trash-alt" style="float: right" onclick="delete_comment(`+comment_id+`); this.parentElement.parentElement.remove();"></i>
-				</div>
-		</li>
-`
+			new_comment = data.responseText;
 			
 			form.parentElement.getElementsByTagName('ul')[0].innerHTML += new_comment;
 			form.text.value = '';

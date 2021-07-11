@@ -59,15 +59,6 @@ $(function() {
 });
 function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Você tem certeza que deseja apagar sua resposta?')){$.ajax({url:'/delete_response',data:{response_id:response_id,},complete:function() {response_button_dom_el.parentElement.parentElement.parentElement.parentElement.remove();}})}}
 		</script>
-		
-		{% if user.is_authenticated %}
-			<script>
-				current_user = {
-					'username': '{{ user.username }}',
-					'profile_picture_url': '{{ user_p.avatar.url }}'
-				}
-			</script>
-		{% endif %}
 	</head>
 	<body>
 
@@ -264,7 +255,7 @@ if (getDarkCookie() == 'true') {
 }
 </script>
 <script src="/static/js/general_functions.js?version=2"></script>
-<script src="/static/js/question.js?v=14.5"></script>
+<script src="/static/js/question.js?v=14.7"></script>
 
 	</body>
 

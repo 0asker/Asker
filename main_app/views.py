@@ -11,7 +11,7 @@ from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django_project.settings import EMAIL_HOST_USER
-from django.contrib.humanize.templatetags.humanize import naturalday
+from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from djpjax import pjax
 from django.template.response import TemplateResponse
 from django.core.cache import cache
@@ -699,7 +699,28 @@ def comment(request):
 															type='comment-in-response',
 															text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"Que user você era no yahoo?"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id))
 	
-	return HttpResponse(comment.id)
+	comment_creator_template = '''
+		<li class="list-group-item c no-horiz-padding">
+				<div class="comm-card">
+						<div class="poster-container">
+								<a class="poster-info" href="/user/{}">
+										<div class="poster-profile-pic-container">
+												<img src="{}" width="40px">
+										</div>
+										<div class="poster-text-container">
+												<span>{}</span>
+												&nbsp;|&nbsp;
+												<span class="post-pub-date">{}</span>
+										</div>
+								</a>
+						</div>
+						<p>{}</p>
+						<i class="far fa-trash-alt" style="float: right" onclick="delete_comment({}); this.parentElement.parentElement.remove();"></i>
+				</div>
+		</li>
+		'''.format(comment.creator.username, UserProfile.objects.get(user=request.user).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.text, comment.id)
+	
+	return HttpResponse(comment_creator_template)
 
 
 def rank(request):
