@@ -309,10 +309,7 @@ def index(request):
 	
 	q = Question.objects.order_by('-pub_date')
 	page = int(request.GET.get('page', 1))
-	if page == 1:
-		questions = q[:20]
-	else:
-		questions = q[(page * 20) - 20:(page * 20)]
+	questions = q[(page * 20) - 20:(page * 20)]
 	
 	context['questions'] = questions
 	
