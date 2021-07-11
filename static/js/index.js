@@ -57,7 +57,7 @@ for (let index in recent_questions) {
 		new_html += `
 			<div class="user-response" data-iddapergunta="`+question["id"]+`">
 			<p>
-				<font color="black">Sua resposta:</font><br>
+				<span>Sua resposta:</span><br>
 				`+question["user_response"]+`
 			</p>
 		`;
@@ -135,7 +135,7 @@ for (let index in popular_questions) {
 		new_html += `
 			<div class="user-response" data-iddapergunta="`+question["id"]+`">
 			<p>
-				<font color="black">Sua resposta:</font><br>
+				<span>Sua resposta:</span><br>
 				`+question["user_response"]+`
 			</p>
 		`;
@@ -240,7 +240,7 @@ function enviar_resposta_pergunta(form) {
 					
 					new_html = `
 <p>
-	<font color="black">Sua resposta:</font><br>
+	<span>Sua resposta:</span><br>
 		`+form.text.value+`
 </p>
 `;
