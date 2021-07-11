@@ -57,6 +57,10 @@
 					{{ response.id|list_comments:request|safe }}
 				</ul>
 
+				<center style="display: none">
+					<img src="/static/images/loading.gif" width="10%">
+				</center>
+
 				<form class="form-inline comm-form" onsubmit="make_comment(this); return false;">
 					{% csrf_token %}
 					<input type="hidden" name="response_id" value="{{ response.id }}">

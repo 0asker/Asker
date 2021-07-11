@@ -182,6 +182,8 @@ if (document.getElementsByClassName('poll-chooser').length == 1) {
  */
 function make_comment(form) {
 	
+	$(form.previousElementSibling).toggle(0);
+	
 	formData = $(form).serialize();
 	
 	$.ajax({
@@ -195,6 +197,8 @@ function make_comment(form) {
 			
 			form.parentElement.getElementsByTagName('ul')[0].innerHTML += new_comment;
 			form.text.value = '';
+			
+			$(form.previousElementSibling).toggle(0);
 		}
 	});
 }

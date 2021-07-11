@@ -690,6 +690,7 @@ def deleteQuestion(request):
 
 
 def comment(request):
+	
 	comment = Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
 												 creator=request.user,
 												 text=request.POST.get('text'),
