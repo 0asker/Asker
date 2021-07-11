@@ -183,6 +183,7 @@ if (document.getElementsByClassName('poll-chooser').length == 1) {
 function make_comment(form) {
 	
 	$(form.previousElementSibling).toggle(0);
+	form.text.value = '';
 	
 	formData = $(form).serialize();
 	
@@ -196,7 +197,6 @@ function make_comment(form) {
 			new_comment = data.responseText;
 			
 			form.parentElement.getElementsByTagName('ul')[0].innerHTML += new_comment;
-			form.text.value = '';
 			
 			$(form.previousElementSibling).toggle(0);
 		}
