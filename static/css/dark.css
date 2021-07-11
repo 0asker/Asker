@@ -1,3 +1,12 @@
+/* Navbar */
+.navbar-round {
+    border: solid 0px #555;
+}
+.navbar-avatar {
+    border: solid 1px #555 !important;
+}
+/* Navbar-end */
+
 /* General */
 body {
   background-color: #222 !important;

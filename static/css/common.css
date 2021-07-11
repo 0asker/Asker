@@ -1,24 +1,19 @@
-/* Navbar */
-/*
-.navbar-round {
-    height: 45px;
-    width: 45px;
-    border-radius: 22.5px;
-    border: solid 1px #ddd;
-    border-color: #ddd !important;
-}
-.navbar-toggler {
-    padding: 11px 12px;
-}
-*/
-
-
 /* Formulário de responder perguntas. */
 textarea.large-compact {
 	height: 65px;
 	transition: all 0.3s ease-out;
 }
 
+/* Navbar */
+.navbar-round {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    border: solid 1px #ddd;
+    border-color: #ddd !important;
+    padding: 11px 12px;
+    font-size: 15px;
+}
 @media (min-width: 320px) and (max-width: 570px) {
 	.navbar-brand {
 		margin-right: 0px;
