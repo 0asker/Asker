@@ -697,7 +697,7 @@ def comment(request):
 	
 	Notification.objects.create(receiver=comment.response.creator.user,
 															type='comment-in-response',
-															text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"Que user você era no yahoo?"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id))
+															text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text))
 	
 	comment_creator_template = '''
 		<li class="list-group-item c no-horiz-padding">
