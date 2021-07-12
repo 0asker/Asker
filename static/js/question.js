@@ -1,31 +1,24 @@
 function like(likeElement, response_id) {
-	
-	/* alterna a imagem do like (se coração vermelho, então fica coração branco, e vice-versa) */
-	like_image = likeElement.getElementsByTagName('img')[0]
-	if (like_image.src.includes('white-heart.png')) { /* se o coração for branco */
-		like_image.src = '/static/images/red-heart.png?version=3'
-		
-		/* aumenta o total de likes do contador */
-		span_like_counter = likeElement.getElementsByTagName('span')[0]
-		span_like_counter.innerHTML = Number(span_like_counter.innerHTML) + 1
+	like_image = likeElement.getElementsByTagName('img')[0];
+	if (like_image.src.includes('white-heart.png')) {
+		like_image.src = '/static/images/red-heart.png?version=3';
+		span_like_counter = likeElement.getElementsByTagName('span')[0];
+		span_like_counter.innerHTML = Number(span_like_counter.innerHTML) + 1;
 	}
 	else {
-		like_image.src = '/static/images/white-heart.png?version=3'
-		
-		/* diminuí o total de likes do contador */
-		span_like_counter = likeElement.getElementsByTagName('span')[0]
-		span_like_counter.innerHTML = Number(span_like_counter.innerHTML) - 1
+		like_image.src = '/static/images/white-heart.png?version=3';
+		span_like_counter = likeElement.getElementsByTagName('span')[0];
+		span_like_counter.innerHTML = Number(span_like_counter.innerHTML) - 1;
 	}
-	
 	$.ajax({
 		url: '/answer/like',
 		data: {
 			answer_id: response_id,
 		},
 		complete: function() {
-			return
+			return;
 		}
-	})
+	});
 }
 
 
@@ -39,9 +32,10 @@ function delete_response(response_button_dom_el, response_id) {
     		complete: function() {
     			response_button_dom_el.parentElement.parentElement.parentElement.remove();
     		}
-    	})
+    	});
     }
 }
+
 
 function delete_comment(comment_id) {
 	$.ajax({
@@ -51,18 +45,17 @@ function delete_comment(comment_id) {
 			comment_id: comment_id,
 		},
 		complete: function() {
-			alert('Comentário deletado.')
+			alert('Comentário deletado.');
 		}
-	})
+	});
 }
 
+
 function report_question(question_id, obj) {
-	// quando a denuncia tiver sido feita, a funcao abaixo é executada:
 	function ok() {
-		obj.parentElement.innerHTML = '<p>Pergunta denunciada com sucesso <i class="far fa-check-circle"></i></p>'
-		obj.remove()
+		obj.parentElement.innerHTML = '<p>Pergunta denunciada <i class="far fa-check-circle"></i></p>';
+		obj.remove();
 	}
-	
 	$.ajax({
 		type: 'get',
 		url: '/report',
@@ -70,20 +63,21 @@ function report_question(question_id, obj) {
 			type: 'question',
 			id: question_id,
 		},
-		
 		complete: function () {
-			ok()
+			ok();
 		}
-	})
+	});
 }
+
 
 $(function () {
 	$('[data-toggle="popover"]').popover({
 		container: 'body',
 		html: true,
 		title: 'Denunciar abuso',
-	})
-})
+	});
+});
+
 
 function chooseAnswer(id) {
 	$.ajax({
@@ -98,8 +92,9 @@ function chooseAnswer(id) {
                 location.reload();
     		}
 		}
-	})
+	});
 }
+
 
 function voteOnPoll() {
     let userChoicesEls = $("input[name='poll-option']:checked");
@@ -122,6 +117,7 @@ function voteOnPoll() {
     });
 }
 
+
 function undoVote() {
     $.ajax({
       type: "POST",
@@ -136,6 +132,7 @@ function undoVote() {
     });
 }
 
+
 function openChooser() {
     let chooser = document.getElementsByClassName('poll-chooser')[0];
     let shower = document.getElementsByClassName('poll-shower')[0];
@@ -143,12 +140,14 @@ function openChooser() {
     chooser.style.display = 'block';
 }
 
+
 function openShower() {
     let chooser = document.getElementsByClassName('poll-chooser')[0];
     let shower = document.getElementsByClassName('poll-shower')[0];
     chooser.style.display = 'none';
     shower.style.display = 'block';
 }
+
 
 function setPollPercentages() {
     if (document.getElementsByClassName('poll-shower').length == 0) { return 0; }
@@ -167,7 +166,7 @@ function setPollPercentages() {
         let percentageString = Math.round(percentage) + '%';
         if (percentage >= 15) { progressBar.textContent = percentageString; }
         progressBar.title = percentageString;
-        progressBar.style = 'width: ' + percentageString + ';'
+        progressBar.style = 'width: ' + percentageString + ';';
     }
 }
 setPollPercentages();
@@ -177,27 +176,18 @@ if (document.getElementsByClassName('poll-chooser').length == 1) {
 }
 
 
-/*
- * Faz um comentário.
- */
 function make_comment(form) {
-	
 	$(form.previousElementSibling).toggle(0);
-	
 	formData = $(form).serialize();
-	
 	$.ajax({
 		url: '/comment',
 		type: 'post',
 		dataType: 'json',
 		data: formData,
 		complete: function(data) {
-			
 			new_comment = data.responseText;
-			
 			form.parentElement.getElementsByTagName('ul')[0].innerHTML += new_comment;
 			form.text.value = '';
-			
 			$(form.previousElementSibling).toggle(0);
 		}
 	});
@@ -208,3 +198,90 @@ function make_comment(form) {
 $(".q-description").linkify({
 	target: "_blank"
 });
+
+
+/* Renderizando a parte "Responda também" da página. */
+document.getElementsByTagName("main")[0].innerHTML += '<div><header><hr><h3 class="mb-3 text-center">— Responda também —</h3><hr></header><div id="questoes_recomendadas"></div></div>';
+
+
+function shuffle(array) {
+  var currentIndex = array.length,  randomIndex;
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+  return array;
+}
+
+questoes_recomendadas_json = shuffle(questoes_recomendadas_json);
+
+questoes_recomendadas = document.getElementById("questoes_recomendadas");
+
+for (let index in questoes_recomendadas_json) {
+	var new_html = `
+	<div class="r-question">
+		<a href="/question/${questoes_recomendadas_json[index]["id"]}"><b>${questoes_recomendadas_json[index]["text"]}</b></a>
+		<br>
+		<small class="text-muted">perguntado ${questoes_recomendadas_json[index]["pub_date"]} por <a href="/user/${questoes_recomendadas_json[index]["creator_username"]}">${questoes_recomendadas_json[index]["creator_username"]}</a></small>
+		<hr>
+	</div>
+	`;
+	questoes_recomendadas.innerHTML += new_html;
+}
+
+/* Js p/ upload de imagem em respostas */
+document.getElementById('upload-photo').onchange = function () {
+	text = document.getElementById('upload-photo-text');
+	delete_photo_icon = document.getElementById('delete-photo-icon');
+	input = document.getElementById('upload-photo');
+	text.innerText = input.value.slice(12);
+	delete_photo_icon.style.display = 'inline';
+};
+
+document.getElementById('delete-photo-icon').onclick = function () {
+	delete_photo_icon = document.getElementById('delete-photo-icon');
+	input = document.getElementById('upload-photo');
+	text = document.getElementById('upload-photo-text');
+	delete_photo_icon.style.display = 'none';
+	text.innerText = '';
+	input.value = null;
+};
+/* Fim: Js p/ upload de imagem em respostas */
+
+
+function delete_question(id) {
+    if (confirm('Opa! Tem certeza que deseja apagar sua resposta?')) {
+		$.ajax({
+			url: '/delete_question',
+			type: 'post',
+			data: {
+				csrfmiddlewaretoken: '{{csrf_token}}',
+				question_id: id,
+			},
+			complete: function() {
+				window.location = window.location.href.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[0] + 'news';
+			}
+		});
+	}
+}
+
+$('#profile-pic-popover').popover({
+	trigger: 'hover',
+	container: 'body',
+	html: true,
+});
+
+$('.responder-profile-pic-popover').popover({
+	trigger: 'hover',
+	container: 'body',
+	html: true,
+});
+
+var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
+var commentformbgcolor='bg-white'; var commentbgcolor='bg-light';
+if (getDarkCookie() == 'true') {
+	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+}

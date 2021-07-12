@@ -84,22 +84,22 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 					
 					<h2 style="font-size: 1.5em">{{ question.text }}</h2>
 					{% if question.description != '' %}
-					<hr>
-					<p class="q-description">{{ question.description|cut_description|safe|linebreaksbr }}</p>
+						<hr>
+						<p class="q-description">{{ question.description|cut_description|safe|linebreaksbr }}</p>
 					{% endif %}
 
 					{% if question.get_embedded_content %}
-					<div class="emb">
-						{{ question.get_embedded_content|safe }}
-					</div>
-					<br>
+						<div class="emb">
+							{{ question.get_embedded_content|safe }}
+						</div>
+						<br>
 					{% endif %}
 
 					{% if question.image %}
-					<center>
-						<hr>
-						<img width="70%" src="{{ question.image.url }}">
-					</center>
+						<center>
+							<hr>
+							<img width="70%" src="{{ question.image.url }}">
+						</center>
 					{% endif %}
 
 					{% if question.has_poll %}
@@ -224,95 +224,18 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 					<p>Confirme seu email para responder está pergunta.</p>
 				{% endif %}
 			{% else %}
-				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
+				<div class="text-center bg-light">
+					<hr>
+					<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
+					<hr>
+				</div>
 			{% endif %}
-		
-		<div class="recommended">
-			<hr>
-			<h3 class="text-secondary">— Responda também —</h3>
-			<hr>
-			
-			{% for question in recommended_questions %}
-			<div class="r-question">
-				<a href="/question/{{ question.id }}"><b>{{ question.text }}</b></a>
-				<br>
-				<small class="text-muted">perguntada {% fix_naturaltime question.pub_date|naturaltime %} por <a href="/user/{{ question.creator.user.username }}">{{ question.creator.user.username }}</a></small>
-				<hr>
-			</div>
-			{% endfor %}
-		</div>
-
 	</main>
 
-<script src="/static/js/linkify/linkify.min.js"></script>
-<script src="/static/js/linkify/linkify-jquery.min.js"></script>
-<script>
-var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
-var commentformbgcolor='bg-white'; var commentbgcolor='bg-light';
-if (getDarkCookie() == 'true') {
-	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
-	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
-}
-</script>
-<script src="/static/js/general_functions.js?version=2"></script>
-<script src="/static/js/question.js?v=15"></script>
-
+		<script src="/static/js/linkify/linkify.min.js"></script>
+		<script src="/static/js/linkify/linkify-jquery.min.js"></script>
+		<script>questoes_recomendadas_json = [{% for question in recommended_questions %}{"id":{{ question.id }},"text":"{{ question.text }}","creator_username":"{{ question.creator.user.username }}","pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}"},{% endfor %}];</script>
+		<script src="/static/js/general_functions.js?version=3"></script>
+		<script src="/static/js/question.js?v=16"></script>
 	</body>
-
-	<script>
-r = Math.random();
-if (r < 0.8) {
-	document.getElementById("ad").remove();
-}
-</script>
-<script>
-/* Js p/ upload de imagem em respostas */
-document.getElementById('upload-photo').onchange = function () {
-	text = document.getElementById('upload-photo-text')
-	delete_photo_icon = document.getElementById('delete-photo-icon')
-	input = document.getElementById('upload-photo')
-	text.innerText = input.value.slice(12)
-	delete_photo_icon.style.display = 'inline'
-}
-
-document.getElementById('delete-photo-icon').onclick = function () {
-	delete_photo_icon = document.getElementById('delete-photo-icon')
-	input = document.getElementById('upload-photo')
-	text = document.getElementById('upload-photo-text')
-	delete_photo_icon.style.display = 'none'
-	text.innerText = ''
-	input.value = null
-}
-/* Fim: Js p/ upload de imagem em respostas */
-
-function delete_question(id) {
-    if (confirm('Opa! Tem certeza que deseja apagar sua resposta?')) {
-		$.ajax({
-			url: '/delete_question',
-			type: 'post',
-			data: {
-				csrfmiddlewaretoken: '{{csrf_token}}',
-				question_id: id,
-			},
-			complete: function() {
-				window.location = window.location.href.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[0] + 'news';
-			}
-		})
-	}
-}
-	</script>
-
-<script>
-$('#profile-pic-popover').popover({
-	trigger: 'hover',
-	container: 'body',
-	html: true,
-});
-
-$('.responder-profile-pic-popover').popover({
-	trigger: 'hover',
-	container: 'body',
-	html: true,
-});
-</script>
 </html>

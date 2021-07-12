@@ -344,24 +344,24 @@ def index(request):
 
 
 def question(request, question_id):
-	try:
-		q = Question.objects.get(id=question_id)
+	q = Question.objects.filter(id=question_id)
+	if q.exists():
+		q = q.first()
 		q.total_views += 1
 		q.save()
-	except:
+	else:
 		return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
 		context = {'error': 'Pergunta não encontrada',
-				   'err_msg': 'Talvez ela tenha sido apagada pelo criador da pergunta.',
-				   'redirect': return_to}
+					 'err_msg': 'Talvez ela tenha sido apagada pelo criador da pergunta.',
+					 'redirect': return_to}
 		return render(request, 'error.html', context)
 
-	responses = Response.objects.filter(question=q).order_by('-pub_date').order_by('-total_likes')
+	responses = Response.objects.filter(question=q).order_by('-total_likes')
 
 	context = {'question': q,
-			   'responses': responses}
+						 'responses': responses}
 	
-	if mobile(request) and random.choice([1,2,3,4]) == 4:
-		print('oi' * 1000)
+	if mobile(request) and random.choice([1,2,3,4,5]) == 5:
 		context['MOBILE_ADS'] = True
 
 	if not request.user.is_anonymous:
@@ -374,16 +374,11 @@ def question(request, question_id):
 
 	'''
 	Questões recomendadas.
-	Elas ficam no cache por 5 minutos até se atualizarem.
-
-	Dica: organizar ordem das questões em JavaScript no lado do cliente para
-	evitar processamento desnecessário no servidor.
 	'''
 	recommended_questions = cache.get('recommended_questions')
 	if not recommended_questions:
-		cache.set('recommended_questions', list(Question.objects.order_by('-pub_date')[:15]))
+		cache.set('recommended_questions', Question.objects.order_by('-pub_date')[:15])
 		recommended_questions = cache.get('recommended_questions')
-	shuffle(recommended_questions)
 	context['recommended_questions'] = recommended_questions
 
 

@@ -178,9 +178,6 @@ textarea.large-compact {
 .response-control {
     float: right;
 }
-.recommended h3 {
-  text-align: center;
-}
 @media (min-width: 320px) and (max-width: 580px) {
   .r-question {
     width: 95%;
