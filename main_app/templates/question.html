@@ -59,6 +59,10 @@ $(function() {
 });
 function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Você tem certeza que deseja apagar sua resposta?')){$.ajax({url:'/delete_response',data:{response_id:response_id,},complete:function() {response_button_dom_el.parentElement.parentElement.parentElement.parentElement.remove();}})}}
 		</script>
+		
+		<script>
+			csrf_token = "{{ csrf_token }}";
+		</script>
 	</head>
 	<body>
 
@@ -236,6 +240,6 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 		<script src="/static/js/linkify/linkify-jquery.min.js"></script>
 		<script>questoes_recomendadas_json = [{% for question in recommended_questions %}{"id":{{ question.id }},"text":"{{ question.text }}","creator_username":"{{ question.creator.user.username }}","pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}"},{% endfor %}];</script>
 		<script src="/static/js/general_functions.js?version=3"></script>
-		<script src="/static/js/question.js?v=16"></script>
+		<script src="/static/js/question.js?v=16.1"></script>
 	</body>
 </html>

@@ -257,7 +257,7 @@ function delete_question(id) {
 			url: '/delete_question',
 			type: 'post',
 			data: {
-				csrfmiddlewaretoken: '{{csrf_token}}',
+				csrfmiddlewaretoken: csrf_token,
 				question_id: id,
 			},
 			complete: function() {
