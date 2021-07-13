@@ -7,6 +7,12 @@ import zlib
 register = template.Library()
 
 
+@register.filter(name='total_responses')
+def total_responses(number):
+	if number == 1:
+		return '1 resposta'
+	return str(number) + ' respostas'
+
 @register.filter(name='list_comments')
 def list_comments(response_id, request):
 	print(request)
