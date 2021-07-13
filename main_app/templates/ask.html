@@ -138,18 +138,5 @@ if (getDarkCookie() == 'true') {
 </script>
 <script src="/static/js/general_functions.js?version=2"></script>
 
-<!-- NSFW -->
-<script src="https://cdnjs.deepai.org/deepai.min.js"></script>
-<script>
-	deepai.setApiKey('quickstart-QUdJIGlzIGNvbWluZy4uLi4K');
-	
-	async function oi() {
-		var resp = await deepai.callStandardApi("nsfw-detector", {
-			image: document.getElementById('image'),
-		});
-	console.log(resp);
-	}
-</script>
-
 </body>
 </html>
