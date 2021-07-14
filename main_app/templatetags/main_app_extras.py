@@ -8,10 +8,14 @@ register = template.Library()
 
 
 @register.filter(name='total_responses')
-def total_responses(number):
-	if number == 1:
+def total_responses(qid):
+	
+	total_r = Response.objects.filter(question=Question.objects.get(id=qid)).count()
+	
+	if total_r == 1:
 		return '1 resposta'
-	return str(number) + ' respostas'
+	return str(total_r) + ' respostas'
+
 
 @register.filter(name='list_comments')
 def list_comments(response_id, request):

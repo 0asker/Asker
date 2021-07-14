@@ -184,7 +184,7 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 
 			<section class="card bg-main" id="responses">
   				<div class="card-header">
-    				{{ question.total_responses|total_responses }}
+    				{{ question.id|total_responses }}
   				</div>
 				<ul class="list-group list-group-flush responses">
 				{% for response in responses|pull_best_answer %}
