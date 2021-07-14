@@ -598,6 +598,8 @@ def ask(request):
 
 	if request.method == 'POST':
 
+		print(request.POST.get('nsfw_score'))
+
 		if request.POST.get('question') == '' or request.POST.get('question') == '.':
 			return render(request, 'ask.html', {'error': '<p>Pergunta inválida.</p>'})
 

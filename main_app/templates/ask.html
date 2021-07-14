@@ -38,13 +38,19 @@
 	<main>
 		{% if user_p.active %}
 		<div id="inner">
-			<form method="post" enctype="multipart/form-data" onsubmit="format_form(this)">
+			<form method="post" enctype="multipart/form-data" onsubmit="format_form(this)" id="form_pergunta">
 				{% csrf_token %}
 				<div class="form-group ask-form">
 					<input class="form-control" type="text" name="question" placeholder="Sua pergunta aqui" autocomplete="off" maxlength="180">
 					<textarea width="100px" maxlength="5000" class="form-control" placeholder="Descrição (opcional)" name="description" style="height: 10em"></textarea>
 					<label for="image">Imagem</label>
+					
+					<input type="hidden" name="nsfw_score" value="0" id="img_nsfw_score">
 					<input type="file" class="form-control-file" id="image" name="file" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
+					<div id="carregando-imagem" style="display: none">
+						<img src="/static/images/loading.gif" width="10%">
+						<span style="vertical-align: middle">Carregando imagem</span>
+					</div>
 
 					<a href="#" class="vertical-spaced clickable" onclick="togglePoll();">Incluir enquete</a>
 
@@ -70,7 +76,7 @@
 
 					</div></div>
 
-					<input class="btn btn-primary" type="submit" value="Fazer pergunta">
+					<input class="btn btn-primary" type="submit" value="Fazer pergunta" id="botao_fazer_pergunta">
 				</div>
 			</form>
 		</div>
@@ -138,17 +144,78 @@ if (getDarkCookie() == 'true') {
 </script>
 <script src="/static/js/general_functions.js?version=2"></script>
 
+<script>
+	function enviar_pergunta() {
+		document.getElementById("form_pergunta").submit();
+	}
+</script>
+
 <!-- NSFW detector -->
 <script src="https://cdnjs.deepai.org/deepai.min.js"></script>
 <script>
-	deepai.setApiKey('quickstart-QUdJIGlzIGNvbWluZy4uLi4K');
-
-	async function nsfw_detector() {
-			var resp = await deepai.callStandardApi("nsfw-detector", {
-							image: document.getElementById('image'),
-			});
-			console.log(resp);
+	
+	deepai.setApiKey("2826d443-8d49-4d03-aaab-6cf13a6f86fe");
+	
+	/* Analisador de imagem (nsfw) */
+	function analisar_imagem() {
+		/* Desativa o botão de perguntar */
+		botao_perguntar = document.getElementById("botao_fazer_pergunta");
+		botao_perguntar.disabled = true;
+		
+		/* Ativa o aviso "carregando imagem" */
+		document.getElementById("carregando-imagem").style.display = "block";
+		
+		(async function nsfw_detector() {
+			try {
+				var resp = await deepai.callStandardApi("nsfw-detector", {
+								image: document.getElementById("image"),
+				});
+				
+				nsfw_score = resp["output"]["nsfw_score"];
+				
+				/*
+				 * nsfw_score > 0.8: imagem não vai ser enviada.
+				 * nsfw_score <= 0.6: imagem vai ser enviada.
+				 */
+				
+				if (nsfw_score > 0.8) {
+					document.getElementById("image").value = null;
+					
+					alert("Impossível enviar imagem.");
+					
+					/* Desativa o aviso "carregando imagem" */
+					document.getElementById("carregando-imagem").style.display = "none";
+					
+					botao_perguntar.disabled = false;
+					
+					return;
+				}
+				
+				
+				/* muda o nsfw_score no input oculto. */
+				document.getElementById("img_nsfw_score").value = nsfw_score;
+				
+				/* Desativa o aviso "carregando imagem" */
+				document.getElementById("carregando-imagem").style.display = "none";
+				
+				botao_perguntar.disabled = false;
+				
+				return;
+				
+			} catch (e) {
+				/* Se der erro, envia a imagem de qualquer forma. */
+				/* Desativa o aviso "carregando imagem" */
+				document.getElementById("carregando-imagem").style.display = "none";
+				
+				botao_perguntar.disabled = false;
+				
+				return;
+			}
+		})();
 	}
+	
+	/* Analisa a imagem quando o usuário preenche o campo de imagem no formulário. */
+	document.getElementById("image").onchange = analisar_imagem;
 </script>
 
 </body>
