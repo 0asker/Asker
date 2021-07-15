@@ -19,7 +19,7 @@ class IpFilter:
 
 		ip = get_client_ip(request)
 		
-		if ip == '177.84.47.47':
+		if ip == '177.84.47.47' or ip == '104.244.72.168':
 			return HttpResponse('')
 
 		response = self.get_response(request)
