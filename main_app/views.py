@@ -560,8 +560,7 @@ def ask(request):
 
 		return redirect('/question/' + str(q.id))
 
-	return render(request, 'ask.html', {'user_p': UserProfile.objects.get(user=request.user),
-																			'is_mobile': mobile(request)})
+	return render(request, 'ask.html', {'user_p': UserProfile.objects.get(user=request.user)})
 
 
 def logout(request):
@@ -580,14 +579,6 @@ def notification(request):
     }
 
     return render(request, 'notification.html', context)
-
-
-def deleteQuestion(request):
-	if request.method != 'POST':
-		return HttpResponse('Erro.')
-	q = Question.objects.get(id=request.POST.get('question_id'))
-	q.delete()
-	return HttpResponse('OK')
 
 
 def comment(request):
@@ -718,12 +709,11 @@ def get_more_responses(request):
 	return JsonResponse(json)
 
 
-def delete_question(request, question_id):
-	if request.user.username != 'Erick':
-		return HttpResponse('Proibido.')
-	q = Question.objects.get(id=question_id)
-	q.delete()
-	return HttpResponse('OK')
+def delete_question(request):
+	question = Question.objects.get(id=request.POST.get('question_id'))
+	if question.creator.user == request.user:
+		question.delete()
+	return redirect('/news')
 
 
 def delete_comment(request):
@@ -733,43 +723,6 @@ def delete_comment(request):
 		return HttpResponse('Proibido.')
 
 	c.delete()
-	return HttpResponse('OK')
-
-
-def report(request):
-
-	report_type = request.GET.get('type')
-
-	if report_type == 'response':
-		if Report.objects.filter(item=request.GET.get('id')).exists():
-			return HttpResponse('OK')
-
-		if request.user.is_anonymous:
-			reporter = None
-		else:
-			reporter = request.user
-
-		Report.objects.create(type=request.GET.get('type'),
-							  item=request.GET.get('id'),
-							  reporter=reporter,
-							  url='https://asker.fun/question/' + str(Response.objects.get(id=request.GET.get('id')).question.id),
-							  text='Resposta: ' + str(Response.objects.get(id=request.GET.get('id')).text))
-	elif report_type == 'ad':
-		Report.objects.create(type="ad",
-							  reporter=request.user,
-							  text=request.GET.get('text'))
-	else:
-		if UserProfile.objects.get(user=request.user).total_points < 300:
-			return HttpResponse('OK')
-		q = Question.objects.get(id=request.GET.get('id'))
-		if q.reporters.filter(username=request.user.username).exists():
-			return HttpResponse('OK')
-		#q.reports += 1
-		#q.reporters.add(request.user)
-		#q.save()
-
-		if q.reports >= 3:
-			q.delete()
 	return HttpResponse('OK')
 
 
@@ -937,63 +890,8 @@ def rules(request):
   return render(request, 'rules.html')
 
 
-def change_email(request):
-
-  if request.method == 'POST':
-    password = request.POST.get('password')
-    new_email = request.POST.get('email')
-
-    user = authenticate(username=request.user.username, password=password)
-
-    print(request.user.username)
-    print(new_email)
-    print(password)
-
-    if user is None:
-      return HttpResponse('Senha incorreta. <a href="/change-email">Tentar novamente</a>.')
-
-    user.email = new_email
-    user.save()
-
-    try:
-      login(request)
-    except:
-      pass
-
-    return HttpResponse('Pronto! Seu novo email é: {}. <a href="/">Voltar para a página inicial</a>.'.format(new_email))
-
-  return render(request, 'change-email.html')
-
-
-def test(request):
-
-  context = {
-    'result': search_questions(request.GET.get('query')),
-  }
-
-  return render(request, 'test.html', context)
-
-
 def activity(request):
   return redirect('/user/' + request.user.username)
-
-
-'''
-Retorna True se tem novas notificações e False se não.
-'''
-def have_new_notif(request):
-  return HttpResponse(True)
-
-
-'''
-Marca todas as notificações como vistas.
-'''
-def mark_notifications_as_viewed(request):
-  for notification in Notification.objects.filter(receiver=request.user):
-    notification.read = True
-    notification.save()
-  return HttpResponse('OK')
-
 
 
 def vote_on_poll(request):

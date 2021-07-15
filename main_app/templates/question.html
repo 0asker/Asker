@@ -57,7 +57,6 @@ $(function() {
 		document.getElementById('edit-response-form').style.display = 'none'
 	});
 });
-function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Você tem certeza que deseja apagar sua resposta?')){$.ajax({url:'/delete_response',data:{response_id:response_id,},complete:function() {response_button_dom_el.parentElement.parentElement.parentElement.parentElement.remove();}})}}
 		</script>
 		
 		<script>
@@ -171,13 +170,16 @@ function delete_response(response_button_dom_el,response_id){if(confirm('Opa! Vo
 						</div>
 					{% endif %}
 
-					{% if question.creator.user.username == user.username %}
-					{% else %}
-					<i class="far fa-flag" id="question-popover" data-toggle="popover" data-content="<p>Para denunciar essa pergunta, use o botão abaixo. Use apenas quando necessário.</p><button class='btn btn-outline-danger' onclick='report_question({{ question.id }}, this)'>Denunciar</button>"></i>
+					{% if not question.creator.user.username == user.username %}
+						<i class="far fa-flag" id="question-popover" data-toggle="popover" data-content="<p>Para denunciar essa pergunta, use o botão abaixo. Use apenas quando necessário.</p><button class='btn btn-outline-danger' onclick='report_question({{ question.id }}, this)'>Denunciar</button>"></i>
 					{% endif %}
 
 					{% if question.creator.user.username == user.username %}
-					<button onclick="delete_question({{ question.id }})" class="btn btn-outline-danger">Apagar</button>
+						<form method="post" action="/delete_question" onsubmit="if(confirm('Opa! Tem certeza que deseja apagar sua resposta?')) return true; else return false;">
+							{% csrf_token %}
+							<input type="hidden" name="question_id" value="{{ question.id }}">
+							<button class="btn btn-outline-danger">Apagar</button>
+						</form>
 					{% endif %}
 				</div>
 			</div>
