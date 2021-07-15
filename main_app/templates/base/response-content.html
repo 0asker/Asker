@@ -3,25 +3,46 @@
 <li class="list-group-item bg-main no-horiz-padding">
 	<div class="card-body">
 		<div class="poster-container">
-		<a class="poster-info" href="/user/{{ response.creator.user.username }}">
-			<div class="poster-profile-pic-container"><img class="poster-profile-pic-popover" width="40px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}"></div>
-			<div class="poster-text-container"><div><span>{{ response.creator.user.username }}</span><br><span title="{{ response.pub_date }}" class="post-pub-date"> {% fix_naturaltime response.pub_date|naturaltime %}</span></div></div>
-		</a></div>
-		   {% if question.best_answer == response.id %}
-			   <div class="best-answer-badge"><span class="badge badge-pill badge-primary">🏆 Melhor resposta</span></div>
-		   {% endif %}
-		<p id="response-{{ response.id }}">{{ response.text|cut_description|safe|linebreaksbr }}</p>
+			<a class="poster-info" href="/user/{{ response.creator.user.username }}">
+				<div class="poster-profile-pic-container">
+					<img class="poster-profile-pic-popover" width="40px" src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}">
+				</div>
+				
+				<div class="poster-text-container">
+					<div>
+						<span>
+							{{ response.creator.user.username }}
+						</span>
+						<span title="{{ response.pub_date }}" class="post-pub-date">
+							{% fix_naturaltime response.pub_date|naturaltime %}
+						</span>
+					</div>
+				</div>
+			</a>
+		</div>
+		
+		{% if question.best_answer == response.id %}
+			<div class="best-answer-badge">
+				<span class="badge badge-pill badge-primary">
+					🏆 Melhor resposta
+				</span>
+			</div>
+		{% endif %}
+		
+		<p id="response-{{ response.id }}">
+			{{ response.text|linebreaksbr }}
+		</p>
+		
 		{% if response.get_embedded_content %}
 			<div class="embedded-content">
 				{{ response.get_embedded_content|safe }}
 			</div>
-			<br>
 		{% endif %}
 
 		{% if response.image %}
-			<hr>
-			<img src="{{ response.image.url }}" class="response-image" alt="Ocorreu um erro ao processar a imagem.">
-			<hr>
+			<div>
+				<img src="{{ response.image.url }}" class="response-image" alt="Ocorreu um erro ao processar a imagem.">
+			</div>
 		{% endif %}
 
 		<div class="heart-comment" id="like-counter-{{ response.id }}" onclick="like(this, {{ response.id }})">

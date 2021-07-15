@@ -176,8 +176,11 @@ def calculate_popular_questions():
 	'''
 	Adicionando as perguntas na variável questions e inicializando os pontos de acordo com o tempo de likes.
 	'''
-	for q in last_questions:
-		questions.append([q.total_likes / likes * 100, q.id])
+	try:
+		for q in last_questions:
+			questions.append([q.total_likes / likes * 100, q.id])
+	except ZeroDivisionError:
+		questions = []
 
 	'''
 	Incrementando pontos de acordo com o total de respostas.
@@ -722,13 +725,11 @@ def rank(request):
 
 def edit_response(request):
 
-	id=request.POST.get('response_id')
+	response = Response.objects.get(creator=UserProfile.objects.get(user=request.user), id=request.POST.get('response_id'))
+	response.text = request.POST.get('response')
+	response.save()
 
-	r = Response.objects.get(creator=UserProfile.objects.get(user=request.user), id=id)
-	r.text = bs(request.POST.get('response').replace('\r\n\r\n', '\n\n'), 'lxml').text
-	r.save()
-
-	return redirect('/question/' + str(r.question.id))
+	return redirect('/question/' + str(response.question.id))
 
 
 def get_more_questions(request):
@@ -954,20 +955,6 @@ def account_verification(request):
 			else:
 				return HttpResponse('Erro: código de verificação incorreto.')
 	return HttpResponse('Erro.')
-
-
-def user_info(request, username):
-	if request.user.username != 'Erick':
-		return HttpResponse('Sem informações.')
-
-	user = User.objects.get(username=username)
-	user_profile = UserProfile.objects.get(user=user)
-
-	context = {
-		'user_p': user_profile,
-	}
-
-	return render(request, 'user-info.html', context)
 
 
 ''' A função abaixo faz a validação das credenciais de novos usuários. '''
@@ -1227,17 +1214,6 @@ def undo_vote_on_poll(request):
 		vote.delete()
 
 	return HttpResponse('Ok.')
-
-
-'''
-Configura o status do usuário para online.
-'''
-def set_status(request):
-
-	user_profile = UserProfile.objects.get(user=request.user)
-	user_profile.last_seen = timezone.now()
-
-	return HttpResponse('OK')
 
 
 def get_popular_questions(request):
