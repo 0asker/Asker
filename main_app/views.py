@@ -10,7 +10,6 @@ import django_project.general_rules as general_rules
 from main_app.models import *
 from main_app.templatetags.main_app_extras import fix_naturaltime
 from main_app.forms import UploadFileForm
-import re
 
 import io
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
@@ -200,7 +199,7 @@ def save_answer(request):
 	if form.is_valid():
 		f = request.FILES['file']
 		
-		file_name = 'qpic-{}{}'.format(timezone.now().date(), timezone.now().time())
+		file_name = 'rpic-{}{}'.format(timezone.now().date(), timezone.now().time())
 
 		success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
 		if success: # TODO: mensagem caso não dê certo
@@ -411,18 +410,20 @@ def signup(request):
 		password = request.POST.get('password')
 
 		'''
-		Validação do nome de usuário: verifica se combina com o regex (apenas letras, números, hífens, undercores e espaços).
+		Validação do nome de usuário: é permitido apenas letras, números, hífens, undercores e espaços.
 		'''
-		regex = r'^[-\w_ ]+$'
-		try:
-			re.search(regex, username)[0]
-		except:
+		# verificando caractere por caractere:
+		pode = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ '
+		for ch in username:
+			if ch in pode:
+				continue
+			
 			html = '<div class="alert alert-danger"><p>O nome de usuário deve conter apenas caracteres alfanuméricos, hífens, underscores e espaços.</p></div>'
 			return render(request, 'signup.html', {'invalid_username': html,
-														 'username': username,
-														 'email': email,
-														 'redirect': r,
-														 'username_error': ' is-invalid'})
+																						 'username': username,
+																						 'email': email,
+																						 'redirect': r,
+																						 'username_error': ' is-invalid'})
 
 		''' Validação das credenciais: '''
 		if not is_a_valid_user(username, email, password):
@@ -531,8 +532,7 @@ def ask(request):
 		if form.is_valid():
 			f = request.FILES['file']
 
-			file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-			file_name += str(f)
+			file_name = 'qpic-{}{}'.format(timezone.now().date(), timezone.now().time())
 
 			success = save_img_file(f, 'django_project/media/questions/' + file_name, (850, 850))
 			if success: # TODO: mensagem caso não dê certo
@@ -802,18 +802,22 @@ def edit_profile(request, username):
 
 			username = request.POST.get('username')
 
-			# validação do novo nome de usuário:
-			r = r'^[-\w_ ]+$'
-			try:
-				re.search(r, username)[0]
-			except:
+			'''
+			Validação do nome de usuário: é permitido apenas letras, números, hífens, undercores e espaços.
+			'''
+			# verificando caractere por caractere:
+			pode = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ '
+			for ch in username:
+				if ch in pode:
+					continue
+
 				html = '<div class="alert alert-danger"><p>O nome de usuário deve conter apenas caracteres alfanuméricos, hífens, underscores e espaços.</p></div>'
 				return render(request, 'edit-profile.html', {'invalid_username_text': html,
 															 'username': username,
 															 'invalid_username': ' is-invalid'})
 
 			if len(username) > 30:
-				return HttpResponse('Escolha um nome de usuário menor ou igual a 30 caracteres.')
+				return HttpResponse('Erro.')
 
 			if User.objects.filter(username=username).exists():
 				return render(request, 'edit-profile.html', {'user_p': UserProfile.objects.get(user=User.objects.get(username=username)), 'username_display': 'block', 'invalid_username': ' is-invalid'})
