@@ -139,6 +139,11 @@ textarea.large-compact {
   align-items: center;
   padding-right: 6px;
 }
+
+.poster-text-container .r-username {
+	display: block;
+}
+
 .choice.list-group-item:first-child {
   border-top: none;
 }
