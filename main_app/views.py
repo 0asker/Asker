@@ -1,87 +1,19 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
-
-'''
-Paginação:
-'''
-from django.core.paginator import Paginator, EmptyPage
-
-from django.core.mail import send_mail
+from django.core.paginator import Paginator
 from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
-from django_project.settings import EMAIL_HOST_USER
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
-from djpjax import pjax
-from django.template.response import TemplateResponse
 from django.core.cache import cache
-
 import django_project.general_rules as general_rules
-from main_app.models import UserProfile, Question, Response, Notification, Comment, Report, Poll, PollChoice, PollVote
+from main_app.models import *
 from main_app.templatetags.main_app_extras import fix_naturaltime
 from main_app.forms import UploadFileForm
-
-from bs4 import BeautifulSoup as bs
-from redislite import Redis
-
 import re
-from random import shuffle
-from hashlib import sha256
-
-import time
-import random
-import string
 
 import io
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
-
-
-import re
-'''
-Retorna True se a requisição vier de um dispositivo mobile.
-'''
-def mobile(request):
-	MOBILE_AGENT_RE=re.compile(r".*(iphone|mobile|androidtouch)",re.IGNORECASE)
-
-	if MOBILE_AGENT_RE.match(request.META['HTTP_USER_AGENT']):
-		return True
-	return False
-
-
-def search_questions(query):
-  queries = query.split()
-
-  all_questions = Question.objects.all()
-
-  result = {'questions': []}
-
-  for question in all_questions:
-    reputation = 0
-    for query in queries:
-      if query in question.text or query in question.description:
-        reputation += 1
-
-    precision = (reputation / len(queries)) * 100
-    if precision >= 70:
-      result['questions'].append({
-        'title': question.text,
-        'description': question.description,
-        'id': question.id,
-        'precision': precision,
-      })
-
-  '''
-    {
-      ['title': 'título da pergunta',
-      'description': 'descrição da pergunta',
-      'id': 'id da pergunta',
-      'precision': 'precisão da pergunta baseado na consulta do usuário',]
-    }
-  '''
-
-
-
-  return result
 
 
 def compress_animated(bio, max_size, max_frames):
@@ -248,8 +180,8 @@ def save_answer(request):
 		return HttpResponse('Proibido.')
 
 	response = Response.objects.create(question=question,
-									   creator=response_creator,
-									   text=bs(text, 'lxml').text)
+																		 creator=response_creator,
+																		 text=text)
 
 	question.total_responses += 1
 	question.save()
@@ -264,16 +196,11 @@ def save_answer(request):
 
 	json = {'answer_id': response.id}
 
-	'''
-	Upload de imagens:
-	'''
-
 	form = UploadFileForm(request.POST, request.FILES)
 	if form.is_valid():
 		f = request.FILES['file']
-
-		file_name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-		file_name += str(f)
+		
+		file_name = 'qpic-{}{}'.format(timezone.now().date(), timezone.now().time())
 
 		success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
 		if success: # TODO: mensagem caso não dê certo
@@ -518,26 +445,10 @@ def signup(request):
 		u = User.objects.create_user(username=username, email=email, password=password)
 		login(request, u)
 
-		''' Geração do código de confirmação de conta: '''
-		s = 'abcdefghijklmnopqrstuvwxyz123456789'
-		RANDOM_CODE = ''.join(random.sample(s, len(s)))
-
 		new_user_profile = UserProfile.objects.create(user=u)
 		new_user_profile.ip = get_client_ip(request)
 		new_user_profile.active = True
-		new_user_profile.verification_code = RANDOM_CODE
 		new_user_profile.save()
-
-		#subject = 'Asker.fun: confirmação de conta'
-		#message = '''Olá {}! Obrigado por criar uma conta no Asker.fun.
-#
-#Para continuar, verifique seu endereço de email usando o link:
-#https://asker.pythonanywhere.com/account/verify?user={}&code={}
-#
-#Obrigado e bem vindo(a)!
-#'''.format(username, sha256(bytes(username, 'utf-8')).hexdigest(), RANDOM_CODE)
-#		recipient = [email]
-#		print(send_mail(subject, message, EMAIL_HOST_USER, recipient, fail_silently=False))
 
 		return redirect(r)
 
@@ -606,7 +517,7 @@ def ask(request):
 		if request.POST.get('question') == '' or request.POST.get('question') == '.':
 			return render(request, 'ask.html', {'error': '<p>Pergunta inválida.</p>'})
 
-		description = bs(request.POST.get('description'), 'html.parser').text
+		description = request.POST.get('description')
 		description = description.replace('\r', '')
 
 		text = request.POST.get('question')
@@ -942,21 +853,6 @@ def block(request, username):
 	return HttpResponse('Bloqueado')
 
 
-def account_verification(request):
-	hash = request.GET.get('user') # o valor do parâmetro user é nada mais nada menos do que a soma sha256 do nome de usuário.
-	CODE = request.GET.get('code') # código de verificação.
-
-	for u in UserProfile.objects.all():
-		if sha256(bytes(u.user.username, 'utf-8')).hexdigest() == hash:
-			if u.verification_code == CODE:
-				u.active = True
-				u.save()
-				return redirect('/?new_user=true')
-			else:
-				return HttpResponse('Erro: código de verificação incorreto.')
-	return HttpResponse('Erro.')
-
-
 ''' A função abaixo faz a validação das credenciais de novos usuários. '''
 def is_a_valid_user(username, email, password):
 	if len(username) > 30:
@@ -988,78 +884,6 @@ def is_a_valid_comment(text):
 		return False
 	return True
 
-
-'''
-Recompensa por adicionar o site aos favoritos.
-'''
-def increasePoints(request):
-
-	user_profile = UserProfile.objects.get(user=request.user)
-
-	if user_profile.message == 'ok': # caso o usuário já tenha ganhado os 100 pontos por adicionar o site aos favoritos.
-		return HttpResponse('OK')
-
-	user_profile.total_points += 100
-	user_profile.message = 'ok' # 'ok' em message: significa que o usuário já ganhou a recompensa por adicionar o site aos favoritos.
-	user_profile.save()
-	return HttpResponse('OK')
-
-
-def reset_password(request):
-
-	if request.method == 'POST':
-		user = User.objects.get(email=request.POST.get('email'))
-		user.set_password(request.POST.get('password1'))
-		user.save()
-
-		return HttpResponse('''<!doctype html>
-		<html>
-		<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		</head>
-		<body>
-		<p>Senha alterada com sucesso. <a href="/signin">Clique aqui</a> para fazer login.</p>
-		</body>
-		</html>
-		''')
-
-	if request.GET.get('type', None) == 'email-verification':
-		'''
-		Para alterar senha:
-		é gerado novo código de verificação aleatório para a conta;
-		é enviado um email para a conta com três parâmetros GET: parâmetro type = get-form, parâmetro verification-code = novo código de verificação e parâmetro username = username;
-		se o código de verificação estiver correto é enviado o formulário para troca de senha, se não, é enviado um erro.
-		'''
-		u_p = UserProfile.objects.get(user=User.objects.get(email=request.GET.get('email')))
-		u_p.verification_code = ''.join(random.choice(string.ascii_lowercase) for i in range(10))
-		u_p.save()
-
-		send_mail('Asker: trocar senha', 'Para alterar sua senha do Asker, use o link: https://br.asker.fun/reset-password?type=get-form&username={}&code={}\nEntre em contato por este email caso ocorra algum erro.'.format(u_p.user.username.replace(' ', '%20'), u_p.verification_code), EMAIL_HOST_USER, [u_p.user.email], fail_silently=False)
-
-		return HttpResponse('Email de verificação enviado. Por favor, verifique seus emails, caso não encontre, verifique a pasta de spam.')
-	elif request.GET.get('type', None) == 'get-form':
-		u_p = UserProfile.objects.get(user=User.objects.get(username=request.GET.get('username')))
-
-		if u_p.verification_code == request.GET.get('code'):
-			return render(request, 'change-password.html', {'email': u_p.user.email})
-		return HttpResponse('Ocorreu um erro, por favor, tente novamente. Caso o erro persista, <a href="mailto:minha.ccontta@gmail.com">nos envie um email</a>.')
-
-	return render(request, 'reset-password-1-part.html')
-
-
-def update_popular_questions(request):
-
-	q = Question.objects.order_by('-pub_date')
-
-	redis_connection = Redis('/tmp/asker.db')
-	ID_LIST = ''
-	for id in Paginator(sorted(q[:150], key=lambda o: o.total_likes, reverse=True), 20).page(1).object_list:
-		ID_LIST += str(id) + ' '
-	ID_LIST = ID_LIST.strip()
-	redis_connection.set('popular_questions', ID_LIST)
-
-	return HttpResponse('OK')
 
 def choose_best_answer(request):
 
@@ -1214,19 +1038,3 @@ def undo_vote_on_poll(request):
 		vote.delete()
 
 	return HttpResponse('Ok.')
-
-
-def get_popular_questions(request):
-	p_questions = cache.get('p_questions')
-
-	if not p_questions:
-		p_questions = calculate_popular_questions()
-		cache.set('p_questions', p_questions)
-
-	paginator = Paginator(p_questions, 20)
-	page = request.GET.get('popular_page', 2)
-
-	try:
-		return render(request, 'base/popular-question.html', {'popular_questions': paginator.page(page), 'render_directly': True})
-	except EmptyPage:
-		return HttpResponse('EmptyPage')
