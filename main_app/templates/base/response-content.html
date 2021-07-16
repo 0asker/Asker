@@ -57,7 +57,6 @@
 		{% if response.creator.user.username == user.username %}
 			<div class="btn-group" role="group" style="float: right;">
 				<button class="btn btn-outline-primary btn-sm" onclick="delete_response(this, {{ response.id }})"><i class="fas fa-trash"></i>&nbsp;Apagar</button>
-				<button class="btn btn-outline-primary btn-sm" onclick="document.getElementById('edit-response-form').style.display='block'"><i class="fas fa-edit"></i>&nbsp;Editar</button>
 			</div>
 		{% elif question.creator.user.username == user.username %}
 			{% if question.may_choose_answer %}
@@ -91,15 +90,7 @@
 					<input class="btn btn-primary" type="submit" value="Comentar">
 				</form>
 			</div>
-				
+			
 		</div>
-	{% if response.creator.user.username == user.username %}
-		<form id="edit-response-form" class="form-inline" method="post" action="/edit-response" onsubmit="document.getElementById('response-{{ response.id }}').innerHTML = this.response.value.replace('\n', '<br>')">
-			{% csrf_token %}
-			<input type="hidden" name="response_id" value="{{ response.id }}">
-			<textarea class="form-control edit-response-textarea" name="response">{{ response.text }}</textarea>
-			<input class="btn btn-outline-primary" type="submit" value="Enviar">
-		</form>
-		{% endif %}
 	</div>
 </li>

@@ -27,37 +27,9 @@
 			document.getElementById('wait').remove();
 		</script>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 		<title>{{ question.text }} | Asker</title>
-		<script>
-$(function() {
-	/*
-	 * Quando o usuário envia uma resposta usando o formulário de enviar resposta
-	 * dessa página, a resposta é enviada via ajax. O servidor retorna de volta
-	 * o HTML da resposta renderizado preparado para ser inserido na página via JavaScript.
-	 */
-	$('#response-form').ajaxForm(function(data) {
-		responses = document.getElementsByClassName('responses')[0];
-		responses.innerHTML += data;
-
-		/* Desativa o ícone de carregamento já que a resposta (teoricamente)
-		 * já foi carregada na página.
-		 */
-		document.getElementById('response-loading-gif').style.display = 'none';
-
-		/* Oculta o formulário de responder a pergunta porque a pergunta já foi respondida. */
-		document.getElementById('response-form').style.display = 'none';
-	});
-
-	$('#edit-response-form').ajaxForm(function(answer_id) {
-		document.getElementById('edit-response-form').style.display = 'none'
-	});
-});
-		</script>
 		
 		<script>
 			csrf_token = "{{ csrf_token }}";
@@ -171,7 +143,17 @@ $(function() {
 					{% endif %}
 
 					{% if not question.creator.user.username == user.username %}
+						<!--
 						<i class="far fa-flag" id="question-popover" data-toggle="popover" data-content="<p>Para denunciar essa pergunta, use o botão abaixo. Use apenas quando necessário.</p><button class='btn btn-outline-danger' onclick='report_question({{ question.id }}, this)'>Denunciar</button>"></i>
+						-->
+						<style>
+							.question-options {
+								float: right;
+							}
+						</style>
+						<div class="question-options">
+							<i class="fas fa-ellipsis-v"></i>
+						</div>
 					{% endif %}
 
 					{% if question.creator.user.username == user.username %}
@@ -200,7 +182,7 @@ $(function() {
 					{% if not ANSWERED %}
 						{% ablockb question.creator.user.username user.username as BLOCKED %}
 						{% if not BLOCKED %}
-							<form id="response-form" method="post" action="/save_answer" enctype="multipart/form-data" onsubmit="document.getElementById('response-loading-gif').style.display = 'block'; document.getElementById('send-response-btn').disabled = true;">
+							<form id="formulario_de_resposta">
 								{% csrf_token %}
 								<input type="hidden" name="question_id" value="{{ question.id }}">
 								<textarea maxlength="5000" class="form-control large-compact" placeholder="Sua resposta" name="text" required="required" onclick="$(this).css('height', '120px')"></textarea>
@@ -231,5 +213,25 @@ $(function() {
 		<script>questoes_recomendadas_json = [{% for question in recommended_questions %}{"id":{{ question.id }},"text":"{{ question.text }}","creator_username":"{{ question.creator.user.username }}","pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}"},{% endfor %}];</script>
 		<script src="/static/js/general_functions.js?version=3"></script>
 		<script src="/static/js/question.js?v=16.1"></script>
+		
+		<script>
+			
+			formulario_de_resposta = document.getElementById("formulario_de_resposta")
+			
+			formulario_de_resposta.onsubmit = function() {
+				
+				$.ajax({
+					url: "/save_answer",
+					method: "post",
+					data: $(formulario_de_resposta).serialize(),
+					complete: function(data) {
+						document.getElementsByClassName("responses")[0].innerHTML += data.responseText;
+						formulario_de_resposta.remove();
+					},
+				});
+				
+				return false;
+			}
+		</script>
 	</body>
 </html>

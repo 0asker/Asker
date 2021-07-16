@@ -156,11 +156,7 @@ envia uma resposta para uma pergunta, a resposta passa por aqui
 para ser salva (no banco de dados).
 '''
 def save_answer(request):
-	if request.method != 'POST':
-		return HttpResponse('Proibido.')
-
-	question_id = request.POST.get('question_id')
-	question = Question.objects.get(id=question_id)
+	question = Question.objects.get(id=request.POST.get('question_id'))
 
 	response_creator = UserProfile.objects.get(user=request.user) # criador da nova resposta.
 
@@ -214,22 +210,12 @@ def save_answer(request):
 	except:
 		json['has_image'] = False
 
-	#from django.contrib.humanize.templatetags.humanize import naturaltime
-
-	'''
-	Resposta serializada:
-	response = {
-		'creator_username': response.creator.user.username,
-		'text': response.text,
-		'pub_date': naturaltime(response.pub_date),
-		'total_likes': response.total_likes,
-	}
-	'''
-
-	return render(request, 'base/response-content.html', {
+	response = render(request, 'base/response-content.html', {
 		'question': question,
 		'response': response,
 	})
+	
+	return response
 
 
 def index(request):
