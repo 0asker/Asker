@@ -192,7 +192,7 @@ $(".q-description").linkify({
 
 
 /* Renderizando a parte "Responda também" da página. */
-document.getElementsByTagName("main")[0].innerHTML += '<div><header><hr><h3 class="mb-3 text-center">— Responda também —</h3><hr></header><div id="questoes_recomendadas"></div></div>';
+document.getElementsByTagName("main")[0].innerHTML += '<div><header><hr><h3 class="mb-3 text-center text-secondary">— Responda também —</h3><hr></header><div id="questoes_recomendadas"></div></div>';
 
 
 function shuffle(array) {

@@ -609,7 +609,7 @@ def rank(request):
 def edit_response(request):
 
 	response = Response.objects.get(creator=UserProfile.objects.get(user=request.user), id=request.POST.get('response_id'))
-	response.text = request.POST.get('response')
+	response.text = request.POST.get('text')
 	response.save()
 
 	return redirect('/question/' + str(response.question.id))
