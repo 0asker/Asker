@@ -70,15 +70,6 @@ function report_question(question_id, obj) {
 }
 
 
-$(function () {
-	$('[data-toggle="popover"]').popover({
-		container: 'body',
-		html: true,
-		title: 'Denunciar abuso',
-	});
-});
-
-
 function chooseAnswer(id) {
 	$.ajax({
 		url: '/answer/choose',
@@ -267,17 +258,6 @@ function delete_question(id) {
 	}
 }
 
-$('#profile-pic-popover').popover({
-	trigger: 'hover',
-	container: 'body',
-	html: true,
-});
-
-$('.responder-profile-pic-popover').popover({
-	trigger: 'hover',
-	container: 'body',
-	html: true,
-});
 
 var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
 var commentformbgcolor='bg-white'; var commentbgcolor='bg-light';

@@ -27,7 +27,7 @@
 			document.getElementById('wait').remove();
 		</script>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 		<script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 		<title>{{ question.text }} | Asker</title>
 		
@@ -142,21 +142,6 @@
 						</div>
 					{% endif %}
 
-					{% if not question.creator.user.username == user.username %}
-						<!--
-						<i class="far fa-flag" id="question-popover" data-toggle="popover" data-content="<p>Para denunciar essa pergunta, use o botão abaixo. Use apenas quando necessário.</p><button class='btn btn-outline-danger' onclick='report_question({{ question.id }}, this)'>Denunciar</button>"></i>
-						-->
-						<!--
-						<style>
-							.question-options {
-								float: right;
-							}
-						</style>
-						<div class="question-options">
-							<i class="fas fa-ellipsis-v"></i>
-						</div>-->
-					{% endif %}
-
 					{% if question.creator.user.username == user.username %}
 						<form method="post" action="/delete_question" onsubmit="if(confirm('Opa! Tem certeza que deseja apagar sua resposta?')) return true; else return false;">
 							{% csrf_token %}
@@ -187,8 +172,17 @@
 								{% csrf_token %}
 								<input type="hidden" name="question_id" value="{{ question.id }}">
 								<textarea maxlength="5000" class="form-control large-compact" placeholder="Sua resposta" name="text" required="required" onclick="$(this).css('height', '120px')"></textarea>
-								<input class="btn btn-outline-primary" type="submit" value="Enviar" id="send-response-btn">
-								<label for="upload-photo"><img src="/static/images/camera.png?version=3" width="25px"> <span id="upload-photo-text"></span></label>
+								
+								<button class="btn btn-outline-primary" type="submit" id="botao_enviar_resposta">
+									<i class="far fa-paper-plane"></i>
+									Enviar
+								</button>
+								
+								<label for="upload-photo">
+									&nbsp;<i class="fas fa-camera fa-lg"></i>
+									<span id="upload-photo-text"></span>
+								</label>
+								
 								<input type="file" accept="image/*" name="file" id="upload-photo" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
 								<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon">
 							</form>
@@ -213,13 +207,16 @@
 		<script src="/static/js/linkify/linkify-jquery.min.js"></script>
 		<script>questoes_recomendadas_json = [{% for question in recommended_questions %}{"id":{{ question.id }},"text":"{{ question.text }}","creator_username":"{{ question.creator.user.username }}","pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}"},{% endfor %}];</script>
 		<script src="/static/js/general_functions.js?version=3"></script>
-		<script src="/static/js/question.js?v=16.1"></script>
+		<script src="/static/js/question.js?v=16.3"></script>
 		
 		<script>
 			
 			formulario_de_resposta = document.getElementById("formulario_de_resposta")
 			
 			formulario_de_resposta.onsubmit = function() {
+				
+				/* Desativa o botão de enviar resposta para evitar spam. */
+				document.getElementById("botao_enviar_resposta").disabled = true;
 				
 				$.ajax({
 					url: "/save_answer",

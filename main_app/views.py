@@ -156,6 +156,7 @@ envia uma resposta para uma pergunta, a resposta passa por aqui
 para ser salva (no banco de dados).
 '''
 def save_answer(request):
+	
 	question = Question.objects.get(id=request.POST.get('question_id'))
 
 	response_creator = UserProfile.objects.get(user=request.user) # criador da nova resposta.
