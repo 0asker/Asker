@@ -512,18 +512,12 @@ def ask(request):
 		pass
 
 	if request.method == 'POST':
-
-		print(request.POST.get('nsfw_score'))
-
-		if request.POST.get('question') == '' or request.POST.get('question') == '.':
-			return render(request, 'ask.html', {'error': '<p>Pergunta inválida.</p>'})
-
 		description = request.POST.get('description')
 		description = description.replace('\r', '')
 
 		text = request.POST.get('question')
 
-		if not is_a_valid_question(text, description):
+		if len(text) > 181:
 			return HttpResponse('Proibido.')
 
 		q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, description=description)
@@ -817,15 +811,6 @@ def is_a_valid_user(username, email, password):
 	elif len(email) > 60:
 		return False
 	elif len(password) < 6 or len(password) > 256:
-		return False
-	return True
-
-
-''' A função abaixo faz a validação de novas questões (perguntas). '''
-def is_a_valid_question(text, description):
-	if len(text) > 180:
-		return False
-	if len(description) > 5000:
 		return False
 	return True
 
