@@ -57,10 +57,13 @@
 						</a>
 					</div>
 					
-					<h2 style="font-size: 1.5em">{{ question.text }}</h2>
-					{% if question.description != '' %}
-						<hr>
-						<p class="q-description">{{ question.description|cut_description|safe|linebreaksbr }}</p>
+					<h2 style="font-size: 1.3em; font-weight: 500;">{{ question.text }}</h2>
+					
+					{% if question.description %}
+						<div>
+							<hr>
+							<p>{{ question.description|linebreaksbr }}</p>
+						</div>
 					{% endif %}
 
 					{% if question.get_embedded_content %}
@@ -71,10 +74,10 @@
 					{% endif %}
 
 					{% if question.image %}
-						<center>
+						<div>
 							<hr>
-							<img width="70%" src="{{ question.image.url }}">
-						</center>
+							<img style="display: block; margin-left: auto; margin-right: auto;" width="70%" src="{{ question.image.url }}">
+						</div>
 					{% endif %}
 
 					{% if question.has_poll %}
@@ -168,7 +171,7 @@
 					{% if not ANSWERED %}
 						{% ablockb question.creator.user.username user.username as BLOCKED %}
 						{% if not BLOCKED %}
-							<form id="formulario_de_resposta">
+							<form id="formulario_de_resposta" enctype="multipart/form-data">
 								{% csrf_token %}
 								<input type="hidden" name="question_id" value="{{ question.id }}">
 								<textarea maxlength="5000" class="form-control large-compact" placeholder="Sua resposta" name="text" required="required" onclick="$(this).css('height', '120px')"></textarea>
