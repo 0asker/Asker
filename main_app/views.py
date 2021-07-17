@@ -584,7 +584,7 @@ def comment(request):
 						<div class="poster-container">
 								<a class="poster-info" href="/user/{}">
 										<div class="poster-profile-pic-container">
-												<img src="{}" width="40px">
+												<img src="{}">
 										</div>
 										<div class="poster-text-container">
 												<span>{}</span>
