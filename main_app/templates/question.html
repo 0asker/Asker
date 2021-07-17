@@ -181,7 +181,7 @@
 									Enviar
 								</button>
 								
-								<label for="upload-photo" onclick="alert('Funcionalidade em manutenção.'); return false;">
+								<label for="upload-photo">
 									&nbsp;<i class="fas fa-camera fa-lg"></i>
 									<span id="upload-photo-text"></span>
 								</label>
@@ -221,10 +221,15 @@
 				/* Desativa o botão de enviar resposta para evitar spam. */
 				document.getElementById("botao_enviar_resposta").disabled = true;
 				
+				var formData = new FormData(this);
+				
 				$.ajax({
 					url: "/save_answer",
 					method: "post",
-					data: $(formulario_de_resposta).serialize(),
+					data: formData,
+					cache:false,
+					contentType: false,
+					processData: false,
 					complete: function(data) {
 						document.getElementsByClassName("responses")[0].innerHTML += data.responseText;
 						formulario_de_resposta.remove();
