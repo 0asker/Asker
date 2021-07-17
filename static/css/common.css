@@ -139,6 +139,12 @@ textarea.large-compact {
   align-items: center;
   padding-right: 6px;
 }
+.poster-profile-pic-container img {
+  min-width: 45px;
+  min-height: 20px;
+  max-width: 70px;
+  max-height: 70px;
+}
 
 .poster-text-container .r-username {
 	display: block;
