@@ -3,14 +3,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
-def correct_naturaltime(naturaltime_str):
-	# TODO: remover quando estiver confiante que não é chamado em nenhum lugar!!
-	# TODO: se encontrar esse método sendo chamado, substituir pelo templatetag fix_naturaltime!
-	corrections = {"atrás": " atrás", "ano": " ano", "mês": " mês", "mes": " mes", "semana": " semana", "dia": " dia", "hora": " hora", "minuto": " minuto"}
-	for substr in corrections:
-		if substr in naturaltime_str:
-			naturaltime_str = naturaltime_str.replace(substr, corrections[substr])
-	return naturaltime_str
 
 def make_embedded_content(text):
 	urls = ('https://youtu.be/', 'youtube.com/watch?v=', 'https://voca.ro/', 'vocaroo.com/')
@@ -89,18 +81,13 @@ class UserProfile(models.Model):
 class Question(models.Model):
 	creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 	text = models.TextField()
+	description = models.TextField(null=True)
 	pub_date = models.DateTimeField(default=timezone.now)
 	image = models.ImageField(null=True, blank=True)
-	description = models.TextField(null=True)
 	total_likes = models.IntegerField(default=0, null=True)
 	total_responses = models.IntegerField(default=0)
-	reports = models.IntegerField(default=0) # TODO: remover este campo.
-	reporters = models.ManyToManyField(User) # TODO: remover este campo.
-	best_answer = models.IntegerField(blank=True, null=True) # ID da melhor resposta.
 	total_views = models.IntegerField(null=True, default=0)
-
-	def get_naturaltime(self):
-		return correct_naturaltime(naturaltime(self.pub_date))
+	best_answer = models.IntegerField(blank=True, null=True) # ID da melhor resposta.
 
 	def get_embedded_content(self):
 		return make_embedded_content(self.description)
@@ -181,18 +168,9 @@ class Notification(models.Model):
 			self.text = '<p>Sua resposta foi escolhida a melhor resposta da pergunta: <a href="/question/{}?n={}">"{}"</a></p>'.format(response.question.id, self.id, response.question.text)
 
 
-
-
-class Report(models.Model):
-    type = models.TextField()
-    item = models.IntegerField(null=True)
-    reporter = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    url = models.URLField(null=True)
-    text = models.TextField(null=True)
-
 class Ban(models.Model): # todos os IP's banidos:
-    ip = models.TextField(null=False)
-    message = models.TextField(null=True, blank=True)
+	ip = models.TextField(null=False, primary_key=True)
+
 
 class Poll(models.Model):
 	question = models.ForeignKey(Question, on_delete=models.CASCADE)

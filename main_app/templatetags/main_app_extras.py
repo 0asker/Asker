@@ -7,6 +7,16 @@ import zlib
 register = template.Library()
 
 
+@register.simple_tag
+def fix_naturaltime(naturaltime_str):
+	# Enquanto a tradução do humanize estiver sem espaços - o que provavelmente será pra sempre
+	corrections = ('atrás', 'ano', 'mês', 'mes', 'semana', 'dia', 'hora', 'minuto')
+	for substr in corrections:
+		if substr in naturaltime_str:
+			naturaltime_str = naturaltime_str.replace(substr, ' ' + substr)
+	return naturaltime_str
+
+
 @register.filter(name='total_responses')
 def total_responses(qid):
 	
@@ -154,16 +164,6 @@ def last_response_pub_date(question_id):
     return Response.objects.filter(question=q).order_by('-pub_date')[0].pub_date
 
 
-@register.filter(name='last_response')
-def last_response(question_id):
-	from ..models import correct_naturaltime
-	try:
-		r = Response.objects.filter(question=Question.objects.get(id=question_id)).order_by('-pub_date')
-		return 'respondida {} por <a href="/user/{}">{}</a>'.format(correct_naturaltime(naturaltime(r[0].pub_date)), r[0].creator.user.username, r[0].creator.user.username)
-	except:
-		return ''
-
-
 @register.filter(name='cut_description')
 def cut_description(description):
 	if len(description) <= 300:
@@ -190,15 +190,6 @@ def has_chosen(user, poll_choice):
         # Exceção do AnonymousUser
         return False
 
-
-@register.simple_tag
-def fix_naturaltime(naturaltime_str):
-	# Enquanto a tradução do humanize estiver sem espaços - o que provavelmente será pra sempre
-	corrections = ('atrás', 'ano', 'mês', 'mes', 'semana', 'dia', 'hora', 'minuto')
-	for substr in corrections:
-		if substr in naturaltime_str:
-			naturaltime_str = naturaltime_str.replace(substr, ' ' + substr)
-	return naturaltime_str
 
 '''
 Retorna o total de visualizações de uma pergunta.
