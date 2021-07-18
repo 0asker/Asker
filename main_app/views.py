@@ -301,8 +301,14 @@ def question(request, question_id):
 	'''
 	recommended_questions = cache.get('recommended_questions')
 	if not recommended_questions:
-		cache.set('recommended_questions', Question.objects.order_by('-pub_date')[:15])
-		recommended_questions = cache.get('recommended_questions')
+		
+		recommended_questions = []
+		
+		for question in Question.objects.order_by('-pub_date')[:15]:
+			if not question.creator.ban:
+				recommended_questions.append(question)
+		
+		cache.set('recommended_questions', recommended_questions)
 	context['recommended_questions'] = recommended_questions
 
 
