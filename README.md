@@ -1,5 +1,5 @@
 <img src="https://br.asker.fun/static/images/asker.png">
-<p>Este repositório guarda o código do Asker (um site de perguntas e respostas). Para rodar o código no seu computador local é recomendado o uso de um ambiente virtual (por exemplo: venv), e depois simplesmente clone este repositório, faça as migrações (makemigrations) e migre (migrate). Por exemplo:</p>
+<p>Este repositório guarda o código do Asker (um site de perguntas e respostas). Para rodar o código no seu computador local é recomendado o uso de um ambiente virtual (por exemplo: venv). Depois clone este repositório, faça as migrações (makemigrations) e migre (migrate). Por exemplo:</p>
 
 <code>git clone https://github.com/0asker/Asker</code>
 
