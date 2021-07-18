@@ -9,13 +9,6 @@
 		<meta name="description" content="Faça e responda perguntas na melhor e mais divertida comunidade de perguntas e respostas!">
 		<meta name="keywords" content="br.asker.fun, asker.fun, perguntas, respostas, asker">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-		
-		<script>
-			.active {
-				color: black;
-			}
-		</script>
-		
 		<link rel="stylesheet" href="/static/css/common.css?v=8">
 		<script src="/static/js/cookieman.js?v=1"></script>
 		<script>
@@ -83,36 +76,42 @@
 						<p class='description'>{{ question.description }}</p>
 					{% endif %}
 					<small class="text-muted">
-						<span>respostas: <span class="response-counter" data-iddapergunta="{{ question.id }}">{{ question.total_answers }}</span></span>
+						<span>respostas: <span id="response-counter-{{ question.id }}">{{ question.total_responses }}</span></span>
 						<span>&nbsp;&middot;&nbsp;</span>
 						<span>perguntado {{ question.pub_date|naturaltime }}</span>
 					</small>
 					<hr>
-					{% answer user_p question as ANSWER %}
-					{% if ANSWER %}
-						{% include "base/response-content-index.html" %}
+					
+					{% if user.is_anonymous %}
+						<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
 					{% else %}
-						<div class="user-response" data-iddapergunta="{{ question.id }}">
-							<div>
-								<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">
-									<i class="fas fa-share"></i>
-									responder
-								</button>
-							</div>
-						</div>
 						
-						<div style="display: none">
-							<form onsubmit="return enviar_resposta_pergunta(this);">
-								{% csrf_token %}
-								<input type="hidden" name="from" value="index">
-								<input name="question_id" type="hidden" value="{{ question.id }}">
-								<textarea onclick="$(this).css('height', '120px');" name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
-								<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">
-									<i class="far fa-paper-plane"></i>
-									Enviar
-								</button>
-							</form>
-						</div>
+						{% answer user_p question as ANSWER %}
+						{% if ANSWER %}
+							{% include "base/response-content-index.html" %}
+						{% else %}
+							<div class="user-response" data-iddapergunta="{{ question.id }}">
+								<div>
+									<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">
+										<i class="fas fa-share"></i>
+										responder
+									</button>
+								</div>
+							</div>
+							
+							<div style="display: none">
+								<form onsubmit="return enviar_resposta_pergunta(this);">
+									{% csrf_token %}
+									<input type="hidden" name="from" value="index">
+									<input name="question_id" type="hidden" value="{{ question.id }}">
+									<textarea onclick="$(this).css('height', '120px');" name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
+									<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">
+										<i class="far fa-paper-plane"></i>
+										Enviar
+									</button>
+								</form>
+							</div>
+						{% endif %}
 					{% endif %}
 				</div>
 			</li>

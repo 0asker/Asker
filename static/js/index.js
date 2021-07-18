@@ -53,6 +53,9 @@ function enviar_resposta_pergunta(form) {
 		type: 'post',
 		data: $(form).serialize(),
 		complete: function(data) {
+			
+			document.getElementById('response-counter-' + form.question_id.value).innerText = Number(document.getElementById('response-counter-' + form.question_id.value).innerText) + 1;
+			
 			form.parentElement.innerHTML = data.responseText;
 		}
 	});
