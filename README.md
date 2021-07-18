@@ -3,6 +3,8 @@
 
 <code>git clone https://github.com/0asker/Asker</code>
 
+<code>cd Asker && pip install -r requirements.txt</code>
+
 <code>python manage.py makemigrations</code>
 
 <code>python manage.py migrate</code>
