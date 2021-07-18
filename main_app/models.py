@@ -56,6 +56,8 @@ class UserProfile(models.Model):
 	verification_code = models.TextField(null=True) # código de verificação da conta.
 
 	hide_activity = models.BooleanField(default=True)
+	
+	ban = models.BooleanField(default=False) # usuário está em shadow ban ou não
 
 	'''
 	O campo abaixo vai ser usado para saber se
