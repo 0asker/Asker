@@ -1,16 +1,10 @@
-# Asker
-Código fonte do asker.fun, site de perguntas e respostas.
+<img src="https://br.asker.fun/static/images/asker.png">
+<p>Este repositório guarda o código fonte do Asker (um site de perguntas e respostas). Para rodar o código no seu computador local, simplesmente clone este repositório, faça as migrações (makemigrations) e migre (migrate). Por exemplo:</p>
 
-Para rodar o projeto localmente, recomendamos usar um ambiente virtual (virtualenv) (talvez seja necessário trocar ```python``` por ```python3```):
+<code>git clone https://github.com/0asker/Asker</code>
 
-```python -m pip install -r requirements.txt```
+<code>python manage.py makemigrations</code>
 
-```python manage.py makemigrations```
+<code>python manage.py migrate</code>
 
-```python manage.py migrate```
-
-```python manage.py runserver```
-
-E é isso, seu projeto estará rodando na porta 8000, então para acessar: ```localhost:8000```
-
-Dúvidas de qualquer tipo, mande um email: minha.ccontta@gmail.com
+<code>python manage.py runserver</code>
