@@ -56,7 +56,7 @@ class UserProfile(models.Model):
 	verification_code = models.TextField(null=True) # código de verificação da conta.
 
 	hide_activity = models.BooleanField(default=True)
-	
+
 	'''
 	O campo abaixo vai ser usado para saber se
 	o usuário já pegou ou não a recompensa por adicionar o site
@@ -88,6 +88,8 @@ class Question(models.Model):
 	total_responses = models.IntegerField(default=0)
 	total_views = models.IntegerField(null=True, default=0)
 	best_answer = models.IntegerField(blank=True, null=True) # ID da melhor resposta.
+
+	reports = models.IntegerField(default=0, null=True)
 
 	def get_embedded_content(self):
 		return make_embedded_content(self.description)
@@ -127,7 +129,7 @@ class Response(models.Model):
 
 	def get_embedded_content(self):
 		return make_embedded_content(self.text)
-	
+
 	def __str__(self):
 		return self.text
 
@@ -137,7 +139,7 @@ class Comment(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     pub_date = models.DateTimeField(default=timezone.now)
-    
+
     def __str__(self):
         return self.text
 
@@ -147,7 +149,7 @@ class Notification(models.Model):
 	type = models.TextField() # tipos: question-answered, like-in-response, comment-in-response, got-best-answer
 	text = models.TextField(null=True)
 	creation_date = models.DateTimeField(default=timezone.now)
-	
+
 	# os campos abaixo são usados caso a notificação seja do tipo like-in-response.
 	liker = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='l') # quem deu o like
 	response = models.ForeignKey(Response, on_delete=models.CASCADE, null=True, related_name='r') # qual é a resposta
