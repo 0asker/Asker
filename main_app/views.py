@@ -211,6 +211,12 @@ def save_answer(request):
 	except:
 		json['has_image'] = False
 
+	if request.POST.get('from') == 'index':
+		return render(request, 'base/response-content-index.html', {
+			'question': question,
+			'ANSWER': response,
+		})
+
 	response = render(request, 'base/response-content.html', {
 		'question': question,
 		'response': response,
@@ -225,9 +231,9 @@ def index(request):
 	
 	q = Question.objects.order_by('-pub_date')
 	page = int(request.GET.get('page', 1))
-	questions = q[(page * 20) - 20:(page * 20)]
+	recent_questions = q[(page * 20) - 20:(page * 20)]
 	
-	context['questions'] = questions
+	context['recent_questions'] = recent_questions
 	
 	''' ads '''
 	from random import randint

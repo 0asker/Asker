@@ -105,21 +105,18 @@ def total_answers(qid):
 
 @register.simple_tag
 def answered(username, qid):
-  try:
-    return Response.objects.filter(creator=UserProfile.objects.get(user=User.objects.get(username=username)), question=Question.objects.get(id=qid)).exists()
-  except:
-    return False
+	try:
+		return Response.objects.filter(creator=UserProfile.objects.get(user=User.objects.get(username=username)), question=Question.objects.get(id=qid)).exists()
+	except:
+		return False
 
 
 @register.simple_tag
-def answer(username, qid):
+def answer(creator, question):
 	try:
-		text = Response.objects.get(creator=UserProfile.objects.get(user=User.objects.get(username=username)), question=Question.objects.get(id=qid)).text
+		return Response.objects.get(creator=creator, question=question)
 	except:
-		text = 'null'
-	if len(text) > 77:
-		text = text[0:77] + '...'
-	return text
+		return False
 
 @register.simple_tag
 def voted(voter, poll):

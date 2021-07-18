@@ -9,6 +9,13 @@
 		<meta name="description" content="Faça e responda perguntas na melhor e mais divertida comunidade de perguntas e respostas!">
 		<meta name="keywords" content="br.asker.fun, asker.fun, perguntas, respostas, asker">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+		
+		<script>
+			.active {
+				color: black;
+			}
+		</script>
+		
 		<link rel="stylesheet" href="/static/css/common.css?v=8">
 		<script src="/static/js/cookieman.js?v=1"></script>
 		<script>
@@ -50,12 +57,67 @@
 			</div>
 		{% endif %}
 		
-		<!-- Barra de navegação (popular / novas perguntas) é adicionada via JavaScript. -->
+		
+		<ul class="nav nav-tabs" id="tabs">
+			<li class="nav-item">
+				<span class="nav-link bg-main-tab" id="popular">Popular</span>
+			</li>
+			<li class="nav-item">
+				<span class="nav-link bg-main-tab" id="news">Novas perguntas</span>
+			</li>
+		</ul>
+		
+		
 <!-- Questões recentes -->
-<section class="card bg-main" id="n_questions" style="display: none">
-	<ul class="list-group list-group-flush" id="n_questions-list">
+<section class="card bg-main" id="n_questions">
+	<ul class="list-group list-group-flush">
+		{% for question in recent_questions %}
+			<li class="list-group-item bg-main">
+				<div class="card-body">
+					<h2 class="question-title">
+						<a href="/question/{{ question.id }}">
+							{{ question.text }}
+						</a>
+					</h2>
+					{% if question.description %}
+						<p class='description'>{{ question.description }}</p>
+					{% endif %}
+					<small class="text-muted">
+						<span>respostas: <span class="response-counter" data-iddapergunta="{{ question.id }}">{{ question.total_answers }}</span></span>
+						<span>&nbsp;&middot;&nbsp;</span>
+						<span>perguntado {{ question.pub_date|naturaltime }}</span>
+					</small>
+					<hr>
+					{% answer user_p question as ANSWER %}
+					{% if ANSWER %}
+						{% include "base/response-content-index.html" %}
+					{% else %}
+						<div class="user-response" data-iddapergunta="{{ question.id }}">
+							<div>
+								<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">
+									<i class="fas fa-share"></i>
+									responder
+								</button>
+							</div>
+						</div>
+						
+						<div style="display: none">
+							<form onsubmit="return enviar_resposta_pergunta(this);">
+								{% csrf_token %}
+								<input type="hidden" name="from" value="index">
+								<input name="question_id" type="hidden" value="{{ question.id }}">
+								<textarea onclick="$(this).css('height', '120px');" name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
+								<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">
+									<i class="far fa-paper-plane"></i>
+									Enviar
+								</button>
+							</form>
+						</div>
+					{% endif %}
+				</div>
+			</li>
+		{% endfor %}
 	</ul>
-	
 	<a class="btn btn-outline-primary" href="/news?page=" id="next_page_recent_questions">Próxima página</a>
 </section>
 <!-- !Questões recentes -->
@@ -63,6 +125,57 @@
 <!-- Questões populares -->
 <section class="card bg-main" id="p_questions" style="display: none">
 	<ul class="list-group list-group-flush infinite-container" id="p_questions-list">
+		{% for question in popular_questions %}
+			<li class="list-group-item bg-main">
+				<div class="card-body">
+					<h2 class="question-title">
+						<a href="/question/{{ question.id }}">
+							{{ question.text }}
+						</a>
+					</h2>
+					{% if question.description %}
+						<p class='description'>{{ question.description }}</p>
+					{% endif %}
+					<small class="text-muted">
+						<span>respostas: <span class="response-counter" data-iddapergunta="{{ question.id }}">{{ question.total_answers }}</span></span>
+						<span>&nbsp;&middot;&nbsp;</span>
+						<span>perguntado {{ question.pub_date|naturaltime }}</span>
+					</small>
+					<hr>
+					{% answer user_p question as ANSWER %}
+					{% if ANSWER %}
+						<div class="user-response" data-iddapergunta="{{ question.id }}">
+						<p>
+							<b>Sua resposta:</b><br>
+							{{ ANSWER }}
+						</p>
+					{% else %}
+						<div>
+							<div class="user-response" data-iddapergunta="{{ question.id }}">
+								<div>
+									<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">
+										<i class="fas fa-share"></i>
+										responder
+									</button>
+								</div>
+							</div>
+							
+							<div style="display: none">
+								<form onsubmit="return enviar_resposta_pergunta(this);">
+									{% csrf_token %}
+									<input name="question_id" type="hidden" value="{{ question.id }}">
+									<textarea onclick="$(this).css('height', '120px');" name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>
+									<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">
+										<i class="far fa-paper-plane"></i>
+										Enviar
+									</button>
+								</form>
+							</div>
+						</div>
+					{% endif %}
+				</div>
+			</li>
+		{% endfor %}
 	</ul>
 	
 	<div class="end">
@@ -72,14 +185,9 @@
 <!-- !Questões populares -->
 	</main>
 
-<script>
-recent_questions=[{% for q in questions %}{"id":{{ q.id }},"text":"{{ q.text }}","description":`{% format_question_description_for_json q.description %}`,"pub_date":"{% fix_naturaltime q.pub_date|naturaltime %}","total_answers":{% total_answers q.id %},"user_response":`{% answer user.username q.id %}`},{% endfor %}];
-popular_questions=[{% for q in popular_questions %}{"id":{{ q.id }},"text":"{{ q.text }}","description":`{% format_question_description_for_json q.description %}`,"pub_date":"{% fix_naturaltime q.pub_date|naturaltime %}","total_answers":{% total_answers q.id %},"user_response":`{% answer user.username q.id %}`},{% endfor %}];
-</script>
-
 <script src="/static/js/linkify/linkify.min.js"></script>
 <script src="/static/js/linkify/linkify-jquery.min.js"></script>
-<script src="/static/js/index.js?v=30"></script>
+<script src="/static/js/index.js?v=30.5"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 	</body>
