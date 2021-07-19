@@ -954,6 +954,7 @@ def apply_shadow_ban(request):
 			user_profile = UserProfile.objects.get(user=user)
 			user_profile.ban = True
 			user_profile.save()
+			return HttpResponse('Pronto! Banido. (shadow ban).')
 		elif request.POST.get('type') == 'remove':
 			'''
 			Desativa o shadow ban.
@@ -963,7 +964,7 @@ def apply_shadow_ban(request):
 			user_profile = UserProfile.objects.get(user=user)
 			user_profile.ban = False
 			user_profile.save()
-		return HttpResponse('Pronto! Esse usuário não está mais banido (shadow ban).')
+			return HttpResponse('Pronto! Esse usuário não está mais banido (shadow ban).')
 	
 	context = {
 		'banned': UserProfile.objects.filter(ban=True),

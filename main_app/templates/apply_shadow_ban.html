@@ -17,9 +17,9 @@
 		<form method="post" id="form">
 			{% csrf_token %}
 			<input type="hidden" name="type" value="apply">
-			<label for="username">Nome de usuário:</label>
-			<input class="form-control" id="username" type="text" name="username">
-			<label for="password">Senha de administração:</label>
+			<label for="username">Nome do usuário a ser banido:</label>
+			<input class="form-control" id="username" type="text" name="username" autocomplete="off">
+			<label for="password">Senha de permissão para banir:</label>
 			<input class="form-control" id="password" type="password" name="password">
 			<input type="submit" value="Banir">
 		</form>
@@ -29,7 +29,7 @@
 		<ul>
 		{% if banned %}
 			{% for user in banned %}
-				<li>{{ user.user.username }}<span style="cursor: pointer;" onclick="unban('{{ user.user.username }}', this.parentElement);">&nbsp;&nbsp;&nbsp;&nbsp;❌</span></li>
+				<li>{{ user.user.username }}<span style="cursor: pointer;" onclick="unban('{{ user.user.username }}', this.parentElement, this.nextElementSibling);">&nbsp;&nbsp;&nbsp;&nbsp;❌</span><img src="/static/images/loading.gif" width="50px" style="display: none;"></li>
 			{% endfor %}
 		{% else %}
 			Não tem nenhum usuário banido (shadow ban).
@@ -40,9 +40,13 @@
 		<!-- jQuery -->
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script>
-			function unban(username, obj) {
+			function unban(username, obj, icon) {
+				
+				$(icon).toggle(0);
+				
 				$.ajax({
 					url: '/apply_shadow_ban',
+					dataType: 'text',
 					data: {
 						csrfmiddlewaretoken: '{{ csrf_token }}',
 						type: 'remove',
@@ -51,6 +55,8 @@
 					},
 					type: 'post',
 					complete: function (data) {
+						
+						$(icon).toggle(0);
 						
 						if (data.responseText == 'Pronto! Esse usuário não está mais banido (shadow ban).')
 							obj.remove();
