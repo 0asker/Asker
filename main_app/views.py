@@ -406,6 +406,14 @@ def signin(request):
 
 
 def signup(request):
+	
+	'''
+	Bloqueia criação de conta pelo navegador TOR.
+	'''
+	from .tor_ips import tor_ips
+	client_ip = get_client_ip(request)
+	if client_ip in tor_ips:
+		return HttpResponse()
 
 	if request.method == 'POST':
 		r = request.POST.get('redirect')
