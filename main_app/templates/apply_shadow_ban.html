@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-br">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Aplicar shadow ban</title>
+		
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+		
+		<style>
+			#form {
+				max-width: 50%;
+			}
+		</style>
+	</head>
+	<body>
+		<form method="post" id="form">
+			{% csrf_token %}
+			<input type="hidden" name="type" value="apply">
+			<label for="username">Nome de usuário:</label>
+			<input class="form-control" id="username" type="text" name="username">
+			<label for="password">Senha de administração:</label>
+			<input class="form-control" id="password" type="password" name="password">
+			<input type="submit" value="Banir">
+		</form>
+		
+		<br>
+		<p>Usuários em shadow ban:</p>
+		<ul>
+		{% if banned %}
+			{% for user in banned %}
+				<li>{{ user.user.username }}<span style="cursor: pointer;" onclick="unban('{{ user.user.username }}', this.parentElement);">&nbsp;&nbsp;&nbsp;&nbsp;❌</span></li>
+			{% endfor %}
+		{% else %}
+			Não tem nenhum usuário banido (shadow ban).
+		{% endif %}
+		</ul>
+		
+		
+		<!-- jQuery -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+			function unban(username, obj) {
+				$.ajax({
+					url: '/apply_shadow_ban',
+					data: {
+						csrfmiddlewaretoken: '{{ csrf_token }}',
+						type: 'remove',
+						username: username,
+						password: document.getElementById('password').value,
+					},
+					type: 'post',
+					complete: function (data) {
+						
+						if (data.responseText == 'Pronto! Esse usuário não está mais banido (shadow ban).')
+							obj.remove();
+						
+						alert(data.responseText);
+					}
+				});
+			}
+		</script>
+	</body>
+</html>

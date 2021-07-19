@@ -52,5 +52,6 @@ urlpatterns = [
   path('poll/undovote', views.undo_vote_on_poll, name='undo_vote_on_poll'),
   path('delete-account', views.delete_account, name='delete_account'),
   path('rules', views.rules, name='rules'),
+  path('apply_shadow_ban', views.apply_shadow_ban, name='apply_shadow_ban'),
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
