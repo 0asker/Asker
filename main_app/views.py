@@ -229,6 +229,14 @@ def index(request):
 
 	context = {}
 	
+	'''
+	O que vai aparecer primeiro: as questões populares ou as questões recentes.
+	'''
+	if request.path == '/news':
+		context['NEWS'] = True
+	else:
+		context['POPULAR'] = True
+	
 	q = Question.objects.order_by('-pub_date')
 	page = int(request.GET.get('page', 1))
 	recent_questions = q[(page * 20) - 20:(page * 20)]

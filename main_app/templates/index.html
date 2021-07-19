@@ -48,19 +48,87 @@
 			</div>
 		{% endif %}
 		
+		<style>
+			{% if POPULAR %}
+				#novas_questoes {
+					display: none;
+				}
+				
+				#questoes_populares {
+					display: block;
+				}
+				
+				#botao-popular {
+					border-bottom-width: 3px;
+				}
+				
+				.navegacao {
+					margin-top: 10px;
+					margin-bottom: 10px;
+				}
+				
+				.navegacao button {
+					border-radius: 0;
+					font-size: 0.8em;
+				}
+			{% endif %}
+			
+			{% if NEWS %}
+				#novas_questoes {
+					display: block;
+				}
+				
+				#questoes_populares {
+					display: none;
+				}
+				
+				#botao-recentes {
+					border-bottom-width: 3px;
+				}
+				
+				.navegacao {
+					margin-top: 10px;
+					margin-bottom: 10px;
+				}
+				
+				.navegacao button {
+					border-radius: 0;
+					font-size: 0.8em;
+				}
+			{% endif %}
+		</style>
 		
-		<ul class="nav nav-tabs" id="tabs">
-			<li class="nav-item">
-				<span class="nav-link bg-main-tab" id="popular">Popular</span>
-			</li>
-			<li class="nav-item">
-				<span class="nav-link bg-main-tab" id="news">Novas perguntas</span>
-			</li>
-		</ul>
-		
+		<div class="navegacao">
+			<button class="btn btn-outline-primary text-uppercase" id="botao-popular">popular</button>
+			<button class="btn btn-outline-primary text-uppercase" id="botao-recentes">recentes</button>
+		</div>
+		<script>
+			botao_popular = document.getElementById("botao-popular");
+			botao_recentes = document.getElementById("botao-recentes");
+			
+			botao_popular.onclick = function() {
+				botao_popular.style.borderBottomWidth = "3px";
+				botao_recentes.style.borderBottomWidth = "1px";
+				
+				document.getElementById("questoes_populares").style.display = "block";
+				document.getElementById("novas_questoes").style.display = "none";
+				
+				window.history.replaceState("object or string", "Title", "/");
+			}
+			
+			botao_recentes.onclick = function() {
+				botao_popular.style.borderBottomWidth = "1px";
+				botao_recentes.style.borderBottomWidth = "3px";
+				
+				document.getElementById("questoes_populares").style.display = "none";
+				document.getElementById("novas_questoes").style.display = "block";
+				
+				window.history.replaceState("object or string", "Title", "/news");
+			}
+		</script>
 		
 <!-- Questões recentes -->
-<section class="card bg-main" id="n_questions">
+<section class="card bg-main" id="novas_questoes">
 	<ul class="list-group list-group-flush">
 		{% for question in recent_questions %}
 			{% include "base/pergunta.html" %}
@@ -71,7 +139,7 @@
 <!-- !Questões recentes -->
 
 <!-- Questões populares -->
-<section class="card bg-main" id="p_questions" style="display: none">
+<section class="card bg-main" id="questoes_populares">
 	
 	<ul class="list-group list-group-flush">
 		{% for question in popular_questions %}
@@ -88,7 +156,7 @@
 
 <script src="/static/js/linkify/linkify.min.js"></script>
 <script src="/static/js/linkify/linkify-jquery.min.js"></script>
-<script src="/static/js/index.js?v=31"></script>
+<script src="/static/js/index.js?v=31.1"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 	</body>
