@@ -433,7 +433,7 @@ def signup(request):
 		Validação do nome de usuário: é permitido apenas letras, números, hífens, undercores e espaços.
 		'''
 		# verificando caractere por caractere:
-		pode = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ '
+		pode = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúâêôäëïöüãõçñÁÉÍÓÚÂÊÔÄËÏÖÜÃÕÇÑ0123456789-_ '
 		for ch in username:
 			if ch in pode:
 				continue
