@@ -34,6 +34,7 @@ urlpatterns = [
   path('user/<str:username>', views.profile, name='profile'),
   path('user/<str:username>/edit', views.edit_profile, name='edit_profile'),
   path('user/<str:username>/block', views.block, name='block'),
+  path('user/<str:username>/silence', views.silence, name='silence'),
   path('ask', views.ask, name='ask'),
   path('signin', views.signin, name='signin'),
   path('signup', views.signup, name='signup'),

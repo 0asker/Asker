@@ -59,12 +59,13 @@ class UserProfile(models.Model):
 	
 	ban = models.BooleanField(default=False) # usuário está em shadow ban ou não
 
+	silenced_users = models.ManyToManyField(User, through="SilencedUsers", related_name='silenced_by', blank=True)
 	'''
 	O campo abaixo vai ser usado para saber se
 	o usuário já pegou ou não a recompensa por adicionar o site
 	aos favoritos.
 	'''
-	message = models.TextField(null=True)
+	message = models.TextField(null=True) # TODO: remover?
 
 	def __str__(self):
 		return self.user.username
@@ -79,6 +80,11 @@ class UserProfile(models.Model):
 		total = self.total_responses() * 2
 		total += self.total_questions()
 		return total
+
+class SilencedUsers(models.Model):
+	silenced = models.ForeignKey(User, on_delete=models.CASCADE)
+	silencer = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+	expires = models.DateTimeField(default=timezone.now)
 
 class Question(models.Model):
 	creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
