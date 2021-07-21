@@ -994,3 +994,16 @@ def apply_shadow_ban(request):
 	}
 	
 	return render(request, 'apply_shadow_ban.html', context)
+
+
+def more_questions(request):
+	
+	q = Question.objects.order_by('-pub_date')
+	page = int(request.GET.get('page', 2))
+	questions = q[(page * 20) - 20:(page * 20)]
+	
+	context = {
+		'questions': questions,
+	}
+	
+	return render(request, 'more-questions.html', context)
