@@ -205,6 +205,15 @@ textarea.large-compact {
 }
 /* Question-end */
 
+/* To generalize */
+.flexbox {
+    display: flex
+}
+.fg-1 {
+    flex-grow: 1;
+}
+/* To generalize-end */
+
 /* Rank */
 .ranked-u-stats {
     display: flex;
@@ -296,10 +305,12 @@ main {
   /* TODO: deletar em ver. futura, substituir por form.inline-input à la reset-pw-1-part */
   display: flex;
 }
-
 .inline-input .left-input {
   flex-grow: 1;
   margin-right: 10px;
+}
+.modal-body {
+  padding: 1px;
 }
 
 @media (min-width: 320px) and (max-width: 580px) {

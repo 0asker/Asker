@@ -41,3 +41,29 @@ else
 	next_page = Number(current_page) + 1;
 
 document.getElementById('next_page_recent_questions').href += next_page;
+
+var selected_user = null;
+
+function select_user(username) {
+    selected_user = username;
+}
+
+function silence_user() {
+  if (!selected_user) {
+    return 0;
+  }
+  if (confirm("Você silenciou o usuário: " + selected_user)) {
+        $.ajax({
+            type: 'get',
+            url: '/user/' + selected_user + '/silence',
+            complete: function(data) {
+                location.reload();
+                return false;
+            }
+        })
+  } else {
+    alert("Você cancelou a operação.");
+  }
+  $('#question-modal').modal('hide');
+  selected_user = null;
+}
