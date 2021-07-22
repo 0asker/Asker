@@ -75,30 +75,40 @@ function isScrolledIntoView(elem)
 		return (elemTop <= docViewBottom);
 }
 
+function load_more() {
+    if(window.getComputedStyle(document.getElementById("novas_questoes"), null).getPropertyValue("display") == "block" && pode_pegar_mais_questoes) {
+
+        pode_pegar_mais_questoes = false;
+
+        /* Obtem mais perguntas para a página inicial */
+
+        $.ajax({
+            url: "/more_questions",
+            type: "get",
+            data: {
+                page: proxima_pagina_perguntas_recentes,
+            },
+            complete: function(data) {
+                document.getElementById("novas_questoes").getElementsByTagName("ul")[0].innerHTML += data.responseText;
+                pode_pegar_mais_questoes = true;
+                proxima_pagina_perguntas_recentes++;
+            }
+        });
+
+    }
+}
+
 pode_pegar_mais_questoes = true;
 proxima_pagina_perguntas_recentes = 2; // por padrão a próxima página para pegar perguntas é 2.
 
+// Checagem inicial:
+if (isScrolledIntoView($("#carregamento_novas_perguntas"))) {
+    load_more();
+}
+
+// Evento para checagens ao scroll
 window.onscroll = function() {
 	if (isScrolledIntoView($("#carregamento_novas_perguntas"))) {
-		if(window.getComputedStyle(document.getElementById("novas_questoes"), null).getPropertyValue("display") == "block" && pode_pegar_mais_questoes) {
-			
-			pode_pegar_mais_questoes = false;
-			
-			/* Obtem mais perguntas para a página inicial */
-			
-			$.ajax({
-				url: "/more_questions",
-				type: "get",
-				data: {
-					page: proxima_pagina_perguntas_recentes,
-				},
-				complete: function(data) {
-					document.getElementById("novas_questoes").getElementsByTagName("ul")[0].innerHTML += data.responseText;
-					pode_pegar_mais_questoes = true;
-					proxima_pagina_perguntas_recentes++;
-				}
-			});
-			
-		}
+	    load_more();
 	}
 }
