@@ -1027,3 +1027,22 @@ def more_questions(request):
 	}
 
 	return render(request, 'more-questions.html', context)
+
+
+'''
+Vou usar para apagar contas fantasmas.
+'''
+def listar_perfis(request):
+	
+	id_do_perfil = request.GET.get('id')
+	
+	up = UserProfile.objects.filter(id=id_do_perfil)
+	
+	if not up.exists():
+		return HttpResponse('não existe')
+	
+	up = up.first()
+	
+	context = {'up': up}
+	
+	return render(request, 'NAO_TAO_UTIL/listar_perfil.html', context)
