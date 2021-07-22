@@ -175,9 +175,7 @@ def save_answer(request):
 	if not is_a_valid_response(text):
 		return HttpResponse('Proibido.')
 
-	response = Response.objects.create(question=question,
-																		 creator=response_creator,
-																		 text=text)
+	response = Response.objects.create(question=question, creator=response_creator, text=text)
 
 	question.total_responses += 1
 	question.save()
@@ -185,10 +183,11 @@ def save_answer(request):
 	response_creator.total_points += 2
 	response_creator.save()
 
-	notification = Notification.objects.create(receiver=question.creator.user,
-											   type='question-answered')
-	notification.set_text(response.id)
-	notification.save()
+	if response_creator.user not in question.creator.silenced_users.all():
+		notification = Notification.objects.create(receiver=question.creator.user,
+												   type='question-answered')
+		notification.set_text(response.id)
+		notification.save()
 
 	json = {'answer_id': response.id}
 

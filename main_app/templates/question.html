@@ -162,7 +162,9 @@
   				</div>
 				<ul class="list-group list-group-flush responses">
 				{% for response in responses|pull_best_answer %}
-					{% include "base/response-content.html" %}
+					{% if response.creator.user not in user_p.silenced_users.all %}
+						{% include "base/response-content.html" %}
+					{% endif %}
 				{% endfor %}
 				</ul>
 			</section>
