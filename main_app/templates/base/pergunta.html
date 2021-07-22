@@ -14,9 +14,13 @@
 					</a>
 				</h2>
 
-				<a class="clickable" href="javascript:void(0);" data-toggle="modal" data-target="#question-modal" onclick="select_user('{{ question.creator}}');">
-					<i class="fas fa-ellipsis-h"></i>
-				</a>
+				{% if not user.is_anonymous %}
+					{% if user != question.creator.user %}
+					<a class="clickable" href="javascript:void(0);" data-toggle="modal" data-target="#question-modal" onclick="select_user('{{ question.creator}}');">
+						<i class="fas fa-ellipsis-h"></i>
+					</a>
+					{% endif %}
+				{% endif %}
 
 			</div>
 			{% if question.description %}
