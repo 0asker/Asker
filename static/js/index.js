@@ -46,7 +46,7 @@ function silence_user() {
             type: 'get',
             url: '/user/' + selected_user + '/silence',
             complete: function(data) {
-                if (data == 'Removed' || data == 'Added') {
+                if (data.responseText == 'Added') {
                     location.reload();
                     return false;
                 }
