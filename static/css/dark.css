@@ -58,6 +58,12 @@ hr {
 .small-text, .light-text {
     color: #888;
 }
+.modal-header {
+    border-bottom: 1px solid #394046;
+}
+.modal-footer {
+    border-top: 1px solid #394046;
+}
 /* General-end */
 
 /* Ask */
