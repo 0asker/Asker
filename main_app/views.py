@@ -1027,23 +1027,3 @@ def more_questions(request):
 	}
 
 	return render(request, 'more-questions.html', context)
-
-
-'''
-Vou usar para apagar contas fantasmas.
-'''
-def listar_perfis(request):
-	
-	id_do_perfil = request.GET.get('id')
-	
-	up = UserProfile.objects.filter(id=id_do_perfil)
-	
-	if not up.exists():
-		return HttpResponse('não existe. <a href="/listar_perfis?id={}">próximo</a>'.format(str(int(id_do_perfil)+1)))
-	
-	up = up.first()
-	
-	context = {'up': up,
-						 'proximo_id': up.id+1,}
-	
-	return render(request, 'NAO_TAO_UTIL/listar_perfil.html', context)
