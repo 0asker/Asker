@@ -4,23 +4,32 @@
 
 {% if not question.creator.ban %}
 
+	{% if not question.creator.user in user_p.silenced_users.all %}
 	<li class="list-group-item bg-main">
 		<div class="card-body">
-			<h2 class="question-title">
-				<a href="/question/{{ question.id }}">
-					{{ question.text }}
+			<div class="flexbox">
+				<h2 class="question-title fg-1">
+					<a href="/question/{{ question.id }}">
+						{{ question.text }}
+					</a>
+				</h2>
+
+				<a class="clickable" href="javascript:void(0);" data-toggle="modal" data-target="#question-modal" onclick="select_user('{{ question.creator}}');">
+					<i class="fas fa-ellipsis-h"></i>
 				</a>
-			</h2>
+
+			</div>
 			{% if question.description %}
 				<p class='description'>{{ question.description }}</p>
 			{% endif %}
 			<small class="text-muted">
 				<span>respostas: <span id="response-counter-{{ question.id }}">{{ question.total_responses }}</span></span>
 				<span>&nbsp;&middot;&nbsp;</span>
-				<span>perguntado {{ question.pub_date|naturaltime }}</span>
+				<span>perguntado {% fix_naturaltime question.pub_date|naturaltime %} por </span>
+				<a href="/user/{{ question.creator }}">{{ question.creator }}</a>
 			</small>
 			<hr>
-			
+
 			{% if user.is_anonymous %}
 				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
 			{% else %}
@@ -36,7 +45,7 @@
 							</button>
 						</div>
 					</div>
-					
+
 					<div style="display: none">
 						<form onsubmit="return enviar_resposta_pergunta(this);">
 							{% csrf_token %}
@@ -53,11 +62,12 @@
 			{% endif %}
 		</div>
 	</li>
+	{% endif %}
 
 {% else %}
 	{% if user_p == question.creator %}
-	
-	
+
+
 	<li class="list-group-item bg-main">
 		<div class="card-body">
 			<h2 class="question-title">
@@ -71,10 +81,11 @@
 			<small class="text-muted">
 				<span>respostas: <span id="response-counter-{{ question.id }}">{{ question.total_responses }}</span></span>
 				<span>&nbsp;&middot;&nbsp;</span>
-				<span>perguntado {{ question.pub_date|naturaltime }}</span>
+				<span>perguntado {% fix_naturaltime question.pub_date|naturaltime %} por </span>
+				<a href="/user/{{ question.creator }}">{{ question.creator }}</a>
 			</small>
 			<hr>
-			
+
 			{% if user.is_anonymous %}
 				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
 			{% else %}
@@ -90,6 +101,7 @@
 							</button>
 						</div>
 					</div>
+					<i class="bi bi-three-dots"></i>
 					
 					<div style="display: none">
 						<form onsubmit="return enviar_resposta_pergunta(this);">

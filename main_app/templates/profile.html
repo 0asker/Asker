@@ -87,18 +87,26 @@
 			}
 		</style>
 
+        {% if not user.is_anonymous %}
+		{% ablockb user.username user_p.user.username as BLOCKED %}
+		{% asilenceb user.username user_p.user.username as SILENCED %}
 		<center id="block-div">
 			<button id="block-button" class="btn btn-outline-info" onclick="block_user()">
-                {% if not user.is_anonymous %}
-                    {% ablockb user.username user_p.user.username as BLOCKED %}
                     {% if BLOCKED %}
-                        Bloqueado
+                        Desbloquear
                     {% else %}
                         Bloquear
                     {% endif %}
-                {% endif %}
+			</button>
+			<button id="silence-button" class="btn btn-outline-info" onclick="silence_user()">
+                    {% if SILENCED %}
+                        Tirar silêncio
+                    {% else %}
+                        Silenciar
+                    {% endif %}
 			</button>
 		</center>
+        {% endif %}
 
 		<script>
 			function block_user() {
@@ -112,6 +120,23 @@
 							button.innerHTML = 'Bloqueado'
 						} else
 							button.innerHTML = 'Bloquear'
+						button.disabled = false
+					}
+				})
+			}
+		</script>
+		<script>
+			function silence_user() {
+				button = document.getElementById('silence-button')
+				button.disabled = true
+				$.ajax({
+					type: 'get',
+					url: '/user/{{ user_p.user.username }}/silence',
+					complete: function(data) {
+						if (data.responseText == 'Removed') {
+							button.innerHTML = 'Silenciar'
+						} else
+							button.innerHTML = 'Tirar silêncio'
 						button.disabled = false
 					}
 				})
