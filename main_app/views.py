@@ -243,11 +243,6 @@ def index(request):
 
 	context['recent_questions'] = recent_questions
 
-	''' ads '''
-	from random import randint
-	if randint(1, 25) == 25:
-		context['ADS'] = True
-
 	'''
 	Pegando as perguntas populares:
 	Pega as últimas 250 perguntas;
