@@ -36,6 +36,7 @@ function addTab(tabId, tabSectionId) {
 addTab('questions', 'questions-section');
 addTab('responses', 'responses-section');
 addTab('blocked', 'blocked-section');
+addTab('silenced', 'silenced-section');
 
 q_page = 1
 function show_more_questions(button, uid) {

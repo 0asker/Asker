@@ -825,11 +825,13 @@ def block(request, username):
 
 def silence(request, username):
 	u_p = UserProfile.objects.get(user=request.user)
+	if username == u_p.user.username:
+		return HttpResponse('Proibido')
 	if u_p.silenced_users.filter(username=username).exists():
 		u_p.silenced_users.remove(User.objects.get(username=username))
-	else:
-		u_p.silenced_users.add(User.objects.get(username=username))
-	return HttpResponse('OK')
+		return HttpResponse('Removed')
+	u_p.silenced_users.add(User.objects.get(username=username))
+	return HttpResponse('Added')
 
 ''' A função abaixo faz a validação das credenciais de novos usuários. '''
 def is_a_valid_user(username, email, password):

@@ -95,7 +95,7 @@ textarea.large-compact {
     float: right;
     cursor: pointer;
 }
-#responses-section, #blocked-section {
+#responses-section, #blocked-section, #silenced-section {
 	display: none;
 }
 /* Profile-end */
