@@ -156,7 +156,7 @@ envia uma resposta para uma pergunta, a resposta passa por aqui
 para ser salva (no banco de dados).
 '''
 def save_answer(request):
-	
+
 	question = Question.objects.get(id=request.POST.get('question_id'))
 
 	response_creator = UserProfile.objects.get(user=request.user) # criador da nova resposta.
@@ -195,7 +195,7 @@ def save_answer(request):
 	form = UploadFileForm(request.POST, request.FILES)
 	if form.is_valid():
 		f = request.FILES['file']
-		
+
 		file_name = 'rpic-{}{}'.format(timezone.now().date(), timezone.now().time())
 
 		success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
@@ -221,14 +221,14 @@ def save_answer(request):
 		'question': question,
 		'response': response,
 	})
-	
+
 	return response
 
 
 def index(request):
 
 	context = {}
-	
+
 	'''
 	O que vai aparecer primeiro: as questões populares ou as questões recentes.
 	'''
@@ -236,18 +236,18 @@ def index(request):
 		context['NEWS'] = True
 	else:
 		context['POPULAR'] = True
-	
+
 	q = Question.objects.order_by('-pub_date')
 	page = int(request.GET.get('page', 1))
 	recent_questions = q[(page * 20) - 20:(page * 20)]
-	
+
 	context['recent_questions'] = recent_questions
-	
+
 	''' ads '''
 	from random import randint
 	if randint(1, 25) == 25:
 		context['ADS'] = True
-	
+
 	'''
 	Pegando as perguntas populares:
 	Pega as últimas 250 perguntas;
@@ -261,7 +261,7 @@ def index(request):
 	if not p_questions:
 		p_questions = calculate_popular_questions()
 		cache.set('p_questions', p_questions)
-	
+
 	context['popular_questions'] = p_questions[:20]
 
 	if request.user.is_authenticated:
@@ -309,13 +309,13 @@ def question(request, question_id):
 	'''
 	recommended_questions = cache.get('recommended_questions')
 	if not recommended_questions:
-		
+
 		recommended_questions = []
-		
+
 		for question in Question.objects.order_by('-pub_date')[:15]:
 			if not question.creator.ban:
 				recommended_questions.append(question)
-		
+
 		cache.set('recommended_questions', recommended_questions)
 	context['recommended_questions'] = recommended_questions
 
@@ -414,7 +414,7 @@ def signin(request):
 
 
 def signup(request):
-	
+
 	'''
 	Bloqueia criação de conta pelo navegador TOR.
 	'''
@@ -437,7 +437,7 @@ def signup(request):
 		for ch in username:
 			if ch in pode:
 				continue
-			
+
 			html = '<div class="alert alert-danger"><p>O nome de usuário deve conter apenas caracteres alfanuméricos, hífens, underscores e espaços.</p></div>'
 			return render(request, 'signup.html', {'invalid_username': html,
 																						 'username': username,
@@ -596,16 +596,16 @@ def notification(request):
 
 
 def comment(request):
-	
+
 	comment = Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
 												 creator=request.user,
 												 text=request.POST.get('text'),
 												 pub_date=timezone.now())
-	
+
 	Notification.objects.create(receiver=comment.response.creator.user,
 															type='comment-in-response',
 															text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text))
-	
+
 	comment_creator_template = '''
 		<li class="list-group-item c no-horiz-padding">
 				<div class="comm-card">
@@ -626,7 +626,7 @@ def comment(request):
 				</div>
 		</li>
 		'''.format(comment.creator.username, UserProfile.objects.get(user=request.user).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.id, comment.text)
-	
+
 	return HttpResponse(comment_creator_template)
 
 
@@ -726,6 +726,15 @@ def get_more_responses(request):
 def delete_question(request):
 	question = Question.objects.get(id=request.POST.get('question_id'))
 	if question.creator.user == request.user:
+
+		'''
+		Deleta também a imagem do sistema de arquivos:
+		'''
+
+		if question.image:
+			import os
+			os.system('rm ' + question.image.path)
+
 		question.delete()
 	return redirect('/news')
 
@@ -746,6 +755,16 @@ def edit_profile(request, username):
 		if request.POST.get('type') == 'profile-pic':
 			form = UploadFileForm(request.POST, request.FILES)
 			if form.is_valid():
+
+				u = UserProfile.objects.get(user=request.user)
+
+				'''
+				Já que vai trocar de avatar, apaga o avatar antigo se tiver.
+				'''
+				if u.avatar and u.avatar.name != 'avatars/default-avatar.png':
+					import os
+					os.system('rm ' + u.avatar.path)
+
 				f = request.FILES['file']
 				'''
 				Nome da imagem do usuário no sistema de arquivos: nome de usuário atual, data de alteração e horário da alteração.
@@ -756,7 +775,6 @@ def edit_profile(request, username):
 				if not success:
 					return redirect('/user/' + request.user.username + '/edit')  # TODO: Mostrar um erro de arquivo invalido!
 
-				u = UserProfile.objects.get(user=request.user)
 				u.avatar = 'avatars/' + file_name
 				u.save()
 			return redirect('/user/' + username)
@@ -957,19 +975,19 @@ def undo_vote_on_poll(request):
 
 
 def apply_shadow_ban(request):
-	
+
 	senha = UserProfile.objects.get(user=User.objects.get(username='Erick')).message
-	
+
 	if request.method == 'POST':
-		
+
 		password = request.POST.get('password')
-		
+
 		if password != senha and request.POST.get('type') == 'remove':
 			return HttpResponse('Senha de administração incorreta!')
-		
+
 		if password != senha:
 			return HttpResponse('Senha incorreta.')
-		
+
 		if request.POST.get('type') == 'apply':
 			'''
 			Aplica shadow ban.
@@ -990,22 +1008,22 @@ def apply_shadow_ban(request):
 			user_profile.ban = False
 			user_profile.save()
 			return HttpResponse('Pronto! Esse usuário não está mais banido (shadow ban).')
-	
+
 	context = {
 		'banned': UserProfile.objects.filter(ban=True),
 	}
-	
+
 	return render(request, 'apply_shadow_ban.html', context)
 
 
 def more_questions(request):
-	
+
 	q = Question.objects.order_by('-pub_date')
 	page = int(request.GET.get('page', 2))
 	questions = q[(page * 20) - 20:(page * 20)]
-	
+
 	context = {
 		'questions': questions,
 	}
-	
+
 	return render(request, 'more-questions.html', context)
