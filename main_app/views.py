@@ -1039,7 +1039,7 @@ def listar_perfis(request):
 	up = UserProfile.objects.filter(id=id_do_perfil)
 	
 	if not up.exists():
-		return HttpResponse('não existe. <a href="/listar_perfis?id={}">próximo</a>'.format(str(id_do_perfil+1)))
+		return HttpResponse('não existe. <a href="/listar_perfis?id={}">próximo</a>'.format(str(int(id_do_perfil)+1)))
 	
 	up = up.first()
 	
