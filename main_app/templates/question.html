@@ -176,7 +176,7 @@
   				</div>
 				<ul class="list-group list-group-flush responses">
 				{% for response in responses|pull_best_answer %}
-					{% if response.creator.user not in user_p.silenced_users.all %}
+					{% if response.creator.user not in user_p.silenced_users.all or request.user.is_anonymous %}
 						{% include "base/response-content.html" %}
 					{% endif %}
 				{% endfor %}
