@@ -100,18 +100,12 @@ function load_more() {
 }
 
 
+window.addEventListener('scroll',()=>{
+	if (isScrolledIntoView($("#carregamento_novas_perguntas"))) {
+		load_more();
+	}
+});
+
+
 pode_pegar_mais_questoes = true;
 id_de_inicio = document.getElementById("novas_questoes").getElementsByClassName("questao")[document.getElementById("novas_questoes").getElementsByClassName("questao").length - 1].getAttribute("data-id") - 1;
-
-
-// Checagem inicial:
-if (isScrolledIntoView($("#carregamento_novas_perguntas"))) {
-    load_more();
-}
-
-// Evento para checagens ao scroll
-window.onscroll = function() {
-	if (isScrolledIntoView($("#carregamento_novas_perguntas"))) {
-	    load_more();
-	}
-}
