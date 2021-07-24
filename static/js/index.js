@@ -60,52 +60,22 @@ function silence_user() {
 }
 
 
-
-/* Scroll infinito */
-
-function isScrolledIntoView(elem)
-{
-		var docViewTop = $(window).scrollTop();
-		var docViewBottom = docViewTop + $(window).height();
-
-		var elemTop = $(elem).offset().top;
-		var elemBottom = elemTop + $(elem).height();
-
-		//return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
-		return (elemTop <= docViewBottom);
-}
-
-
 function load_more() {
-    if(window.getComputedStyle(document.getElementById("novas_questoes"), null).getPropertyValue("display") == "block" && pode_pegar_mais_questoes) {
 
-        pode_pegar_mais_questoes = false;
+	/* Obtem mais perguntas para a página inicial */
 
-        /* Obtem mais perguntas para a página inicial */
-
-        $.ajax({
-            url: "/more_questions",
-            type: "get",
-            data: {
-                id_de_inicio: id_de_inicio,
-            },
-            complete: function(data) {
-                document.getElementById("novas_questoes").getElementsByTagName("ul")[0].innerHTML += data.responseText;
-                pode_pegar_mais_questoes = true;
-                id_de_inicio = document.getElementById("novas_questoes").getElementsByClassName("questao")[document.getElementById("novas_questoes").getElementsByClassName("questao").length - 1].getAttribute("data-id") - 1;
-            }
-        });
-
-    }
+	$.ajax({
+			url: "/more_questions",
+			type: "get",
+			data: {
+					id_de_inicio: id_de_inicio,
+			},
+			complete: function(data) {
+					document.getElementById("novas_questoes").getElementsByTagName("ul")[0].innerHTML += data.responseText;
+					id_de_inicio = document.getElementById("novas_questoes").getElementsByClassName("questao")[document.getElementById("novas_questoes").getElementsByClassName("questao").length - 1].getAttribute("data-id") - 1;
+			}
+	});
 }
 
 
-window.addEventListener('scroll',()=>{
-	if (isScrolledIntoView($("#carregamento_novas_perguntas"))) {
-		load_more();
-	}
-});
-
-
-pode_pegar_mais_questoes = true;
 id_de_inicio = document.getElementById("novas_questoes").getElementsByClassName("questao")[document.getElementById("novas_questoes").getElementsByClassName("questao").length - 1].getAttribute("data-id") - 1;
