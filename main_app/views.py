@@ -6,10 +6,10 @@ from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from django.core.cache import cache
-import django_project.general_rules as general_rules
 from main_app.models import *
 from main_app.templatetags.main_app_extras import fix_naturaltime
 from main_app.forms import UploadFileForm
+import django_project.general_rules as general_rules
 
 import io
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
@@ -1011,10 +1011,10 @@ def apply_shadow_ban(request):
 
 
 def more_questions(request):
-
-	q = Question.objects.order_by('-pub_date')
-	page = int(request.GET.get('page', 2))
-	questions = q[(page * 20) - 20:(page * 20)]
+	
+	id_de_inicio = int(request.GET.get('id_de_inicio')) - 20
+	questions = list(Question.objects.filter(id__range=(id_de_inicio, id_de_inicio + 20)))
+	questions.reverse()
 
 	context = {
 		'questions': questions,
