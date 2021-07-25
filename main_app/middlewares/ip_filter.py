@@ -1,5 +1,6 @@
 from django.http import HttpResponseForbidden
 from ..models import Ban
+from ..models import Contador
 
 def get_client_ip(request):
 	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -17,6 +18,13 @@ class IpFilter:
 	def __call__(self, request):
 		# Code to be executed for each request before
 		# the view (and later middleware) are called.
+		
+		try:
+			c = Contador.objects.all().first()
+			c.total += 1
+			c.save()
+		except:
+			pass
 		
 		if Ban.objects.filter(ip=get_client_ip(request)).exists():
 			return HttpResponseForbidden('Proibido.')

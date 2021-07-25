@@ -199,3 +199,7 @@ class PollVote(models.Model):
 	poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
 	choice = models.ForeignKey(PollChoice, on_delete=models.CASCADE)
 	voter = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Contador(models.Model):
+	total = models.IntegerField()
