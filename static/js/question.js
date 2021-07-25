@@ -191,37 +191,6 @@ $(".q-description").linkify({
 });
 
 
-/* Renderizando a parte "Responda também" da página. */
-document.getElementsByTagName("main")[0].innerHTML += '<div><header><hr><h3 class="mb-3 text-center text-secondary">— Responda também —</h3><hr></header><div id="questoes_recomendadas"></div></div>';
-
-
-function shuffle(array) {
-  var currentIndex = array.length,  randomIndex;
-  while (0 !== currentIndex) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]];
-  }
-  return array;
-}
-
-questoes_recomendadas_json = shuffle(questoes_recomendadas_json);
-
-questoes_recomendadas = document.getElementById("questoes_recomendadas");
-
-for (let index in questoes_recomendadas_json) {
-	var new_html = `
-	<div class="r-question">
-		<a href="/question/${questoes_recomendadas_json[index]["id"]}"><b>${questoes_recomendadas_json[index]["text"]}</b></a>
-		<br>
-		<small class="text-muted">perguntado ${questoes_recomendadas_json[index]["pub_date"]} por <a href="/user/${questoes_recomendadas_json[index]["creator_username"]}">${questoes_recomendadas_json[index]["creator_username"]}</a></small>
-		<hr>
-	</div>
-	`;
-	questoes_recomendadas.innerHTML += new_html;
-}
-
 /* Js p/ upload de imagem em respostas */
 document.getElementById('upload-photo').onchange = function () {
 	text = document.getElementById('upload-photo-text');

@@ -227,7 +227,7 @@
 		<script src="/static/js/linkify/linkify-jquery.min.js"></script>
 		<script>questoes_recomendadas_json = [{% for question in recommended_questions %}{"id":{{ question.id }},"text":"{{ question.text }}","creator_username":"{{ question.creator.user.username }}","pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}"},{% endfor %}];</script>
 		<script src="/static/js/general_functions.js?version=3"></script>
-		<script src="/static/js/question.js?v=16.4"></script>
+		<script src="/static/js/question.js?v=16.5"></script>
 		
 		<script>
 			

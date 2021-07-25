@@ -235,11 +235,9 @@ def index(request):
 	
 	if request.GET.get('page'):
 		page = int(request.GET.get('page', 1))
-		recent_questions = Question.objects.order_by('-pub_date')[(page * 20) - 20:(page * 20)]
+		questoes_recentes = Question.objects.order_by('-pub_date')[(page * 20) - 20:(page * 20)]
 	else:
-		recent_questions = Question.objects.order_by('-pub_date')[:20]
-
-	context['recent_questions'] = recent_questions
+		context['questoes_recentes'] = Question.objects.order_by('-pub_date')[:20]
 
 	context['popular_questions'] = cache.get('p_questions')
 	if not context['popular_questions']:
