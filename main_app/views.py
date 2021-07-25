@@ -246,7 +246,8 @@ def index(request):
 		context['popular_questions'] = calculate_popular_questions()
 		cache.set('p_questions', context['popular_questions'])
 
-	context['user_p'] = UserProfile.objects.get(user=request.user)
+	if request.user.is_authenticated:
+		context['user_p'] = UserProfile.objects.get(user=request.user)
 
 	return render(request, 'index.html', context)
 
