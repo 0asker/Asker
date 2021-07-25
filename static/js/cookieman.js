@@ -1,6 +1,6 @@
 function setDarkCookie(state) {
     /* states: false, true */
-    document.cookie = 'darkmode=' + state + ';path=/;SameSite=Lax'
+    document.cookie = 'darkmode=' + state + ';path=/;SameSite=Lax';
 }
 
 function getDarkCookie() {
