@@ -58,13 +58,10 @@ function load_more() {
 			url: "/more_questions",
 			type: "get",
 			data: {
-					id_de_inicio: id_de_inicio,
+					id_de_inicio: document.getElementById("novas_questoes").getElementsByClassName("questao")[document.getElementById("novas_questoes").getElementsByClassName("questao").length - 1].getAttribute("data-id") - 1,
 			},
 			complete: function(data) {
 					document.getElementById("novas_questoes").getElementsByTagName("ul")[0].innerHTML += data.responseText;
-					id_de_inicio = document.getElementById("novas_questoes").getElementsByClassName("questao")[document.getElementById("novas_questoes").getElementsByClassName("questao").length - 1].getAttribute("data-id") - 1;
 			}
 	});
 }
-
-id_de_inicio = document.getElementById("novas_questoes").getElementsByClassName("questao")[document.getElementById("novas_questoes").getElementsByClassName("questao").length - 1].getAttribute("data-id") - 1;
