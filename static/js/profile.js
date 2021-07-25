@@ -38,9 +38,9 @@ addTab('responses', 'responses-section');
 addTab('blocked', 'blocked-section');
 addTab('silenced', 'silenced-section');
 
-q_page = 1
+q_page = 1;
 function show_more_questions(button, uid) {
-	questions = document.getElementById('qs')
+	questions = document.getElementById('qs');
 	
 	$.ajax({
 		type: 'get',
@@ -56,7 +56,7 @@ function show_more_questions(button, uid) {
 				button.style.display = "none";
 			}
 			
-			data = JSON.parse(data.responseText)
+			data = JSON.parse(data.responseText);
 			
 			$.each(data.questions, function(i, val) {
 			        var newLi = '<li class="list-group-item bg-main"><div class="question card-body"><a href="/question/'+val.id+'">'+val.text+'</a><br><span style="color: #888; font-size: 80%;">Perguntada '+val.naturalday+'</span>';
@@ -67,18 +67,18 @@ function show_more_questions(button, uid) {
 					newLi += '</div></li>';
 
 				questions.innerHTML += newLi;
-			})
+			});
 			
 			if(!data.has_next) {
 				button.remove();
 			}
 		}
-	})
+	});
 }
 
-r_page = 1
+r_page = 1;
 function show_more_responses(button, uid) {
-	responses = document.getElementById('rs')
+	responses = document.getElementById('rs');
 	
 	$.ajax({
 		type: 'get',
@@ -89,7 +89,7 @@ function show_more_responses(button, uid) {
 			user_id: uid,
 		},
 		complete: function(data) {
-			data = JSON.parse(data.responseText)
+			data = JSON.parse(data.responseText);
 			
 			$.each(data.responses, function(i, val) {
 			    var newLi = '<li class="list-group-item bg-main"><div class="response card-body"><a href="/question/'+val.question_id+'">'+val.question_text+'</a><br><p>';
@@ -98,20 +98,14 @@ function show_more_responses(button, uid) {
 			    }
 			    newLi += val.text + '</p><span style="color: #888; font-size: 80%;">Perguntada por <a href="/user/'+val.creator+'">'+val.creator+'</a> '+val.naturalday+'</span></div></li>';
 			    responses.innerHTML += newLi;
-			})
+			});
 			
 			if(!data.has_next) {
-				button.remove()
+				button.remove();
 			}
 		}
-	})
+	});
 }
 
-/*
- * Converte URLs da biografia do usuário para tags âncora <a></a> HTML.
- * Para funcionar, é preciso dos scripts:
- * /static/js/linkify.min.js
- * /static/js/linkify-html.min.js
- */
 bio = document.getElementById("bio");
 bio.innerHTML = linkifyHtml(bio.innerHTML);
