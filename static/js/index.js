@@ -3,7 +3,6 @@ if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
 }
 
-
 function enviar_resposta_pergunta(form) {
 	
 	form.style.opacity = 0.5;
@@ -14,9 +13,7 @@ function enviar_resposta_pergunta(form) {
 		type: 'post',
 		data: $(form).serialize(),
 		complete: function(data) {
-			
 			document.getElementById('response-counter-' + form.question_id.value).innerText = Number(document.getElementById('response-counter-' + form.question_id.value).innerText) + 1;
-			
 			form.parentElement.innerHTML = data.responseText;
 		}
 	});
@@ -24,12 +21,9 @@ function enviar_resposta_pergunta(form) {
 	return false;
 }
 
-
-/* Linkify */
 $('.description').linkify({
 	target: "_blank"
 });
-
 
 var selected_user = null;
 
@@ -51,7 +45,7 @@ function silence_user() {
                     return false;
                 }
             }
-        })
+        });
   } else {
     alert("Você cancelou a operação.");
   }
@@ -59,11 +53,7 @@ function silence_user() {
   selected_user = null;
 }
 
-
 function load_more() {
-
-	/* Obtem mais perguntas para a página inicial */
-
 	$.ajax({
 			url: "/more_questions",
 			type: "get",
@@ -76,6 +66,5 @@ function load_more() {
 			}
 	});
 }
-
 
 id_de_inicio = document.getElementById("novas_questoes").getElementsByClassName("questao")[document.getElementById("novas_questoes").getElementsByClassName("questao").length - 1].getAttribute("data-id") - 1;
