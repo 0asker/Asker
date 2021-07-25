@@ -87,10 +87,14 @@
 			<button class="btn btn-outline-primary text-uppercase left-spaced" id="botao-recentes">recentes</button>
 		</div>
 		<script>
+			if (window.location.href.indexOf("news") != -1)
+				document.getElementById("logo").href = "/news";
+			
 			botao_popular = document.getElementById("botao-popular");
 			botao_recentes = document.getElementById("botao-recentes");
 			
 			botao_popular.onclick = function() {
+				document.getElementById("logo").href = "/";
 				botao_popular.style.borderBottomWidth = "3px";
 				botao_recentes.style.borderBottomWidth = "1px";
 				
@@ -101,6 +105,7 @@
 			}
 			
 			botao_recentes.onclick = function() {
+				document.getElementById("logo").href = "/news";
 				botao_popular.style.borderBottomWidth = "1px";
 				botao_recentes.style.borderBottomWidth = "3px";
 				
