@@ -235,10 +235,13 @@ def index(request):
 		context['NEWS'] = True
 	else:
 		context['POPULAR'] = True
-
-	q = Question.objects.order_by('-pub_date')
-	page = int(request.GET.get('page', 1))
-	recent_questions = q[(page * 20) - 20:(page * 20)]
+	
+	
+	if request.GET.get('page'):
+		page = int(request.GET.get('page', 1))
+		recent_questions = Question.objects.order_by('-pub_date')[(page * 20) - 20:(page * 20)]
+	else:
+		recent_questions = Question.objects.order_by('-pub_date')[:20]
 
 	context['recent_questions'] = recent_questions
 
