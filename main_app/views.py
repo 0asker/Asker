@@ -72,7 +72,7 @@ def get_client_ip(request):
 
 
 def calculate_popular_questions():
-	last_questions = Question.objects.order_by('-pub_date')[:100]
+	last_questions = Question.objects.order_by('-pub_date')[:80]
 
 	'''
 	Essa variável guarda, dentro, as perguntas e seus totais de pontos.
@@ -147,7 +147,7 @@ def calculate_popular_questions():
 
 		p_questions.append(question)
 
-	return p_questions
+	return p_questions[:20]
 
 
 '''
@@ -228,14 +228,10 @@ def index(request):
 
 	context = {}
 
-	'''
-	O que vai aparecer primeiro: as questões populares ou as questões recentes.
-	'''
 	if request.path == '/news':
 		context['NEWS'] = True
 	else:
 		context['POPULAR'] = True
-	
 	
 	if request.GET.get('page'):
 		page = int(request.GET.get('page', 1))
@@ -245,32 +241,12 @@ def index(request):
 
 	context['recent_questions'] = recent_questions
 
-	'''
-	Pegando as perguntas populares:
-	Pega as últimas 250 perguntas;
-	Pega o total de likes da pergunta com mais likes (dessas últimas 250);
-	Compara cada pergunta (uma por uma) com esse total de likes, por exemplo: a pergunta com mais likes tem 100 likes, se a pergunta x tem 50 likes, então a pergunta x ganha 50 pontos (50%: o cálculo é feito com base na porcentagem);
-	No final, organiza as perguntas por total de likes e guarda o ID delas em uma lista para consultar as perguntas novamente no banco de dados (Question.objects.filter(id__in=IDS_EM_ORDEM_DE_QUAL_PERGUNTA_TEM_MAIS_PONTOS)).
-	'''
+	context['popular_questions'] = cache.get('p_questions')
+	if not context['popular_questions']:
+		context['popular_questions'] = calculate_popular_questions()
+		cache.set('p_questions', context['popular_questions'])
 
-	p_questions = cache.get('p_questions')
-
-	if not p_questions:
-		p_questions = calculate_popular_questions()
-		cache.set('p_questions', p_questions)
-
-	context['popular_questions'] = p_questions[:20]
-
-	if request.user.is_authenticated:
-		user_p = UserProfile.objects.get(user=request.user)
-		user_p.ip = get_client_ip(request)
-		user_p.save()
-		context['user_p'] = user_p
-		if not user_p.active:
-			context['account_verification_alert'] = '<div class="alert alert-info"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div>'.format(request.user.email)
-
-	if request.GET.get('new_user', 'false') == 'true':
-		context['account_verification_alert'] = SUCCESS_ACCOUNT_VERIFICATION
+	context['user_p'] = UserProfile.objects.get(user=request.user)
 
 	return render(request, 'index.html', context)
 
@@ -485,6 +461,12 @@ def profile(request, username):
 		context = {'error': 'Usuário não encontrado', 'err_msg': 'Este usuário não existe ou alterou seu nome.',
 				   'redirect': return_to}
 		return render(request, 'error.html', context)
+
+	if request.user.is_authenticated:
+		user_p = UserProfile.objects.get(user=request.user)
+		user_p.ip = get_client_ip(request)
+		user_p.save()
+
 	if request.user.username != username and request.user.username != 'Erick':
 		u.total_views += 1
 		u.save()
