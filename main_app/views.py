@@ -10,6 +10,8 @@ from main_app.models import *
 from main_app.templatetags.main_app_extras import fix_naturaltime
 from main_app.forms import UploadFileForm
 import django_project.general_rules as general_rules
+import random
+
 
 import io
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
@@ -279,17 +281,10 @@ def question(request, question_id):
 	'''
 	Questões recomendadas.
 	'''
-	recommended_questions = cache.get('recommended_questions')
-	if not recommended_questions:
-
-		recommended_questions = []
-
-		for question in Question.objects.order_by('-pub_date')[:15]:
-			if not question.creator.ban:
-				recommended_questions.append(question)
-
-		cache.set('recommended_questions', recommended_questions)
-	context['recommended_questions'] = recommended_questions
+	recommended_questions = list(Question.objects.order_by('-pub_date')[:80])
+	random.shuffle(recommended_questions)
+	
+	context['recommended_questions'] = recommended_questions[:20]
 
 
 	if q.has_poll():

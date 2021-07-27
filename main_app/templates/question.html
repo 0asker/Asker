@@ -221,6 +221,28 @@
 					<hr>
 				</div>
 			{% endif %}
+			
+			<style>
+				.perguntado-a-por {
+					display: block;
+					font-size: smaller;
+				}
+			</style>
+			<br>
+			<div class="card">
+				<div class="card-body">
+					{% for question in recommended_questions %}
+						<div style="margin: 20px;">
+							<a href="#">{{ question.text }}</a>
+							{% if question.description %}
+								<p>{{ question.description }}</p>
+							{% endif %}
+							<span class="perguntado-a-por">perguntado {% fix_naturaltime question.pub_date|naturaltime %} por <a href="/user/{{ question.creator.user.username }}">{{ question.creator.user.username }}</a></span>
+						</div>
+						<hr>
+					{% endfor %}
+				</div>
+			</div>
 	</main>
 
 		<script src="/static/js/linkify/linkify.min.js"></script>
