@@ -233,7 +233,7 @@
 				<div class="card-body">
 					{% for question in recommended_questions %}
 						<div style="margin: 20px;">
-							<a href="#">{{ question.text }}</a>
+							<a href="/question/{{ question.id }}">{{ question.text }}</a>
 							{% if question.description %}
 								<p>{{ question.description }}</p>
 							{% endif %}
