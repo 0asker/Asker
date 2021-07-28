@@ -15,7 +15,7 @@ function enviar_resposta_pergunta(form) {
 		type: 'post',
 		data: $(form).serialize(),
 		complete: function(data) {
-			response_counter = document.getElementById('response-counter-' + form.question_id.value);
+			var response_counter = document.getElementById('response-counter-' + form.question_id.value);
 			response_counter.innerText = Number(response_counter.innerText) + 1;
 			form.parentElement.innerHTML = data.responseText;
 		},
@@ -23,6 +23,8 @@ function enviar_resposta_pergunta(form) {
 	
 	return false;
 }
+
+
 
 var selected_user = null;
 
@@ -51,6 +53,8 @@ function silence_user() {
   $('#question-modal').modal('hide');
   selected_user = null;
 }
+
+
 
 function load_more() {
 	$.ajax({
