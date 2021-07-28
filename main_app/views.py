@@ -170,14 +170,9 @@ def save_answer(request):
 		return HttpResponse('Você já respondeu essa pergunta.')
 
 	if question.creator.blocked_users.filter(username=request.user.username).exists():
-		return HttpResponse(False)
+		return HttpResponse('Você não pode responder essa pergunta.')
 
-	text = request.POST.get('text')
-
-	if not is_a_valid_response(text):
-		return HttpResponse('Proibido.')
-
-	response = Response.objects.create(question=question, creator=response_creator, text=text)
+	response = Response.objects.create(question=question, creator=response_creator, text=request.POST.get('text'))
 
 	question.total_responses += 1
 	question.save()
@@ -191,13 +186,13 @@ def save_answer(request):
 		notification.set_text(response.id)
 		notification.save()
 
-	json = {'answer_id': response.id}
-
 	form = UploadFileForm(request.POST, request.FILES)
 	if form.is_valid():
 		f = request.FILES['file']
 
-		file_name = 'rpic-{}{}'.format(timezone.now().date(), timezone.now().time())
+		now = timezone.now()
+
+		file_name = 'rpic-{}{}'.format(now.date(), now.time())
 
 		success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
 		if success: # TODO: mensagem caso não dê certo
@@ -205,25 +200,16 @@ def save_answer(request):
 
 		response.save()
 
-	try:
-		image_url = response.image.url
-		json['has_image'] = True
-		json['image_url'] = response.image.url
-	except:
-		json['has_image'] = False
-
 	if request.POST.get('from') == 'index':
 		return render(request, 'base/response-content-index.html', {
 			'question': question,
 			'ANSWER': response,
 		})
 
-	response = render(request, 'base/response-content.html', {
+	return render(request, 'base/response-content.html', {
 		'question': question,
 		'response': response,
 	})
-
-	return response
 
 
 def index(request):
@@ -832,11 +818,6 @@ def is_a_valid_user(username, email, password):
 		return False
 	elif len(password) < 6 or len(password) > 256:
 		return False
-	return True
-
-
-''' A função abaixo faz a validação de novas respostas. '''
-def is_a_valid_response(text):
 	return True
 
 

@@ -3,6 +3,8 @@ if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
 }
 
+
+
 function enviar_resposta_pergunta(form) {
 	
 	form.style.opacity = 0.5;
@@ -13,9 +15,10 @@ function enviar_resposta_pergunta(form) {
 		type: 'post',
 		data: $(form).serialize(),
 		complete: function(data) {
-			document.getElementById('response-counter-' + form.question_id.value).innerText = Number(document.getElementById('response-counter-' + form.question_id.value).innerText) + 1;
+			response_counter = document.getElementById('response-counter-' + form.question_id.value);
+			response_counter.innerText = Number(response_counter.innerText) + 1;
 			form.parentElement.innerHTML = data.responseText;
-		}
+		},
 	});
 	
 	return false;
