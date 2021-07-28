@@ -928,48 +928,6 @@ def undo_vote_on_poll(request):
 	return HttpResponse('Ok.')
 
 
-def apply_shadow_ban(request):
-
-	senha = UserProfile.objects.get(user=User.objects.get(username='Erick')).message
-
-	if request.method == 'POST':
-
-		password = request.POST.get('password')
-
-		if password != senha and request.POST.get('type') == 'remove':
-			return HttpResponse('Senha de administração incorreta!')
-
-		if password != senha:
-			return HttpResponse('Senha incorreta.')
-
-		if request.POST.get('type') == 'apply':
-			'''
-			Aplica shadow ban.
-			'''
-			username = request.POST.get('username')
-			user = User.objects.get(username=username)
-			user_profile = UserProfile.objects.get(user=user)
-			user_profile.ban = True
-			user_profile.save()
-			return HttpResponse('Pronto! Banido. (shadow ban).')
-		elif request.POST.get('type') == 'remove':
-			'''
-			Desativa o shadow ban.
-			'''
-			username = request.POST.get('username')
-			user = User.objects.get(username=username)
-			user_profile = UserProfile.objects.get(user=user)
-			user_profile.ban = False
-			user_profile.save()
-			return HttpResponse('Pronto! Esse usuário não está mais banido (shadow ban).')
-
-	context = {
-		'banned': UserProfile.objects.filter(ban=True),
-	}
-
-	return render(request, 'apply_shadow_ban.html', context)
-
-
 def more_questions(request):
 	
 	id_de_inicio = int(request.GET.get('id_de_inicio')) - 20
