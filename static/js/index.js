@@ -21,10 +21,6 @@ function enviar_resposta_pergunta(form) {
 	return false;
 }
 
-$('.description').linkify({
-	target: "_blank"
-});
-
 var selected_user = null;
 
 function select_user(username) {
