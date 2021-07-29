@@ -538,15 +538,18 @@ def logout(request):
 
 def notification(request):
 
-    p = Paginator(Notification.objects.filter(receiver=request.user).order_by('-creation_date'), 15)
+	if request.user.is_anonymous:
+		return redirect('/question/%d' % Question.objects.all().last().id)
 
-    page = request.GET.get('page', 1)
+	p = Paginator(Notification.objects.filter(receiver=request.user).order_by('-creation_date'), 15)
 
-    context = {
-        'notifications': p.page(page),
-    }
+	page = request.GET.get('page', 1)
 
-    return render(request, 'notification.html', context)
+	context = {
+		'notifications': p.page(page),
+	}
+
+	return render(request, 'notification.html', context)
 
 
 def comment(request):
