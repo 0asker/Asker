@@ -185,12 +185,6 @@ function make_comment(form) {
 }
 
 
-/* Linkify */
-$(".q-description").linkify({
-	target: "_blank"
-});
-
-
 /* Js p/ upload de imagem em respostas */
 document.getElementById('upload-photo').onchange = function () {
 	text = document.getElementById('upload-photo-text');

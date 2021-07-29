@@ -264,15 +264,6 @@ def question(request, question_id):
 				context['answered'] = True
 				break
 
-	'''
-	Questões recomendadas.
-	'''
-	recommended_questions = list(Question.objects.order_by('-pub_date')[:80])
-	random.shuffle(recommended_questions)
-	
-	context['recommended_questions'] = recommended_questions[:20]
-
-
 	if q.has_poll():
 		context['poll'] = Poll.objects.get(question=q)
 		context['poll_choices'] = PollChoice.objects.filter(poll=context['poll'])

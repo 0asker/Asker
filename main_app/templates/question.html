@@ -221,40 +221,8 @@
 					<hr>
 				</div>
 			{% endif %}
-			
-			<!-- Perguntas recomendadas -->
-			
-			<style>
-				.perguntado-a-por {
-					display: block;
-					font-size: smaller;
-				}
-			</style>
-			<script>
-			</script>
-			
-			<br>
-			<div class="card">
-				<div class="card-body">
-					{% for question in recommended_questions %}
-						<div style="margin: 20px;">
-							<a href="/question/{{ question.id }}">{{ question.text }}</a>
-							{% if question.description %}
-								<p>{{ question.description }}</p>
-							{% endif %}
-							<span class="perguntado-a-por">perguntado {% fix_naturaltime question.pub_date|naturaltime %} por <a href="/user/{{ question.creator.user.username }}">{{ question.creator.user.username }}</a></span>
-						</div>
-						<hr>
-					{% endfor %}
-				</div>
-			</div>
-			
-			<!-- !Perguntas recomendadas -->
 	</main>
 
-		<script src="/static/js/linkify/linkify.min.js"></script>
-		<script src="/static/js/linkify/linkify-jquery.min.js"></script>
-		<script>questoes_recomendadas_json = [{% for question in recommended_questions %}{"id":{{ question.id }},"text":"{{ question.text }}","creator_username":"{{ question.creator.user.username }}","pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}"},{% endfor %}];</script>
 		<script src="/static/js/general_functions.js?version=3"></script>
 		<script src="/static/js/question.js?v=16.5"></script>
 		
