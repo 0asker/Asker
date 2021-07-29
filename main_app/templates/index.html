@@ -2,191 +2,62 @@
 {% load humanize %}
 <!doctype html>
 <html lang="pt-br">
-	<head>
-		<title>Asker | Página inicial</title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="Faça e responda perguntas na melhor e mais divertida comunidade de perguntas e respostas!">
-		<meta name="keywords" content="br.asker.fun, asker.fun, perguntas, respostas, asker">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-		<link rel="stylesheet" href="/static/css/common.min.css">
-		<script src="/static/js/cookieman.js?v=1"></script>
-		<script>
-			var cssfn = 'light.css';
-			var cssversion = '?v=5.04';
-			if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
-			var link = document.createElement('link');
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = '/static/css/' + cssfn + cssversion;
-			document.head.appendChild(link);
-		</script>
-		
-		<script>
-			var csrf_token = "{{ csrf_token }}";
-			
-			{% if user.is_anonymous %}
-				var user_status = "anonymous";
-			{% else %}
-				var user_status = "logged";
-			{% endif %}
-		</script>
-	</head>
-
+<head>
+<title>Asker | Página inicial</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Faça e responda perguntas na melhor e mais divertida comunidade de perguntas e respostas!">
+<meta name="keywords" content="br.asker.fun, asker.fun, perguntas, respostas, asker">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/common.min.css">
+<script src="/static/js/cookieman.js?v=1"></script>
+<script>
+var cssfn = 'light.css';
+var cssversion = '?v=5.04';
+if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
+var link = document.createElement('link');
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = '/static/css/' + cssfn + cssversion;
+document.head.appendChild(link);
+</script>
+<script>var csrf_token = "{{ csrf_token }}";{% if user.is_anonymous %}var user_status = "anonymous";{% else %}var user_status = "logged";{% endif %}</script>
+<style>body{display:none}.navegacao{margin-top:10px;margin-bottom:10px}.navegacao button{border-radius:0;font-size:.8em}</style>
+<script>
+recent_questions=[{% for question in questoes_recentes %}{% if not question.creator.user in user_p.silenced_users.all %}{"id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|linebreaksbr }}","total_answers":{{ question.total_responses }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
+popular_questions=[{% for question in popular_questions %}{% if not question.creator.user in user_p.silenced_users.all %}{"id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|linebreaksbr }}","total_answers":{{ question.total_responses }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
+</script>
+</head>
 	<body>
 	{% include "includes/navbar.html" %}
-	<main>
-		
-		<style>
-			{% if POPULAR %}
-				#novas_questoes {
-					display: none;
-				}
-				
-				#questoes_populares {
-					display: block;
-				}
-				
-				#botao-popular {
-					border-bottom-width: 3px;
-				}
-				
-				.navegacao {
-					margin-top: 10px;
-					margin-bottom: 10px;
-				}
-				
-				.navegacao button {
-					border-radius: 0;
-					font-size: 0.8em;
-				}
-			{% endif %}
-			
-			{% if NEWS %}
-				#novas_questoes {
-					display: block;
-				}
-				
-				#questoes_populares {
-					display: none;
-				}
-				
-				#botao-recentes {
-					border-bottom-width: 3px;
-				}
-				
-				.navegacao {
-					margin-top: 10px;
-					margin-bottom: 10px;
-				}
-				
-				.navegacao button {
-					border-radius: 0;
-					font-size: 0.8em;
-				}
-			{% endif %}
-		</style>
-		
-		<div class="navegacao">
-			<button class="btn btn-outline-primary text-uppercase" id="botao-popular">popular</button>
-			<button class="btn btn-outline-primary text-uppercase left-spaced" id="botao-recentes">recentes</button>
-		</div>
-		<script>
-			if (window.location.href.indexOf("news") != -1)
-				document.getElementById("logo").href = "/news";
-			
-			botao_popular = document.getElementById("botao-popular");
-			botao_recentes = document.getElementById("botao-recentes");
-			
-			botao_popular.onclick = function() {
-				document.getElementById("logo").href = "/";
-				botao_popular.style.borderBottomWidth = "3px";
-				botao_recentes.style.borderBottomWidth = "1px";
-				
-				document.getElementById("questoes_populares").style.display = "block";
-				document.getElementById("novas_questoes").style.display = "none";
-				
-				window.history.replaceState("object or string", "Title", "/");
-			}
-			
-			botao_recentes.onclick = function() {
-				document.getElementById("logo").href = "/news";
-				botao_popular.style.borderBottomWidth = "1px";
-				botao_recentes.style.borderBottomWidth = "3px";
-				
-				document.getElementById("questoes_populares").style.display = "none";
-				document.getElementById("novas_questoes").style.display = "block";
-				
-				window.history.replaceState("object or string", "Title", "/news");
-			}
-		</script>
-		
-<!-- Questões recentes -->
-
+<main>
 <script>
-	
-	/*
-	 * As questões são carregadas em uma variável para depois ser renderizadas
-	 * em JavaScript para aliviar a carga no servidor.
-	 */
-	
-	recent_questions = [
-		{% for question in questoes_recentes %}
-			{% if not question.creator.user in user_p.silenced_users.all %}
-				{
-					"id": {{ question.id }},
-					"text": "{{ question.text }}",
-					"description": "{{ question.description|linebreaksbr }}",
-					"total_answers": {{ question.total_responses }},
-					"pub_date": "{% fix_naturaltime question.pub_date|naturaltime %}",
-					"creator": "{{ question.creator.user.username }}",
-					
-					{% answer user_p question as ANSWER %}
-					"user_answer": "{{ ANSWER|linebreaksbr }}",
-				},
-			{% endif %}
-		{% endfor %}
-	];
-
-	popular_questions = [
-		{% for question in popular_questions %}
-			{% if not question.creator.user in user_p.silenced_users.all %}
-				{
-					"id": {{ question.id }},
-					"text": "{{ question.text }}",
-					"description": "{{ question.description|linebreaksbr }}",
-					"total_answers": {{ question.total_responses }},
-					"pub_date": "{% fix_naturaltime question.pub_date|naturaltime %}",
-					"creator": "{{ question.creator.user.username }}",
-					
-					{% answer user_p question as ANSWER %}
-					"user_answer": "{{ ANSWER|linebreaksbr }}",
-				},
-			{% endif %}
-		{% endfor %}
-	];
+	{% if POPULAR %}
+		var mostrar_primeiro = "popular";
+	{% else %}
+		var mostrar_primeiro = "recentes";
+	{% endif %}
 </script>
-
+<div class="navegacao">
+	<button class="btn btn-outline-primary text-uppercase" id="botao-popular">popular</button>
+	<button class="btn btn-outline-primary text-uppercase left-spaced" id="botao-recentes">recentes</button>
+</div>
+<script>-1!=window.location.href.indexOf("news")&&(document.getElementById("logo").href="/news");var botao_popular=document.getElementById("botao-popular"),botao_recentes=document.getElementById("botao-recentes");botao_popular.onclick=function(){document.getElementById("logo").href="/",botao_popular.style.borderBottomWidth="3px",botao_recentes.style.borderBottomWidth="1px",document.getElementById("questoes_populares").style.display="block",document.getElementById("novas_questoes").style.display="none",window.history.replaceState("object or string","Title","/")},botao_recentes.onclick=function(){document.getElementById("logo").href="/news",botao_popular.style.borderBottomWidth="1px",botao_recentes.style.borderBottomWidth="3px",document.getElementById("questoes_populares").style.display="none",document.getElementById("novas_questoes").style.display="block",window.history.replaceState("object or string","Title","/news")};</script>
+<!-- Questões recentes -->
 <section class="card bg-main" id="novas_questoes">
 	<ul class="list-group list-group-flush" id="lista_de_questoes_recentes">
 	</ul>
 	<button class="btn btn-outline-primary" onclick="load_more()">Carregar mais</button>
 </section>
-
 <!-- !Questões recentes -->
-
 <!-- Questões populares -->
 <section class="card bg-main" id="questoes_populares">
-	
 	<ul class="list-group list-group-flush" id="lista_de_questoes_populares">
 	</ul>
-	
-	<div class="end">
-		<p>Fim! <i class="far fa-sad-cry"></i> Veja as <a href="/news">perguntas recentes.</a></p>
-	</div>
+	<div class="end"><p>Fim! <i class="far fa-sad-cry"></i> Veja as <a href="/news">perguntas recentes.</a></p></div>
 </section>
 <!-- !Questões populares -->
-	</main>
+</main>
 
 <div class="modal fade" id="question-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -214,7 +85,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/static/js/index.min.js?v=2"></script>
+<script src="/static/js/index.min.js?v=2.1"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 	</body>

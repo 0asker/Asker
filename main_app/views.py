@@ -607,81 +607,6 @@ def edit_response(request):
 	return redirect('/question/' + str(response.question.id))
 
 
-def get_more_questions(request):
-	page = request.GET.get('q_page', 2)
-	user_id = request.GET.get('user_id')
-	target = UserProfile.objects.get(user=User.objects.get(id=user_id))
-	if target.hide_activity:
-		if target.user.id != request.user.id:
-			return 'Proibido.'
-	q = Question.objects.filter(creator=target).order_by('-pub_date')
-
-	p = Paginator(q, 10)
-
-	json = {
-	}
-
-	json['questions'] = {}
-
-	count = 1
-
-	try:
-		p.page(page)
-	except:
-		return HttpResponse(False)
-
-	for q in p.page(page):
-		if target.user.id == request.user.id:
-			best_answer = q.best_answer
-		else:
-			best_answer = -1
-		json['questions'][count] = {
-			'text': q.text,
-			'id': q.id,
-			'naturalday': naturalday(q.pub_date),
-			'best_answer': best_answer
-		}
-		count += 1
-
-	json['has_next'] = p.page(page).has_next()
-
-	return JsonResponse(json)
-
-
-def get_more_responses(request):
-	page = request.GET.get('r_page', 2)
-	user_id = request.GET.get('user_id')
-	target = UserProfile.objects.get(user=User.objects.get(id=user_id))
-	if target.hide_activity:
-		if target.user.id != request.user.id:
-			return 'Proibido.'
-	r = Response.objects.filter(creator=target).order_by('-pub_date')
-	p = Paginator(r, 10)
-
-	json = {
-	}
-
-	json['responses'] = {}
-
-	count = 1
-	for r in p.page(page):
-		json['responses'][count] = {
-			'text': r.text,
-			'question_text': r.question.text,
-			'question_id': r.question.id,
-			'best_answer': r.id == r.question.best_answer,
-			'creator': r.question.creator.user.username,
-			'naturalday': naturalday(r.question.pub_date)
-		}
-		count += 1
-
-	json['has_next'] = p.page(page).has_next()
-
-	print(json)
-
-	return JsonResponse(json)
-
-
 def delete_question(request):
 	question = Question.objects.get(id=request.POST.get('question_id'))
 	if question.creator.user == request.user:
@@ -936,6 +861,7 @@ def more_questions(request):
 
 	context = {
 		'questions': questions,
+		'user_p': UserProfile.objects.get(user=request.user),
 	}
 
 	return render(request, 'more-questions.html', context)

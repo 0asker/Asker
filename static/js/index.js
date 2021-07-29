@@ -172,3 +172,15 @@ questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" dat
 																'</div>' +
 															'</li>';
 }
+
+if (mostrar_primeiro == 'popular') {
+	document.getElementById('novas_questoes').style.display = 'none';
+	document.getElementById('questoes_populares').style.display = 'block';
+	document.getElementById('botao-popular').style.borderBottomWidth = '3px';
+} else {
+	document.getElementById('novas_questoes').style.display = 'block';
+	document.getElementById('questoes_populares').style.display = 'none';
+	document.getElementById('botao-recentes').style.borderBottomWidth = '3px';
+}
+
+document.getElementsByTagName('body')[0].style.display = 'block';
