@@ -76,7 +76,7 @@ function load_more() {
 var questoes_recentes = document.getElementById("lista_de_questoes_recentes");
 
 for (var index = 0; index < 20; ++index) {
-questoes_recentes.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+recent_questions[index].id+'">' +
+try { questoes_recentes.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+recent_questions[index].id+'">' +
 																'<div class="card-body">' +
 																	'<div class="flexbox">' +
 																		'<h2 class="question-title fg-1">' +
@@ -118,7 +118,8 @@ questoes_recentes.innerHTML += '<li class="list-group-item bg-main questao" data
 																		'</form>' +
 																		'</div>') +
 																'</div>' +
-															'</li>';
+															'</li>'; } catch (e) {
+															}
 }
 
 
@@ -128,7 +129,7 @@ questoes_recentes.innerHTML += '<li class="list-group-item bg-main questao" data
 var questoes_populares = document.getElementById("lista_de_questoes_populares");
 
 for (var index = 0; index < 20; ++index) {
-questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+popular_questions[index].id+'">' +
+try { questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+popular_questions[index].id+'">' +
 																'<div class="card-body">' +
 																	'<div class="flexbox">' +
 																		'<h2 class="question-title fg-1">' +
@@ -170,7 +171,8 @@ questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" dat
 																		'</form>' +
 																		'</div>') +
 																'</div>' +
-															'</li>';
+															'</li>'; } catch (e) {
+															}
 }
 
 if (mostrar_primeiro == 'popular') {
