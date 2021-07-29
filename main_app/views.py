@@ -466,6 +466,10 @@ def profile(request, username):
 
 
 def ask(request):
+	
+	if request.user.is_anonymous:
+		return redirect('/question/%d' % Question.objects.all().last().id)
+	
 	'''
 	Controle de spam
 	'''
