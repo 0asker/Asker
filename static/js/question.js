@@ -1,5 +1,6 @@
 function like(likeElement, response_id) {
-	like_image = likeElement.getElementsByTagName('img')[0];
+	var like_image = likeElement.getElementsByTagName('img')[0];
+	var span_like_counter = null;
 	if (like_image.src.includes('white-heart.png')) {
 		like_image.src = '/static/images/red-heart.png?version=3';
 		span_like_counter = likeElement.getElementsByTagName('span')[0];
@@ -77,8 +78,8 @@ function chooseAnswer(id) {
 			answer_id: id,
 		},
 		complete: function() {
-		    btns = document.getElementsByClassName('choose-answer-btn');
-    		for (i = btns.length-1; i >= 0; i--) {
+		    var btns = document.getElementsByClassName('choose-answer-btn');
+    		for (var i = btns.length-1; i >= 0; i--) {
                 btns[i].remove();
                 location.reload();
     		}
@@ -151,9 +152,9 @@ function setPollPercentages() {
         votes.push(choiceVotes);
     }
 
-    for (var i=0; i < els.length; i++) {
-        let progressBar = els[i].getElementsByClassName('progress-bar')[0];
-        let percentage = (votes[i] / totalVotes) * 100;
+    for (var ind=0; ind < els.length; ind++) {
+        let progressBar = els[ind].getElementsByClassName('progress-bar')[0];
+        let percentage = (votes[ind] / totalVotes) * 100;
         let percentageString = Math.round(percentage) + '%';
         if (percentage >= 15) { progressBar.textContent = percentageString; }
         progressBar.title = percentageString;
@@ -169,14 +170,14 @@ if (document.getElementsByClassName('poll-chooser').length == 1) {
 
 function make_comment(form) {
 	$(form.previousElementSibling).toggle(0);
-	formData = $(form).serialize();
+	var formData = $(form).serialize();
 	$.ajax({
 		url: '/comment',
 		type: 'post',
 		dataType: 'json',
 		data: formData,
 		complete: function(data) {
-			new_comment = data.responseText;
+			var new_comment = data.responseText;
 			form.parentElement.getElementsByTagName('ul')[0].innerHTML += new_comment;
 			form.text.value = '';
 			$(form.previousElementSibling).toggle(0);
@@ -187,17 +188,17 @@ function make_comment(form) {
 
 /* Js p/ upload de imagem em respostas */
 document.getElementById('upload-photo').onchange = function () {
-	text = document.getElementById('upload-photo-text');
-	delete_photo_icon = document.getElementById('delete-photo-icon');
-	input = document.getElementById('upload-photo');
+	var text = document.getElementById('upload-photo-text');
+	var delete_photo_icon = document.getElementById('delete-photo-icon');
+	var input = document.getElementById('upload-photo');
 	text.innerText = input.value.slice(12);
 	delete_photo_icon.style.display = 'inline';
 };
 
 document.getElementById('delete-photo-icon').onclick = function () {
-	delete_photo_icon = document.getElementById('delete-photo-icon');
-	input = document.getElementById('upload-photo');
-	text = document.getElementById('upload-photo-text');
+	var delete_photo_icon = document.getElementById('delete-photo-icon');
+	var input = document.getElementById('upload-photo');
+	var text = document.getElementById('upload-photo-text');
 	delete_photo_icon.style.display = 'none';
 	text.innerText = '';
 	input.value = null;
@@ -228,3 +229,31 @@ if (getDarkCookie() == 'true') {
 	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
 	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
 }
+
+
+
+
+var formulario_de_resposta = document.getElementById("formulario_de_resposta");
+
+formulario_de_resposta.onsubmit = function() {
+	
+	/* Desativa o botão de enviar resposta para evitar spam. */
+	document.getElementById("botao_enviar_resposta").disabled = true;
+	
+	var formData = new FormData(this);
+	
+	$.ajax({
+		url: "/save_answer",
+		method: "post",
+		data: formData,
+		cache:false,
+		contentType: false,
+		processData: false,
+		complete: function(data) {
+			document.getElementsByClassName("responses")[0].innerHTML += data.responseText;
+			formulario_de_resposta.remove();
+		},
+	});
+	
+	return false;
+};

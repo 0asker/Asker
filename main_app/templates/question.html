@@ -224,34 +224,6 @@
 	</main>
 
 		<script src="/static/js/general_functions.js?version=3"></script>
-		<script src="/static/js/question.js?v=16.5"></script>
-		
-		<script>
-			
-			formulario_de_resposta = document.getElementById("formulario_de_resposta")
-			
-			formulario_de_resposta.onsubmit = function() {
-				
-				/* Desativa o botão de enviar resposta para evitar spam. */
-				document.getElementById("botao_enviar_resposta").disabled = true;
-				
-				var formData = new FormData(this);
-				
-				$.ajax({
-					url: "/save_answer",
-					method: "post",
-					data: formData,
-					cache:false,
-					contentType: false,
-					processData: false,
-					complete: function(data) {
-						document.getElementsByClassName("responses")[0].innerHTML += data.responseText;
-						formulario_de_resposta.remove();
-					},
-				});
-				
-				return false;
-			}
-		</script>
+		<script src="/static/js/question.js?v=16.7"></script>
 	</body>
 </html>
