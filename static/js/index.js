@@ -55,75 +55,62 @@ function silence_user() {
 }
 
 
-
-function load_more() {
-	$.ajax({
-			url: "/more_questions",
-			type: "get",
-			data: {
-					id_de_inicio: document.getElementById("novas_questoes").getElementsByClassName("questao")[document.getElementById("novas_questoes").getElementsByClassName("questao").length - 1].getAttribute("data-id") - 1,
-			},
-			complete: function(data) {
-					document.getElementById("novas_questoes").getElementsByTagName("ul")[0].innerHTML += data.responseText;
-			}
-	});
-}
-
-
 /*
  * Renderiza as questões recentes. */
 
 var questoes_recentes = document.getElementById("lista_de_questoes_recentes");
 
-for (var index = 0; index < 20; ++index) {
-try { questoes_recentes.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+recent_questions[index].id+'">' +
-																'<div class="card-body">' +
-																	'<div class="flexbox">' +
-																		'<h2 class="question-title fg-1">' +
-																			'<a href="/question/'+recent_questions[index].id+'">' +
-																				recent_questions[index].text +
-																			'</a>' +
-																		'</h2>' +
-																		(user_status != "anonymous" ? '<a class="clickable" href="javascript:void(0);" data-toggle="modal" data-target="#question-modal" onclick=\'select_user("'+recent_questions[index].creator+'");\'><i class="fas fa-ellipsis-h"></i></a>' : '') +
-																	'</div>' +
-																	(recent_questions[index].description != '' ? '<p class="description">'+recent_questions[index].description+'</p>' : '') +
-																	'<small class="text-muted">' +
-																		'<span>respostas: <span id="response-counter-'+recent_questions[index].id+'">'+recent_questions[index].total_answers+'</span></span>' +
-																		'<span>&nbsp;&middot;&nbsp;</span>' +
-																		'<span>perguntado '+recent_questions[index].pub_date+' por </span>' +
-																		'<a href="/user/'+recent_questions[index].creator+'">'+recent_questions[index].creator+'</a>' +
-																	'</small>' +
-																	'<hr>' +
-																	(user_status == "anonymous" ? '<p>Faça <a href="/signin?redirect=/question/'+recent_questions[index].id+'">login</a> ou <a href="/signup?redirect=/question/'+recent_questions[index].id+'">crie uma conta</a> para responder essa pergunta.</p>' : '') +
-																	(recent_questions[index].user_answer != 'False' ? '<div class="user-response" data-iddapergunta="'+recent_questions[index].id+'"><p><b>Sua resposta:</b><br>'+recent_questions[index].user_answer+'</p></div>' : '<div class="user-response" data-iddapergunta="'+recent_questions[index].id+'">'+
-																	'<div>' +
-																	
-																	(user_status != "anonymous" ?
-																	
-																		'<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">' +
-																			'<i class="fas fa-share"></i>' +
-																			' responder' : '') +
-																		'</button>' +
-																	'</div></div>' +
-																	'<div style="display: none">' +
-																		'<form onsubmit="return enviar_resposta_pergunta(this);">' +
-																			'<input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'">' +
-																			'<input type="hidden" name="from" value="index">' +
-																			'<input name="question_id" type="hidden" value="'+recent_questions[index].id+'">' +
-																			'<textarea onclick=\'$(this).css("height", "120px");\' name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>' +
-																			'<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">' +
-																			'<i class="far fa-paper-plane"></i>' +
-																			' Enviar' +
-																			'</button>' +
-																		'</form>' +
-																		'</div>') +
-																'</div>' +
-															'</li>'; } catch (e) {
-															}
+function renderizar_questoes(questions) {
+	for (var index = 0; index < 20; ++index) {
+		try {
+			questoes_recentes.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+questions[index].id+'">' +
+																		'<div class="card-body">' +
+																			'<div class="flexbox">' +
+																				'<h2 class="question-title fg-1">' +
+																					'<a href="/question/'+questions[index].id+'">' +
+																						questions[index].text +
+																					'</a>' +
+																				'</h2>' +
+																				(user_status != "anonymous" ? '<a class="clickable" href="javascript:void(0);" data-toggle="modal" data-target="#question-modal" onclick=\'select_user("'+questions[index].creator+'");\'><i class="fas fa-ellipsis-h"></i></a>' : '') +
+																			'</div>' +
+																			(questions[index].description != '' ? '<p class="description">'+questions[index].description+'</p>' : '') +
+																			'<small class="text-muted">' +
+																				'<span>respostas: <span id="response-counter-'+questions[index].id+'">'+questions[index].total_answers+'</span></span>' +
+																				'<span>&nbsp;&middot;&nbsp;</span>' +
+																				'<span>perguntado '+questions[index].pub_date+' por </span>' +
+																				'<a href="/user/'+questions[index].creator+'">'+questions[index].creator+'</a>' +
+																			'</small>' +
+																			'<hr>' +
+																			(user_status == "anonymous" ? '<p>Faça <a href="/signin?redirect=/question/'+questions[index].id+'">login</a> ou <a href="/signup?redirect=/question/'+questions[index].id+'">crie uma conta</a> para responder essa pergunta.</p>' : '') +
+																			(questions[index].user_answer != 'False' ? '<div class="user-response" data-iddapergunta="'+questions[index].id+'"><p><b>Sua resposta:</b><br>'+questions[index].user_answer+'</p></div>' : '<div class="user-response" data-iddapergunta="'+questions[index].id+'">'+
+																			'<div>' +
+																			
+																			(user_status != "anonymous" ?
+																			
+																				'<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">' +
+																					'<i class="fas fa-share"></i>' +
+																					' responder' : '') +
+																				'</button>' +
+																			'</div></div>' +
+																			'<div style="display: none">' +
+																				'<form onsubmit="return enviar_resposta_pergunta(this);">' +
+																					'<input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'">' +
+																					'<input type="hidden" name="from" value="index">' +
+																					'<input name="question_id" type="hidden" value="'+questions[index].id+'">' +
+																					'<textarea onclick=\'$(this).css("height", "120px");\' name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>' +
+																					'<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">' +
+																					'<i class="far fa-paper-plane"></i>' +
+																					' Enviar' +
+																					'</button>' +
+																				'</form>' +
+																				'</div>') +
+																		'</div>' +
+																	'</li>'; } catch (e) {
+																	}
+	}
 }
 
-
-
+renderizar_questoes(recent_questions);
 
 /* Renderiza as questões populares. */
 var questoes_populares = document.getElementById("lista_de_questoes_populares");
@@ -186,3 +173,21 @@ if (mostrar_primeiro == 'popular') {
 }
 
 document.getElementsByTagName('body')[0].style.display = 'block';
+
+function load_more(button, icon) {
+	button.style.display = 'none';
+	icon.style.display = 'block';
+	$.ajax({
+			url: "/more_questions",
+			type: "get",
+			dataType: "json",
+			data: {
+					id_de_inicio: document.getElementById("novas_questoes").getElementsByClassName("questao")[document.getElementById("novas_questoes").getElementsByClassName("questao").length - 1].getAttribute("data-id") - 1,
+			},
+			complete: function(data) {
+				icon.style.display = 'none';
+				button.style.display = 'block';
+				renderizar_questoes(data.responseJSON);
+			},
+	});
+}

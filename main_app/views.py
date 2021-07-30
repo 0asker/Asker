@@ -852,17 +852,44 @@ def undo_vote_on_poll(request):
 
 
 def more_questions(request):
-	
+
 	id_de_inicio = int(request.GET.get('id_de_inicio')) - 20
 	questions = list(Question.objects.filter(id__range=(id_de_inicio, id_de_inicio + 20)))
 	questions.reverse()
 
-	context = {
-		'questions': questions,
-		'user_p': UserProfile.objects.get(user=request.user),
-	}
+	para_retornar = []
 
-	return render(request, 'more-questions.html', context)
+	if request.user.is_anonymous:
+		for q in questions:
+			para_retornar.append(
+				{
+					"id": q.id,
+					"text": q.text,
+					"description": q.description,
+					"total_answers": q.total_responses,
+					"pub_date": fix_naturaltime(naturaltime(q.pub_date)),
+					"creator": q.creator.user.username,
+					"user_answer": "False",
+				},
+			)
+	else:
+		for q in questions:
+			r = Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=q)
+			answer = 'False' if not r.exists() else r[0].text
+
+			para_retornar.append(
+				{
+					"id": q.id,
+					"text": q.text,
+					"description": q.description,
+					"total_answers": q.total_responses,
+					"pub_date": fix_naturaltime(naturaltime(q.pub_date)),
+					"creator": q.creator.user.username,
+					"user_answer": answer,
+				},
+			)
+
+	return JsonResponse(para_retornar, safe=False)
 
 
 def get_more_questions(request):
