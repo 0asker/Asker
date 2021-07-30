@@ -29,7 +29,6 @@ def total_responses(qid):
 
 @register.filter(name='list_comments')
 def list_comments(response_id, request):
-	print(request)
 	comment_template = '''
 		<li class="list-group-item c no-horiz-padding">
 				<div class="comm-card">
