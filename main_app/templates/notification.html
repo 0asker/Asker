@@ -49,8 +49,12 @@
                 {% endfor %}
             </ul>
             <div class="page-btn-container">
-            	<a class="page-btn btn btn-primary" style="flex: 1;" href="/notifications?page={{ antigas }}">Mais antigas</a>
-            	{% if novas %} <a class="page-btn btn btn-primary" style="flex: 1;" href="/notifications?page={{ novas }}">Mais recentes</a> {% endif %}
+            	{% if notifications.has_next %}
+            	<a class="page-btn btn btn-primary" style="flex: 1;" href="/notifications?page={{ notifications.next_page_number }}">Mais antigas</a>
+            	{% endif %}
+            	{% if notifications.has_previous %}
+            	<a class="page-btn btn btn-primary" style="flex: 1;" href="/notifications?page={{ notifications.previous_page_number }}">Mais recentes</a>
+            	{% endif %}
             </div>
         </section></main>
 		<script>

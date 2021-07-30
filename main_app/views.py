@@ -541,15 +541,13 @@ def notification(request):
 	if request.user.is_anonymous:
 		return redirect('/question/%d' % Question.objects.all().last().id)
 	
-	page = int(request.GET.get('page', 1))
+	p = Paginator(Notification.objects.filter(receiver=request.user).order_by('-creation_date'), 15)
+
+	page = request.GET.get('page', 1)
 	
 	context = {
-		'notifications': Notification.objects.filter(receiver=request.user).order_by('-creation_date')[(page * 15) - 15:page * 15],
-		'antigas': page + 1,
+		'notifications': p.page(page),
 	}
-	
-	if not page == 1:
-		context['novas'] = page - 1
 
 	return render(request, 'notification.html', context)
 
