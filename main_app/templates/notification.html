@@ -64,26 +64,5 @@ if (getDarkCookie() == 'true') {
 }
 		</script>
 
-    <script>
-      /* Função para marcar todas as notificações como lidas. */
-      function read_all() {
-        notifications = document.getElementsByClassName("notif");
-
-        for (let notif in notifications) {
-
-          if (notifications[notif].style == undefined) {
-            continue;
-          }
-
-          notifications[notif].style.backgroundColor = "white";
-        }
-
-        $.ajax({
-          url: "/mark-notifications-as-viewed",
-          type: "get",
-        });
-      }
-    </script>
-
     </body>
 </html>
