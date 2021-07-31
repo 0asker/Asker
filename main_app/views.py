@@ -965,3 +965,37 @@ def get_more_responses(request):
 	print(json)
 
 	return JsonResponse(json)
+
+
+'''
+Bot de perguntas e respostas (chat).
+'''
+from difflib import SequenceMatcher
+from .conversas import conversas
+
+def semelhanca(a, b):
+	return SequenceMatcher(None, a, b).ratio()
+
+def obter_resposta(pergunta_do_usuario):
+	
+	pergunta_do_usuario = pergunta_do_usuario.lower()
+	
+	resposta = 'não entendi o que você falou.'
+	maior_semelhanca = 0
+	for par_pergunta_resposta in conversas:
+		if semelhanca(par_pergunta_resposta[0], pergunta_do_usuario) > maior_semelhanca:
+			maior_semelhanca = semelhanca(par_pergunta_resposta[0], pergunta_do_usuario)
+			resposta = par_pergunta_resposta[1]
+	
+	return resposta
+
+
+def bot(request):
+	
+	print(request.POST)
+	if request.method == 'POST':
+		response = obter_resposta(request.POST.get('text'))
+		
+		return HttpResponse(response, content_type='text/plain')
+	
+	return render(request, 'bot.html')
