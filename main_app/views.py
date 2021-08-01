@@ -992,10 +992,8 @@ def obter_resposta(pergunta_do_usuario):
 
 def bot(request):
 	
-	print(request.POST)
 	if request.method == 'POST':
 		response = obter_resposta(request.POST.get('text'))
-		
 		return HttpResponse(response, content_type='text/plain')
 	
 	return render(request, 'bot.html')
