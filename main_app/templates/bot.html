@@ -34,19 +34,48 @@
 			<form method="post" id="formulario-mensagem" class="form-inline">
 				{% csrf_token %}
 				<input type="text" name="text" id="msg-usuario" class="form-control">
-				<button class="btn btn-outline-primary"><i class="far fa-paper-plane"></i></button>
+				<button class="btn btn-outline-primary" id="botao-enviar"><i class="far fa-paper-plane"></i></button>
+				<p class="alert alert-info" id="alerta-perguntar" style="display: none">Espere o bot responder para perguntar novamente.</p>
 			</form>
 		</div>
+		
+<style>
+.loading:after {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: bottom;
+  -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+  animation: ellipsis steps(4,end) 900ms infinite;
+  content: "\2026"; /* ascii code for the ellipsis character */
+  width: 0px;
+}
+
+@keyframes ellipsis {
+  to {
+    width: 20px;    
+  }
+}
+
+@-webkit-keyframes ellipsis {
+  to {
+    width: 20px;    
+  }
+}
+</style>
 		
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script>
 	document.getElementById("formulario-mensagem").onsubmit = function() {
 		
+		document.getElementById("botao-enviar").disabled = true;
+		
 		var msg = document.getElementById("msg-usuario").value;
 		document.getElementById("msg-usuario").value = "";
 		
 		document.getElementById("mensagens").innerHTML += "<span class='msg'>Você: " + msg + "</span><br>";
+		
+		document.getElementById("mensagens").innerHTML += "<span style='display: block' class='msg loading'>Pensando</span>";
 		
 		document.getElementById("mensagens").scrollTop = document.getElementsByClassName("msg")[document.getElementsByClassName("msg").length - 1].offsetTop;
 		
@@ -58,6 +87,8 @@
 				text: msg,
 			},
 			complete: function(data) {
+				document.getElementById("botao-enviar").disabled = false;
+				document.getElementsByClassName("msg")[document.getElementsByClassName("msg").length - 1].remove();
 				document.getElementById("mensagens").innerHTML += "<span class='msg'>Bot: " + data.responseText + "</span><br>";
 				document.getElementById("mensagens").scrollTop = document.getElementsByClassName("msg")[document.getElementsByClassName("msg").length - 1].offsetTop;
 			}
