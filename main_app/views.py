@@ -997,6 +997,10 @@ def bot(request):
 			return HttpResponse('Proibido.')
 		
 		response = obter_resposta(text)
+		
+		if response.strip() == '':
+			response = 'não entendi.'
+		
 		return HttpResponse(response, content_type='text/plain')
 	
 	return render(request, 'bot.html')
