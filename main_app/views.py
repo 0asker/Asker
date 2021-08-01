@@ -149,7 +149,7 @@ def calculate_popular_questions():
 
 		p_questions.append(question)
 
-	return p_questions[:20]
+	return p_questions[:15]
 
 
 '''
@@ -220,12 +220,8 @@ def index(request):
 		context['NEWS'] = True
 	else:
 		context['POPULAR'] = True
-	
-	if request.GET.get('page'):
-		page = int(request.GET.get('page', 1))
-		questoes_recentes = Question.objects.order_by('-pub_date')[(page * 20) - 20:(page * 20)]
-	else:
-		context['questoes_recentes'] = Question.objects.order_by('-pub_date')[:20]
+
+	context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
 
 	context['popular_questions'] = cache.get('p_questions')
 	if not context['popular_questions']:
