@@ -33,7 +33,7 @@
 			<hr>
 			<form method="post" id="formulario-mensagem" class="form-inline">
 				{% csrf_token %}
-				<input type="text" name="text" id="msg-usuario" class="form-control">
+				<input autocomplete="off" maxlength="180" type="text" name="text" id="msg-usuario" class="form-control">
 				<button class="btn btn-outline-primary" id="botao-enviar"><i class="far fa-paper-plane"></i></button>
 				<p class="alert alert-info" id="alerta-perguntar" style="display: none">Espere o bot responder para perguntar novamente.</p>
 			</form>

@@ -971,6 +971,7 @@ def get_more_responses(request):
 Bot de perguntas e respostas (chat).
 '''
 from difflib import SequenceMatcher
+from random import choice
 from .conversas import conversas
 
 def semelhanca(a, b):
@@ -987,13 +988,19 @@ def obter_resposta(pergunta_do_usuario):
 			maior_semelhanca = semelhanca(par_pergunta_resposta[0], pergunta_do_usuario)
 			resposta = par_pergunta_resposta[1]
 	
-	return resposta
+	return choice(resposta)
 
 
 def bot(request):
 	
 	if request.method == 'POST':
-		response = obter_resposta(request.POST.get('text'))
+		
+		text = request.POST.get('text')
+		
+		if len(text) > 181:
+			return HttpResponse('Proibido.')
+		
+		response = obter_resposta(text)
 		return HttpResponse(response, content_type='text/plain')
 	
 	return render(request, 'bot.html')
