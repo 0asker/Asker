@@ -9,20 +9,22 @@
 
 <style>
 	#mensagens {
-		height: 250px;
+		height: 300px;
 		overflow: auto;
 	}
 	
 	#msgs {
 		width: 80%;
-		margin: 0 auto;
+		margin: 150px auto;
+		line-height: 35px;
 	}
 </style>
 	</head>
 	<body>
-		<div id="msgs">
+		<div id="msgs" class="bg-light">
 			<div id="mensagens">
 			</div>
+			<hr>
 			<form method="post" id="formulario-mensagem">
 				{% csrf_token %}
 				<input type="text" name="text" id="msg-usuario">
