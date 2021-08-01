@@ -9,12 +9,151 @@
 	</head>
 	<body>
 		
+		<style>
+#campo_de_mensagens {
+	height: 250px;
+	width: 270px;
+	overflow: auto;
+	margin: 20px;
+}
+
+.username {
+	color: blue;
+}
+
+.bot-username {
+	color: red;
+}
+
+@media only screen and (max-width: 600px) {
+	#user-message {
+		width: 80%;
+	}
+}
+
+/**
+ * ==============================================
+ * Dot Elastic
+ * ==============================================
+ */
+.dot-elastic {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotElastic 1s infinite linear;
+}
+
+.dot-elastic::before, .dot-elastic::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dot-elastic::before {
+  left: -15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotElasticBefore 1s infinite linear;
+}
+
+.dot-elastic::after {
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotElasticAfter 1s infinite linear;
+}
+
+@keyframes dotElasticBefore {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1, 1.5);
+  }
+  50% {
+    transform: scale(1, 0.67);
+  }
+  75% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes dotElastic {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1, 1.5);
+  }
+  75% {
+    transform: scale(1, 1);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes dotElasticAfter {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1, 0.67);
+  }
+  75% {
+    transform: scale(1, 1.5);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+#dots {
+	display: none;
+}
+		</style>
+		
+		<center>
 		<div id="campo_de_mensagens">
+			
+			<div id="msgs">
+			</div>
+			
+			<div id="dots">
+				<div class="col-3">
+					<div class="snippet" data-title=".dot-elastic">
+						<div class="stage">
+							<div class="dot-elastic"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
 		</div>
+		</center>
 		<br>
-		<form method="post" class="form-inline" id="campo_enviar_mensagem">
-			{% csrf_token %}
-			<input type="text" name="text" class="form-control" required>
+		
+		<form method="post" class="form-inline justify-content-center" id="campo_enviar_mensagem">
+			<input id="user-message" type="text" class="form-control" required>
 			<button type="submit" class="btn btn-outline-primary">
 				<i class="far fa-paper-plane"></i>
 			</button>
@@ -24,24 +163,25 @@
 		<script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 		
 		<script>
-			campo_enviar_mensagem = document.getElementById("campo_enviar_mensagem");
-			campo_enviar_mensagem.onsubmit = function() {
+			document.getElementById("campo_enviar_mensagem").onsubmit = function() {
+				var msg = document.getElementById("user-message").value;
+				document.getElementById("user-message").value = "";
 				
-				msg = campo_enviar_mensagem.text.value;
-				campo_enviar_mensagem.text.value = "";
-				document.getElementById("campo_de_mensagens").innerHTML += "<span>Você: " + msg + "</span><br>";
+				document.getElementById("msgs").innerHTML += "<span class='msg'><span class='username'>Você:</span> " + msg + "</span><br>";
+				document.getElementById("dots").style.display = "block";
+				document.getElementById("campo_de_mensagens").scrollTop = document.getElementById("dots").offsetTop;
 				
 				$.ajax({
 					url: "/bot",
-					type: "POST",
+					type: "post",
 					data: {
 						csrfmiddlewaretoken: "{{ csrf_token }}",
 						text: msg,
 					},
 					complete: function(data) {
-						response = data.responseText;
-						
-						document.getElementById("campo_de_mensagens").innerHTML += "<span>Bot: " + response + "</span><br>";
+						document.getElementById("dots").style.display = "none";
+						document.getElementById("msgs").innerHTML += "<span class='msg'><span class='bot-username'>Bot:</span> " + data.responseText + "</span><br>";
+						document.getElementById("campo_de_mensagens").scrollTop = document.getElementsByClassName("msg")[document.getElementsByClassName("msg").length - 1].offsetTop;
 					}
 				});
 				
