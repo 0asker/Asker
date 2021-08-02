@@ -223,7 +223,7 @@
 			{% endif %}
 	</main>
 <!-- Ad -->
-{% if AD %}
+{% if AD and not user.is_anonymous %}
 	<hr>
 	<center>
 		<div style="max-width: 50%;">
