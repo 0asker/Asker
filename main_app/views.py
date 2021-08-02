@@ -75,9 +75,12 @@ def get_client_ip(request):
 
 def calculate_popular_questions():
 	last_id = Question.objects.all().last().id
-	popular_questions = Question.objects.filter(id__range=(last_id - 200, last_id)).order_by('-total_views')
-	
-	return popular_questions[:15]
+	popular_questions = Question.objects.filter(id__range=(last_id - 200, last_id)).order_by('-total_views')[:15]
+	first_part = list(popular_questions[:10])
+	second_part = list(popular_questions[:5])
+	random.shuffle(first_part)
+	popular_questions = first_part + second_part
+	return popular_questions
 
 
 '''
