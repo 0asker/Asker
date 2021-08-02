@@ -191,7 +191,7 @@
 							<form id="formulario_de_resposta">
 								{% csrf_token %}
 								<input type="hidden" name="question_id" value="{{ question.id }}">
-								<textarea maxlength="5000" class="form-control large-compact" placeholder="Sua resposta" name="text" required="required" onclick="$(this).css('height', '120px')"></textarea>
+								<textarea maxlength="5000" class="form-control large-compact" placeholder="Sua resposta" name="text" required="required" onclick="$(this).css('height', '140px')"></textarea>
 								
 								<button class="btn btn-outline-primary" type="submit" id="botao_enviar_resposta">
 									<i class="far fa-paper-plane"></i>
@@ -222,6 +222,17 @@
 				</div>
 			{% endif %}
 	</main>
+<!-- Ad -->
+{% if AD %}
+	<hr>
+	<center>
+		<div style="max-width: 50%;">
+			<script async="async" data-cfasync="false" src="//pl16405437.highperformancecpm.com/a5a82325576f4300f3eeba835c04e59a/invoke.js"></script>
+			<div id="container-a5a82325576f4300f3eeba835c04e59a"></div>
+		</div>
+	</center>
+{% endif %}
+<!-- !Ad -->
 
 		<script src="/static/js/general_functions.js?version=3"></script>
 		<script src="/static/js/question.js?v=16.7"></script>
