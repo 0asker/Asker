@@ -74,82 +74,10 @@ def get_client_ip(request):
 
 
 def calculate_popular_questions():
-	last_questions = Question.objects.order_by('-pub_date')[:80]
-
-	'''
-	Essa variável guarda, dentro, as perguntas e seus totais de pontos.
-	Por exemplo: questions[0][0] é o total de pontos. questions[0][1] é o ID da pergunta.
-	'''
-	questions = []
-
-	'''
-	Calculando o total de likes da pergunta com mais likes:
-	'''
-	likes = 0
-	for q in last_questions:
-		if q.total_likes > likes:
-			likes = q.total_likes
-
-	'''
-	Calculando o total de respostas da pergunta com mais respostas:
-	'''
-	responses = 0
-	for q in last_questions:
-		if q.total_responses > responses:
-			responses = q.total_responses
-
-	'''
-	Calculando o total de visualizações da pergunta com mais visualizações.
-	'''
-	views = 0
-	for q in last_questions:
-		if q.total_views > views:
-			views = q.total_views
-
-	'''
-	Adicionando as perguntas na variável questions e inicializando os pontos de acordo com o tempo de likes.
-	'''
-	try:
-		for q in last_questions:
-			questions.append([q.total_likes / likes * 100, q.id])
-	except ZeroDivisionError:
-		questions = []
-
-	'''
-	Incrementando pontos de acordo com o total de respostas.
-	'''
-	for question in last_questions:
-		for q in questions:
-			if q[1] == question.id:
-				q[0] += question.total_responses / responses * 100
-
-	'''
-	Incrementando pontos de acordo com o total de visualizações.
-	'''
-	for question in last_questions:
-		for q in questions:
-			if q[1] == question.id:
-				q[0] += question.total_views / views * 100
-
-	questions = sorted(questions, key=lambda questions: questions[0], reverse=True) # ordenação: com mais pontos para menos pontos.
-	ids = []
-	for q in questions:
-		ids.append(q[1])
-
-	'''
-	Adicionando as questões numa lista de JSON.
-	'''
-	p_questions = []
-	for id in ids:
-
-		try:
-			question = Question.objects.get(id=id)
-		except:
-			continue
-
-		p_questions.append(question)
-
-	return p_questions[:15]
+	last_id = Question.objects.all().last().id
+	popular_questions = Question.objects.filter(id__range=(last_id - 200, last_id)).order_by('-total_views')
+	
+	return popular_questions[:15]
 
 
 '''
@@ -226,7 +154,7 @@ def index(request):
 	context['popular_questions'] = cache.get('p_questions')
 	if not context['popular_questions']:
 		context['popular_questions'] = calculate_popular_questions()
-		cache.set('p_questions', context['popular_questions'])
+		cache.set('p_questions', context['popular_questions'], 600)
 
 	if request.user.is_authenticated:
 		context['user_p'] = UserProfile.objects.get(user=request.user)
