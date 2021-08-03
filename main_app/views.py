@@ -183,9 +183,6 @@ def question(request, question_id):
 	context = {'question': q,
 						 'responses': responses}
 
-	if random.choice((1, 2, 3)) == 3:
-		context['AD'] = True
-
 	if not request.user.is_anonymous:
 		context['user_p'] = UserProfile.objects.get(user=request.user)
 		context['answered'] = False
