@@ -67,7 +67,7 @@ class UserProfile(models.Model):
 	'''
 	message = models.TextField(null=True) # TODO: remover?
 
-	balance = models.FloatField(null=True) # saldo do programa de recompensas
+	balance = models.FloatField(default=0) # saldo do programa de recompensas
 
 	def __str__(self):
 		return self.user.username

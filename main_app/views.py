@@ -992,4 +992,6 @@ def bot(request):
 programa de recompensas.
 '''
 def rewards(request):
-  return render(request, 'rewards.html')
+  return render(request, 'rewards.html', {
+    'user_p': UserProfile.objects.get(user=request.user),
+  })

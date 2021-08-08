@@ -41,7 +41,7 @@
     </header>
     {% if user.is_authenticated %}
       <main>
-        <span>Seu saldo: 0,3</span>
+        <span>Seu saldo: {{ user_p.balance }}</span>
         <i class="fas fa-coins fa-sm"></i>
         <hr>
         
