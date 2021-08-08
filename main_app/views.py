@@ -992,6 +992,31 @@ def bot(request):
 programa de recompensas.
 '''
 def rewards(request):
-  return render(request, 'rewards.html', {
-    'user_p': UserProfile.objects.get(user=request.user),
-  })
+  
+  if request.user.is_anonymous:
+    return render(request, 'rewards.html')
+  
+  user_profile = UserProfile.objects.get(user=request.user)
+  
+  context = {}
+  
+  context['user_p'] = user_profile
+  context['user_balance'] = round(user_profile.balance, 3)
+  context['valor_da_recompensa'] = 0.2
+  
+  if (timezone.now() - user_profile.last_click_on_ad).seconds > 3550:
+    context['CAN_SHOW_AD'] = True
+  else:
+    context['sec'] = (timezone.now() - user_profile.last_click_on_ad).seconds
+  
+  return render(request, 'rewards.html', context)
+
+
+def increase_balance(request):
+  user_profile = UserProfile.objects.get(user=request.user)
+  
+  if (timezone.now() - user_profile.last_click_on_ad).seconds > 3550:
+    user_profile.balance += 0.2
+    user_profile.last_click_on_ad = timezone.now()
+  user_profile.save()
+  return HttpResponse('OK')

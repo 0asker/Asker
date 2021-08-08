@@ -6,7 +6,6 @@
     
     <title>Programa de recompensas do Asker - Ganhe dinheiro!</title>
     
-    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css">
     
     <style>
@@ -41,20 +40,72 @@
     </header>
     {% if user.is_authenticated %}
       <main>
-        <span>Seu saldo: {{ user_p.balance }}</span>
+        <span>Seu saldo: <span id="balance">{{ user_balance }}</span></span>
         <i class="fas fa-coins fa-sm"></i>
         <hr>
         
-        <div>Clique no anúncio abaixo e receba 0,1 moedas de recompensa.</div>
-        <hr>
-        <!--<center>
+        
+        
+        
+        
+        
+        {% if not CAN_SHOW_AD %}
+<script>
+  var tempo = new Date({{ sec }} * 1000).toISOString().substr(11, 8);
+  // 00:00:00
+  var min = Number(tempo.slice(3, 5)) - 60;
+  var sec = Number(tempo.slice(6)) - 60;
+  if (sec < 0) {
+    sec *= -1;
+  }
+  if (min < 0) {
+    min *= -1;
+  }
+  
+  var handler = function() {
+    sec -= 1;
+    
+    if (sec == -1) {
+      sec = 59;
+      min--;
+    }
+    
+    document.getElementById("time").textContent = (min < 10 ? "0" + min : min) + ":" + (sec < 10 ? "0" + sec : sec);
+    
+    if (sec == 0 && min == 0) {
+      window.location.reload();
+    }
+  };
+  setInterval(handler, 1000);
+  handler();
+</script>
+<h1 id="time" style="text-align: center"></h1>
+<center><p>Espere o tempo acima para resgatar mais moedas.</p></center>
+      <hr>
+        {% else %}
+        
+        
+        
+        
+        
+        
+        
+        
+        <center>
+          <div>Clique no anúncio abaixo e receba 0,1 moedas de recompensa.</div>
+          <hr>
+        </center>
+        
+        <center id="ad">
           <div id="ad1">
             <script async="async" data-cfasync="false" src="//pl16405437.highperformancecpm.com/a5a82325576f4300f3eeba835c04e59a/invoke.js"></script>
-    <div id="container-a5a82325576f4300f3eeba835c04e59a"></div>
+            <div id="container-a5a82325576f4300f3eeba835c04e59a"></div>
           </div>
-        </center>-->
-        
+        </center>
         <hr>
+        {% endif %}
+        
+        
         
         <div class="explicacao">
           <center><span class="title">Como Funciona?</span></center>
@@ -78,6 +129,21 @@
       </main>
     {% endif %}
     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
+    
+    <script>
+      valor_da_recompensa = "{{ valor_da_recompensa }}";
+      
+      document.getElementById("ad1").onclick = function() {
+        $.ajax({
+          url: "/increase_balance",
+          complete: function () {
+            alert("Parabéns! Você ganhou " + valor_da_recompensa + " moedas de recompensa!");
+            balance.innerText = String(Number(balance.innerText.replace(",", ".")) + Number(valor_da_recompensa.replace(",", "."))).replace(".", ",");
+          }
+        });
+      };
+    </script>
   </body>
 </html>

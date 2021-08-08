@@ -56,6 +56,11 @@ urlpatterns = [
   path('more_questions', views.more_questions, name='more_questions'),
   path('more_popular_questions', views.more_popular_questions, name='more_popular_questions'),
   path('bot', views.bot, name='bot'),
+  
+  
   path('rewards', views.rewards, name='rewards'),
+  path('increase_balance', views.increase_balance, name='increase_balance'),
+  
+  
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
