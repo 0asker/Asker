@@ -158,6 +158,8 @@ def index(request):
 	if not context['popular_questions']:
 		context['popular_questions'] = calculate_popular_questions()
 		cache.set('p_questions', context['popular_questions'], 600)
+  
+	context['popular_questions'] = context['popular_questions'][:15]
 
 	if request.user.is_authenticated:
 		context['user_p'] = UserProfile.objects.get(user=request.user)
@@ -778,6 +780,55 @@ def undo_vote_on_poll(request):
 	return HttpResponse('Ok.')
 
 
+def more_popular_questions(request):
+  
+  page = request.GET.get('page')
+  
+  questions = cache.get('p_questions')
+  
+  if not questions:
+    questions = calculate_popular_questions()
+    cache.set('p_questions', questions, 600)
+  
+  paginator = Paginator(questions, 15)
+  
+  questions = paginator.page(page)
+  
+  para_retornar = []
+  
+  if request.user.is_anonymous:
+    for q in questions:
+      para_retornar.append(
+        {
+          "id": q.id,
+          "text": q.text,
+          "description": q.description,
+          "total_answers": q.total_responses,
+          "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
+          "creator": q.creator.user.username,
+          "user_answer": "False",
+        },
+      )
+  else:
+    for q in questions:
+      r = Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=q)
+      answer = 'False' if not r.exists() else r[0].text
+      
+      para_retornar.append(
+        {
+          "id": q.id,
+          "text": q.text,
+          "description": q.description,
+          "total_answers": q.total_responses,
+          "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
+          "creator": q.creator.user.username,
+          "user_answer": answer,
+        },
+      )
+  
+  return JsonResponse(para_retornar, safe=False)
+
+
 def more_questions(request):
 
 	id_de_inicio = int(request.GET.get('id_de_inicio')) - 20
@@ -935,3 +986,10 @@ def bot(request):
 		return HttpResponse(response, content_type='text/plain')
 	
 	return render(request, 'bot.html')
+
+
+'''
+programa de recompensas.
+'''
+def rewards(request):
+  return render(request, 'rewards.html')

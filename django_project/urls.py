@@ -54,6 +54,8 @@ urlpatterns = [
   path('delete-account', views.delete_account, name='delete_account'),
   path('rules', views.rules, name='rules'),
   path('more_questions', views.more_questions, name='more_questions'),
+  path('more_popular_questions', views.more_popular_questions, name='more_popular_questions'),
   path('bot', views.bot, name='bot'),
+  path('rewards', views.rewards, name='rewards'),
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
