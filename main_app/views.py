@@ -1022,10 +1022,30 @@ def rewards(request):
   context['user_balance_ref'] = round(user_profile.balance_by_ref, 3)
   context['valor_da_recompensa'] = 73
   
+  
+  if random.choice((1, 2, 3)) == 3:
+    context['PROPELLER_ADS_INTERSTICIAL'] = True
+  
+  if random.choice((1, 2, 3, 4, 5, 6)) == 6:
+    context['PROPELLER_ADS_IN_PAGE_PUSH_BANNER'] = True
+  
+  
   if user_profile.last_click_on_ad == None:
     context['CAN_SHOW_AD'] = True
+    
+    if random.choice((1, 2)) == 1:
+      context['ADS_TERRA_NATIVE_BANNER'] = True
+    else:
+      if random.choice((1, 2)) == 1:
+        context['ADS_TERRA_DIRECT_LINK'] = True
   elif (timezone.now() - user_profile.last_click_on_ad).seconds > 3600:
     context['CAN_SHOW_AD'] = True
+    
+    if random.choice((1, 2)) == 1:
+      context['ADS_TERRA_NATIVE_BANNER'] = True
+    else:
+      if random.choice((1, 2)) == 1:
+        context['ADS_TERRA_DIRECT_LINK'] = True
   else:
     context['sec'] = (timezone.now() - user_profile.last_click_on_ad).seconds
   
