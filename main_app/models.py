@@ -68,7 +68,9 @@ class UserProfile(models.Model):
 	message = models.TextField(null=True) # TODO: remover?
 
 	balance = models.FloatField(default=0) # saldo do programa de recompensas
-	last_click_on_ad = models.DateTimeField(default=timezone.now) # data do último clique do usuário no anúncio
+	balance_by_ref = models.FloatField(default=0) # saldo do programa de recompensas ganho por referências
+	last_click_on_ad = models.DateTimeField(null=True) # data do último clique do usuário no anúncio
+	ref = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None, related_name='ref')
 
 	def __str__(self):
 		return self.user.username

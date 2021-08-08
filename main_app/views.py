@@ -144,6 +144,9 @@ def save_answer(request):
 
 
 def index(request):
+  
+	if not request.GET.get('r', None) is None:
+		return redirect('/signup?r={}&redirect=/rewards'.format(request.GET.get('r', None)))
 
 	context = {}
 
@@ -296,6 +299,7 @@ def signup(request):
 	if client_ip in tor_ips:
 		return HttpResponse()
 
+
 	if request.method == 'POST':
 		r = request.POST.get('redirect')
 		username = request.POST.get('username').strip()
@@ -342,6 +346,11 @@ def signup(request):
 		new_user_profile = UserProfile.objects.create(user=u)
 		new_user_profile.ip = get_client_ip(request)
 		new_user_profile.active = True
+    
+		ref = request.GET.get('r', None)
+		if ref is not None:
+				new_user_profile.ref = User.objects.get(id=ref)
+    
 		new_user_profile.save()
 
 		return redirect(r)
@@ -1002,9 +1011,12 @@ def rewards(request):
   
   context['user_p'] = user_profile
   context['user_balance'] = round(user_profile.balance, 3)
+  context['user_balance_ref'] = round(user_profile.balance_by_ref, 3)
   context['valor_da_recompensa'] = 0.2
   
-  if (timezone.now() - user_profile.last_click_on_ad).seconds > 3550:
+  if user_profile.last_click_on_ad == None:
+    context['CAN_SHOW_AD'] = True
+  elif (timezone.now() - user_profile.last_click_on_ad).seconds > 3600:
     context['CAN_SHOW_AD'] = True
   else:
     context['sec'] = (timezone.now() - user_profile.last_click_on_ad).seconds
@@ -1015,8 +1027,24 @@ def rewards(request):
 def increase_balance(request):
   user_profile = UserProfile.objects.get(user=request.user)
   
-  if (timezone.now() - user_profile.last_click_on_ad).seconds > 3550:
+  if user_profile.last_click_on_ad == None:
+    if user_profile.ref != None:
+      ref = UserProfile.objects.get(user=user_profile.ref)
+      ref.balance += 0.06;
+      ref.balance_by_ref += 0.06;
+      ref.save()
+    
     user_profile.balance += 0.2
     user_profile.last_click_on_ad = timezone.now()
+  elif (timezone.now() - user_profile.last_click_on_ad).seconds > 3600:
+    if user_profile.ref != None:
+      ref = UserProfile.objects.get(user=user_profile.ref)
+      ref.balance += 0.06;
+      ref.balance_by_ref += 0.06;
+      ref.save()
+    
+    user_profile.balance += 0.2
+    user_profile.last_click_on_ad = timezone.now()
+  
   user_profile.save()
   return HttpResponse('OK')
