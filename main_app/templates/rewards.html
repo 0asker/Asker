@@ -42,11 +42,22 @@
       <main>
         <span>Seu saldo: <span id="balance">{{ user_balance }}</span></span>
         <i class="fas fa-coins fa-sm"></i>
+        (moedas)
         <br>
         <span>Ganhos por referência: <span id="balance">{{ user_balance_ref }}</span></span>
         <i class="fas fa-coins fa-sm"></i>
+        (moedas)
         <br>
-        <span>Seu link de referência: https://br.asker.fun/?r={{ user.id }}</span>
+        <span>Seu link de referência:</span>
+        <style>
+          #ref_link1 {
+            max-width: 70%;
+          }
+        </style>
+        <form onsubmit="return false;" class="form-inline">
+          <input id="ref_link1" type="text" value="https://br.asker.fun/?r={{ user.id }}" onkeypress="return false;" class="form-control" style="color: grey">
+          <button class="btn btn-primary btn-sm" onclick="copyLink()">Copiar</button>
+        </form>
         <hr>
         
         
@@ -164,6 +175,18 @@
           }
         });
       };
+      
+function copyLink() {
+  /* Get the text field */
+  var copyText = document.getElementById("ref_link1");
+
+  /* Select the text field */
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+  /* Copy the text inside the text field */
+  document.execCommand("copy");
+}
     </script>
   </body>
 </html>
