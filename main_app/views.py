@@ -146,7 +146,7 @@ def save_answer(request):
 def index(request):
   
 	if not request.GET.get('r', None) is None:
-		return redirect('/signup?r={}&redirect=/rewards'.format(request.GET.get('r', None)))
+		return redirect('/rewards?r={}'.format(request.GET.get('r', None)))
 
 	context = {}
 
@@ -1005,7 +1005,7 @@ programa de recompensas.
 def rewards(request):
   
   if request.user.is_anonymous:
-    return render(request, 'rewards.html')
+    return render(request, 'rewards.html', {'ref': request.GET.get('r')})
   
   user_profile = UserProfile.objects.get(user=request.user)
   
