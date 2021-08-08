@@ -1020,7 +1020,7 @@ def rewards(request):
   context['user_p'] = user_profile
   context['user_balance'] = round(user_profile.balance, 3)
   context['user_balance_ref'] = round(user_profile.balance_by_ref, 3)
-  context['valor_da_recompensa'] = 0.2
+  context['valor_da_recompensa'] = 73
   
   if user_profile.last_click_on_ad == None:
     context['CAN_SHOW_AD'] = True
@@ -1038,20 +1038,20 @@ def increase_balance(request):
   if user_profile.last_click_on_ad == None:
     if user_profile.ref != None:
       ref = UserProfile.objects.get(user=user_profile.ref)
-      ref.balance += 0.06;
-      ref.balance_by_ref += 0.06;
+      ref.balance += 21.9
+      ref.balance_by_ref += 21.9
       ref.save()
     
-    user_profile.balance += 0.2
+    user_profile.balance += 73
     user_profile.last_click_on_ad = timezone.now()
   elif (timezone.now() - user_profile.last_click_on_ad).seconds > 3600:
     if user_profile.ref != None:
       ref = UserProfile.objects.get(user=user_profile.ref)
-      ref.balance += 0.06;
-      ref.balance_by_ref += 0.06;
+      ref.balance += 21.9
+      ref.balance_by_ref += 21.9
       ref.save()
     
-    user_profile.balance += 0.2
+    user_profile.balance += 73
     user_profile.last_click_on_ad = timezone.now()
   
   user_profile.save()
