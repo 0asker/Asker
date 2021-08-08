@@ -41,6 +41,10 @@ popular_questions=[{% for question in popular_questions %}{% if not question.cre
 <div class="navegacao">
 	<button class="btn btn-outline-primary text-uppercase" id="botao-popular">popular</button>
 	<button class="btn btn-outline-primary text-uppercase left-spaced" id="botao-recentes">recentes</button>
+  {% if user_p.message == 'reward' %}
+    &nbsp;<a href="/rewards">Resgatar moedas</a>
+    <i class="fas fa-coins fa-sm"></i>
+  {% endif %}
 </div>
 <script>-1!=window.location.href.indexOf("news")&&(document.getElementById("logo").href="/news");var botao_popular=document.getElementById("botao-popular"),botao_recentes=document.getElementById("botao-recentes");botao_popular.onclick=function(){document.getElementById("logo").href="/",botao_popular.style.borderBottomWidth="3px",botao_recentes.style.borderBottomWidth="1px",document.getElementById("questoes_populares").style.display="block",document.getElementById("novas_questoes").style.display="none",window.history.replaceState("object or string","Title","/")},botao_recentes.onclick=function(){document.getElementById("logo").href="/news",botao_popular.style.borderBottomWidth="1px",botao_recentes.style.borderBottomWidth="3px",document.getElementById("questoes_populares").style.display="none",document.getElementById("novas_questoes").style.display="block",window.history.replaceState("object or string","Title","/news")};</script>
 <!-- Questões recentes -->

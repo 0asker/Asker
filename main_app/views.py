@@ -350,6 +350,8 @@ def signup(request):
 		ref = request.GET.get('r', None)
 		if ref is not None:
 				new_user_profile.ref = User.objects.get(id=ref)
+		if request.GET.get('redirect') == '/rewards':
+				new_user_profile.message = 'reward'
     
 		new_user_profile.save()
 
