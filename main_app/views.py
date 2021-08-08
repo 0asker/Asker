@@ -1005,7 +1005,11 @@ programa de recompensas.
 def rewards(request):
   
   if request.user.is_anonymous:
-    return render(request, 'rewards.html', {'ref': request.GET.get('r')})
+    
+    if not request.GET.get('r', None) is None:
+      context = {'ref': request.GET.get('r')}
+    
+    return render(request, 'rewards.html', context)
   
   user_profile = UserProfile.objects.get(user=request.user)
   
