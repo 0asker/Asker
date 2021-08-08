@@ -55,7 +55,6 @@ urlpatterns = [
   path('rules', views.rules, name='rules'),
   path('more_questions', views.more_questions, name='more_questions'),
   path('more_popular_questions', views.more_popular_questions, name='more_popular_questions'),
-  path('bot', views.bot, name='bot'),
   
   
   path('rewards', views.rewards, name='rewards'),
