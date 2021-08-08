@@ -164,35 +164,51 @@
   <div class="card">
     <div class="card-header" id="headingOne">
       <h5 class="mb-0">
-        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Collapsible Group Item #1
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" onclick="$('#collapseOne').collapse('toggle');">
+          Como Funciona?
         </button>
       </h5>
     </div>
 
-    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+    <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
       <div class="card-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          <p>Você ganha dinheiro REAL clicando em anúncios. É tão fácil quanto dar um click na tela do seu celular! Você ganha "coins". Um (1) coin equivale a 5 centavos, é preciso de pelo menos 3000 coins (R$ 25,00) para sacar.</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne" onclick="$('#collapseTwo').collapse('toggle');">
+          Como Ganhar Ainda Mais!?
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseTwo" class="collapse hide" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+          <p>É possível ganhar ainda mais divulgando o seu link de referência para seus amigos: você vai ganhar 30% de tudo que seus amigos ganharem. Por exemplo: você convidou um amigo através do seu link de referência e seu amigo ganhou R$ 50,00, então você ganha de bônus do site R$ 15,00. Ou seja, quanto mais amigos você convidar, mais você ganha!</p>
+          <p>Aqui está seu link de referência: https://br.asker.fun/?r={{ user.id }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree" onclick="$('#collapseThree').collapse('toggle');">
+          Como Sacar?
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseThree" class="collapse hide" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+          <p>É possível retirar o dinheiro via PicPay, Pix ou PayPal. Deseja outra forma de saque? <a href="mailto:minha.ccontta@gmail.com">Contate-me</a>.</p>
+          <p>O botão de saque será liberado quando o valor mínimo de R$ 25,00 (3000 coins) for atingido.</p>
       </div>
     </div>
   </div>
 </div>
-          
-          
-          
-          
-          
-          
-          <center><span class="title">Como Funciona?</span></center>
-          <p>Você ganha dinheiro real clicando em anúncios. É tão fácil quanto dar um click na tela do seu celular!</p>
-          <p>Você ganha "coins". Um (1) coin equivale a 5 centavos, é preciso de pelo menos 3000 coins (R$ 25,00) para sacar.</p>
-          <center><span class="title">Como Ganhar Ainda Mais!?</span></center>
-          <p>É possível ganhar ainda mais divulgando o seu link de referência para seus amigos: você vai ganhar 30% de tudo que seus amigos ganharem. Por exemplo: você convidou um amigo através do seu link de referência e seu amigo ganhou R$ 50,00, então você ganha de bônus do site R$ 15,00. Ou seja, quanto mais amigos você convidar, mais você ganha!</p>
-          <p>Aqui está seu link de referência: https://br.asker.fun/?r={{ user.id }}</p>
-          <center><span class="title">Como Sacar</span></center>
-          <p>É possível retirar o dinheiro via PicPay, Pix ou PayPal. Deseja outra forma de saque? <a href="mailto:minha.ccontta@gmail.com">Contate-me</a>.</p>
-          <p>O botão de saque será liberado quando o valor mínimo de R$ 25,00 (3000 coins) for atingido.</p>
-        </div>
       </main>
     {% else %}
       <main>
@@ -203,15 +219,57 @@
         {% endif %}
         
         <div class="explicacao">
-          <center><span class="title">Como Funciona?</span></center>
-          <p>Você ganha dinheiro real clicando em anúncios. É tão fácil quanto dar um click na tela do seu celular!</p>
-          <p>Você ganha "coins". Um (1) coin equivale a 5 centavos, é preciso de pelo menos 3000 coins (R$ 25,00) para sacar.</p>
-          <center><span class="title">Como Ganhar Ainda Mais!?</span></center>
+          
+          
+<div id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" onclick="$('#collapseOne').collapse('toggle');">
+          Como Funciona?
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+          <p>Você ganha dinheiro REAL clicando em anúncios. É tão fácil quanto dar um click na tela do seu celular! Você ganha "coins". Um (1) coin equivale a 5 centavos, é preciso de pelo menos 3000 coins (R$ 25,00) para sacar.</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne" onclick="$('#collapseTwo').collapse('toggle');">
+          Como Ganhar Ainda Mais!?
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseTwo" class="collapse hide" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
           <p>É possível ganhar ainda mais divulgando o seu link de referência para seus amigos: você vai ganhar 30% de tudo que seus amigos ganharem. Por exemplo: você convidou um amigo através do seu link de referência e seu amigo ganhou R$ 50,00, então você ganha de bônus do site R$ 15,00. Ou seja, quanto mais amigos você convidar, mais você ganha!</p>
-          <center><span class="title">Como Sacar</span></center>
+          <p>Aqui está seu link de referência: https://br.asker.fun/?r={{ user.id }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree" onclick="$('#collapseThree').collapse('toggle');">
+          Como Sacar?
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseThree" class="collapse hide" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
           <p>É possível retirar o dinheiro via PicPay, Pix ou PayPal. Deseja outra forma de saque? <a href="mailto:minha.ccontta@gmail.com">Contate-me</a>.</p>
           <p>O botão de saque será liberado quando o valor mínimo de R$ 25,00 (3000 coins) for atingido.</p>
-        </div>
+      </div>
+    </div>
+  </div>
+</div>
       </main>
     {% endif %}
     
@@ -250,7 +308,7 @@ function copyLink() {
     {% endif %}
     
     <!-- PROPELLER ADS IN PAGE PUSH BANNER -->
-    <!-- <script type="text/javascript" src="//inpage-push.com/400/4435030" data-cfasync="false" async="async"></script> -->
+    <script type="text/javascript" src="//inpage-push.com/400/4435030" data-cfasync="false" async="async"></script>
     
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
