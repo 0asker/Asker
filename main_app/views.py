@@ -1023,10 +1023,6 @@ def rewards(request):
   context['valor_da_recompensa'] = 73
   
   
-  if random.choice((1, 2, 3, 4, 5, 6)) == 6:
-    context['PROPELLER_ADS_IN_PAGE_PUSH_BANNER'] = True
-  
-  
   if user_profile.last_click_on_ad == None:
     context['CAN_SHOW_AD'] = True
     
