@@ -201,6 +201,9 @@ def question(request, question_id):
 		context['poll_choices'] = PollChoice.objects.filter(poll=context['poll'])
 		context['poll_votes'] = PollVote.objects.filter(poll=context['poll'])
 
+	if request.GET.get('nabift') == 'y':
+		context['NO_SHOW_ADS'] = True
+
 	return render(request, 'question.html', context)
 
 

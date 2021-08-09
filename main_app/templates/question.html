@@ -35,7 +35,7 @@
 			csrf_token = "{{ csrf_token }}";
 		</script>
 		
-		{% if user.is_anonymous %}
+		{% if user.is_anonymous and not NO_SHOW_ADS %}
 			<!-- popunder -->
 			<script type='text/javascript' src='//pl16413934.alternativecpmgate.com/d6/7a/10/d67a10c6aac13f8da9beabf04bd46d6b.js'></script>
 		{% endif %}
@@ -161,7 +161,7 @@
 				</div>
 			</div>
 
-			{% if user.is_anonymous %}
+			{% if user.is_anonymous and not NO_SHOW_ADS %}
 				<div class="alert alert-info">
 					<h5 class="alert-heading">Opa!</h5>
 					<p>

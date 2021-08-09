@@ -67,7 +67,7 @@ function renderizar_questoes(questions) {
 																		'<div class="card-body">' +
 																			'<div class="flexbox">' +
 																				'<h2 class="question-title fg-1">' +
-																					'<a href="/question/'+questions[index].id+'">' +
+																					'<a class="q-title" href="/question/'+questions[index].id+'">' +
 																						questions[index].text +
 																					'</a>' +
 																				'</h2>' +
@@ -120,7 +120,7 @@ try { questoes_populares.innerHTML += '<li class="list-group-item bg-main questa
 																'<div class="card-body">' +
 																	'<div class="flexbox">' +
 																		'<h2 class="question-title fg-1">' +
-																			'<a href="/question/'+popular_questions[index].id+'">' +
+																			'<a class="q-title" href="/question/'+popular_questions[index].id+'">' +
 																				popular_questions[index].text +
 																			'</a>' +
 																		'</h2>' +
