@@ -437,7 +437,7 @@ def ask(request):
 		if len(text) > 181:
 			return HttpResponse('Proibido.')
 
-		q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, description=description)
+		q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, description=description.replace('\\', '\\\\'))
 
 		form = UploadFileForm(request.POST, request.FILES)
 		if form.is_valid():
