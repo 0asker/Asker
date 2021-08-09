@@ -106,6 +106,3 @@ function show_more_responses(button, uid) {
 		}
 	});
 }
-
-bio = document.getElementById("bio");
-bio.innerHTML = linkifyHtml(bio.innerHTML);

@@ -74,6 +74,7 @@
         
         
         {% if not CAN_SHOW_AD %}
+<h1 id="time" style="text-align: center"></h1>
 <script>
   var tempo = new Date({{ sec }} * 1000).toISOString().substr(11, 8);
   // 00:00:00
@@ -107,7 +108,6 @@
   setInterval(handler, 1000);
   handler();
 </script>
-<h1 id="time" style="text-align: center"></h1>
 <center><p>Espere o tempo acima para resgatar mais coins.</p></center>
       <hr>
         {% else %}
@@ -243,15 +243,18 @@
     <script>
       valor_da_recompensa = "{{ valor_da_recompensa }}";
       
-      document.getElementById("ad1").onclick = function() {
-        $.ajax({
-          url: "/increase_balance",
-          complete: function () {
-            alert("Parabéns! Você ganhou " + valor_da_recompensa + " coins!");
-            balance.innerText = String(Number(balance.innerText.replace(",", ".")) + Number(valor_da_recompensa.replace(",", "."))).replace(".", ",");
-          }
-        });
-      };
+      ad1 = document.getElementById("ad1");
+      if (ad1 != null) {
+        ad1.onclick = function() {
+          $.ajax({
+            url: "/increase_balance",
+            complete: function () {
+              alert("Parabéns! Você ganhou " + valor_da_recompensa + " coins!");
+              window.location.reload();
+            }
+          });
+        };
+      }
       
 function copyLink() {
   /* Get the text field */
