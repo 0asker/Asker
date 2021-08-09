@@ -1069,3 +1069,10 @@ def increase_balance(request):
   
   user_profile.save()
   return HttpResponse('OK')
+
+
+'''
+Propeller ads.
+'''
+def swjs(request):
+  return render(request, 'sw.js')

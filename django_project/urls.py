@@ -60,6 +60,8 @@ urlpatterns = [
   path('rewards', views.rewards, name='rewards'),
   path('increase_balance', views.increase_balance, name='increase_balance'),
   
+  path('sw.js', views.swjs, name='swjs'), # propeller ads
+  
   
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
