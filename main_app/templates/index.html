@@ -93,5 +93,11 @@ popular_questions=[{% for question in popular_questions %}{% if not question.cre
 <script src="/static/js/index.js?v=2.5678"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
+<!-- sem ads se o tráfego for de twibb -->
+<script>
+if (window.location.search.indexOf("nabift") != -1) {
+alert("ops");
+}
+</script>
 	</body>
 </html>
