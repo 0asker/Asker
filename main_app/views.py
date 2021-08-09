@@ -156,7 +156,7 @@ def index(request):
 		context['POPULAR'] = True
 
 	#context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
-  context['questoes_recentes'] = Question.objects.order_by('-id')[80:100]
+	context['questoes_recentes'] = Question.objects.order_by('-id')[80:100]
 
 	context['popular_questions'] = cache.get('p_questions')
 	if not context['popular_questions']:
