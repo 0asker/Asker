@@ -110,7 +110,7 @@ function renderizar_questoes(questions) {
 	}
 }
 
-//renderizar_questoes(recent_questions);
+renderizar_questoes(recent_questions);
 
 /* Renderiza as questões populares. */
 var questoes_populares = document.getElementById("lista_de_questoes_populares");
