@@ -202,7 +202,7 @@
     {% else %}
       <main>
         {% if ref %}
-          <p><a href="/signup?redirect=/rewards&r={{ ref }}">Crie uma conta</a> ou <a href="/signin?redirect=/rewards">faça login</a> para começar a ganhar dinheiro! 🤑</p>
+          <p><a href="/signup?redirect=/rewards&r={{ ref }}" id="crie-uma-conta">Crie uma conta</a> ou <a href="/signin?redirect=/rewards">faça login</a> para começar a ganhar dinheiro! 🤑</p>
         {% else %}
           <p><a href="/signup?redirect=/rewards">Crie uma conta</a> ou <a href="/signin?redirect=/rewards">faça login</a> para começar a ganhar dinheiro! 🤑</p>
         {% endif %}
@@ -281,5 +281,18 @@ function copyLink() {
     
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
+    
+    {% if user.is_authenticated %}
+      <script>
+        if (!localStorage.getItem("can")) {
+          var tem_mais_de_16_anos = confirm("É necessário ter no mínimo 16 anos de idade para usar o sistema de recompensas do Asker. Você confirma ter pelo menos 16 anos de idade?");
+          
+          if (!tem_mais_de_16_anos) {
+            window.location.href = "/";
+          } else
+            localStorage.setItem("can", true);
+        }
+      </script>
+    {% endif %}
   </body>
 </html>
