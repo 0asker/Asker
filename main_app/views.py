@@ -1036,12 +1036,12 @@ def rewards(request):
   context['user_balance_ref'] = round(user_profile.balance_by_ref, 3)
   
   if user_profile.balance < 1500:
-    context['valor_da_recompensa'] = 80
+    context['valor_da_recompensa'] = 60
   elif user_profile.balance >= 1500 and user_profile.balance <= 2000:
-    context['valor_da_recompensa'] = 70
+    context['valor_da_recompensa'] = 50
     context['POPUNDER'] = True
   else:
-    context['valor_da_recompensa'] = 60
+    context['valor_da_recompensa'] = 40
     context['POPUNDER'] = True
   
   if 'POPUNDER' in context.keys():
@@ -1073,11 +1073,11 @@ def increase_balance(request):
   user_profile = UserProfile.objects.get(user=request.user)
   
   if user_profile.balance < 1500:
-    USER_P_RECOMPENSA = 80
-  elif user_profile.balance >= 1500 and user_profile.balance <= 2000:
-    USER_P_RECOMPENSA = 70
-  else:
     USER_P_RECOMPENSA = 60
+  elif user_profile.balance >= 1500 and user_profile.balance <= 2000:
+    USER_P_RECOMPENSA = 50
+  else:
+    USER_P_RECOMPENSA = 40
   
   if user_profile.last_click_on_ad == None:
     if user_profile.ref != None:
