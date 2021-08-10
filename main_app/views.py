@@ -157,12 +157,15 @@ def index(request):
 
 	context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
 
-	context['popular_questions'] = cache.get('p_questions')
-	if not context['popular_questions']:
-		context['popular_questions'] = calculate_popular_questions()
-		cache.set('p_questions', context['popular_questions'], 600)
-  
-	context['popular_questions'] = context['popular_questions'][:15]
+	try:
+		context['popular_questions'] = cache.get('p_questions')
+		if not context['popular_questions']:
+			context['popular_questions'] = calculate_popular_questions()
+			cache.set('p_questions', context['popular_questions'], 600)
+		
+		context['popular_questions'] = context['popular_questions'][:15]
+	except:
+		pass
 
 	if request.user.is_authenticated:
 		context['user_p'] = UserProfile.objects.get(user=request.user)
@@ -1005,6 +1008,14 @@ def bot(request):
 '''
 programa de recompensas.
 '''
+'''
+balance menos de 1500:
+  80 coins por clique em anúncio preparado.
+balance maior ou igual 1500 e menor ou igual 2000:
+  70 coins por clique em anúncio preparado e popunder.
+balance mais de 2000:
+  60 coins por clique em anúncio preparado e popunder.
+'''
 def rewards(request):
   
   if request.user.is_anonymous:
@@ -1023,8 +1034,18 @@ def rewards(request):
   context['user_p'] = user_profile
   context['user_balance'] = round(user_profile.balance, 3)
   context['user_balance_ref'] = round(user_profile.balance_by_ref, 3)
-  context['valor_da_recompensa'] = 80
   
+  if user_profile.balance < 1500:
+    context['valor_da_recompensa'] = 80
+  elif user_profile.balance >= 1500 and user_profile.balance <= 2000:
+    context['valor_da_recompensa'] = 70
+    context['POPUNDER'] = True
+  else:
+    context['valor_da_recompensa'] = 60
+    context['POPUNDER'] = True
+  
+  if 'POPUNDER' in context.keys():
+    context['POPUNDER'] = random.choice(('''<script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://iclickcdn.com/tag.min.js',4437641,document.body||document.documentElement)</script>''', '''<script type='text/javascript' src='//pl16413934.highperformancecpm.com/d6/7a/10/d67a10c6aac13f8da9beabf04bd46d6b.js'></script>'''))
   
   if user_profile.last_click_on_ad == None:
     context['CAN_SHOW_AD'] = True
@@ -1051,23 +1072,30 @@ def rewards(request):
 def increase_balance(request):
   user_profile = UserProfile.objects.get(user=request.user)
   
+  if user_profile.balance < 1500:
+    USER_P_RECOMPENSA = 80
+  elif user_profile.balance >= 1500 and user_profile.balance <= 2000:
+    USER_P_RECOMPENSA = 70
+  else:
+    USER_P_RECOMPENSA = 60
+  
   if user_profile.last_click_on_ad == None:
     if user_profile.ref != None:
       ref = UserProfile.objects.get(user=user_profile.ref)
-      ref.balance += 24
-      ref.balance_by_ref += 24
+      ref.balance += USER_P_RECOMPENSA * (30 / 100)
+      ref.balance_by_ref += USER_P_RECOMPENSA * (30 / 100)
       ref.save()
     
-    user_profile.balance += 80
+    user_profile.balance += USER_P_RECOMPENSA
     user_profile.last_click_on_ad = timezone.now()
   elif (timezone.now() - user_profile.last_click_on_ad).seconds > 3600:
     if user_profile.ref != None:
       ref = UserProfile.objects.get(user=user_profile.ref)
-      ref.balance += 24
-      ref.balance_by_ref += 24
+      ref.balance += USER_P_RECOMPENSA * (30 / 100)
+      ref.balance_by_ref += USER_P_RECOMPENSA * (30 / 100)
       ref.save()
     
-    user_profile.balance += 80
+    user_profile.balance += USER_P_RECOMPENSA
     user_profile.last_click_on_ad = timezone.now()
   
   user_profile.save()
