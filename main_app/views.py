@@ -203,7 +203,7 @@ def question(request, question_id):
         
         
         if 'ultima_visualizacao_de_anuncio_notificacao' in infos.keys():
-            if time.time() - infos['ultima_visualizacao_de_anuncio_notificacao'] > 10: # só mostra o anúncio em forma de notificação de 5 em 5 dias.
+            if time.time() - infos['ultima_visualizacao_de_anuncio_notificacao'] > 345600: # só mostra o anúncio em forma de notificação de 4 em 4 dias.
                 context['PODE_MOSTRAR_ANUNCIO_NOTIFICACAO'] = True
                 infos['ultima_visualizacao_de_anuncio_notificacao'] = time.time()
                 infos['ultima_visualizacao_de_anuncio_notificacao_contagem'] += 1
