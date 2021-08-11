@@ -11,6 +11,8 @@ from main_app.templatetags.main_app_extras import fix_naturaltime
 from main_app.forms import UploadFileForm
 import django_project.general_rules as general_rules
 import random
+import json
+import time
 
 
 import io
@@ -192,8 +194,29 @@ def question(request, question_id):
                                              'responses': responses}
 
     if not request.user.is_anonymous:
-        context['user_p'] = UserProfile.objects.get(user=request.user)
+        user_p = UserProfile.objects.get(user=request.user)
+        context['user_p'] = user_p
         context['answered'] = False
+        
+        # verifica se já é possível mostrar o anúncio de notificação.
+        infos = json.loads(user_p.infos)
+        
+        
+        if 'ultima_visualizacao_de_anuncio_notificacao' in infos.keys():
+            if time.time() - infos['ultima_visualizacao_de_anuncio_notificacao'] > 10: # só mostra o anúncio em forma de notificação de 5 em 5 dias.
+                context['PODE_MOSTRAR_ANUNCIO_NOTIFICACAO'] = True
+                infos['ultima_visualizacao_de_anuncio_notificacao'] = time.time()
+                infos['ultima_visualizacao_de_anuncio_notificacao_contagem'] += 1
+        else:
+            context['PODE_MOSTRAR_ANUNCIO_NOTIFICACAO'] = True
+            infos['ultima_visualizacao_de_anuncio_notificacao'] = time.time()
+            infos['ultima_visualizacao_de_anuncio_notificacao_contagem'] = 1
+        
+        # salva as informações (UserProfile.infos) atualizadas do usuário.
+        user_p.infos = json.dumps(infos)
+        user_p.save()
+        
+        
         for response in responses:
             if response.id == request.user.id:
                 context['answered'] = True

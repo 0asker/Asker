@@ -72,6 +72,9 @@ class UserProfile(models.Model):
     last_click_on_ad = models.DateTimeField(null=True) # data do último clique do usuário no anúncio
     ref = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None, related_name='ref')
 
+    # informações diversas:
+    infos = models.TextField(default='{}') # <- JSON aqui.
+
     def __str__(self):
         return self.user.username
 
