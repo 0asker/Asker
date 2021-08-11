@@ -34,10 +34,6 @@
 		<script>
 			csrf_token = "{{ csrf_token }}";
 		</script>
-		
-		{% if user.is_anonymous and not NO_SHOW_ADS %}
-			<script type='text/javascript' src='//pl16501151.highperformancecpm.com/40/16/25/401625261f29ca1666968a67f459e500.js'></script>
-		{% endif %}
 	</head>
 	<body>
 
@@ -160,6 +156,14 @@
 				</div>
 			</div>
 
+            {% if user.is_anonymous %}
+            <div class="text-center bg-light">
+                <hr>
+                <p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
+                <hr>
+            </div>
+            {% endif %}
+
 			<section class="card bg-main" id="responses">
   				<div class="card-header">
     				{{ question.id|total_responses }}
@@ -201,18 +205,14 @@
 							Pergunta indisponível.
 						{% endif %}
 					{% endif %}
-				{% else %}
-					<p>Confirme seu email para responder está pergunta.</p>
 				{% endif %}
-			{% else %}
-				<div class="text-center bg-light">
-					<hr>
-					<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
-					<hr>
-				</div>
 			{% endif %}
 	</main>
 		<script src="/static/js/general_functions.js?version=3"></script>
 		<script src="/static/js/question.js?v=16.7"></script>
+        
+		{% if user.is_anonymous and not NO_SHOW_ADS %}
+			<script type='text/javascript' src='//pl16501151.highperformancecpm.com/40/16/25/401625261f29ca1666968a67f459e500.js'></script>
+		{% endif %}
 	</body>
 </html>
