@@ -158,20 +158,6 @@
 							<button class="btn btn-outline-danger">Apagar</button>
 						</form>
 					{% endif %}
-                    
-                    {% if question.category.all %}
-                        <div class="categories">
-                            <p><span class="text-secondary">Categoria(s)</span>:
-                            {% for category in question.category.all %}
-                                {% if forloop.last %}
-                                    <a href="#">{{ category.name }}</a>.
-                                {% else %}
-                                    <a href="#">{{ category.name }}</a>,
-                                {% endif %}
-                            {% endfor %}
-                            </p>
-                        </div>
-                    {% endif %}
 				</div>
 			</div>
 

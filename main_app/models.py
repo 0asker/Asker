@@ -92,11 +92,6 @@ class SilencedUsers(models.Model):
     expires = models.DateTimeField(default=timezone.now)
 
 
-class Category(models.Model):
-    name = models.TextField(null=False) # nome da categoria
-    description = models.TextField(null=False) # descriçao da categoria
-
-
 class Question(models.Model):
     creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     text = models.TextField()
@@ -107,7 +102,6 @@ class Question(models.Model):
     total_responses = models.IntegerField(default=0)
     total_views = models.IntegerField(null=True, default=0)
     best_answer = models.IntegerField(blank=True, null=True) # ID da melhor resposta.
-    category = models.ManyToManyField(Category, null=True)
     reports = models.IntegerField(default=0, null=True)
 
     def get_embedded_content(self):
