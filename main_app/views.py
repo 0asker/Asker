@@ -346,10 +346,17 @@ def signup(request):
 
             html = '<div class="alert alert-danger"><p>O nome de usuário deve conter apenas caracteres alfanuméricos, hífens, underscores e espaços.</p></div>'
             return render(request, 'signup.html', {'invalid_username': html,
-                                                                                                                                                                     'username': username,
-                                                                                                                                                                     'email': email,
-                                                                                                                                                                     'redirect': r,
-                                                                                                                                                                     'username_error': ' is-invalid'})
+													 'username': username,
+													 'email': email,
+													 'redirect': r,
+													 'username_error': ' is-invalid'})
+        if '  ' in username:
+            html = '<div class="alert alert-danger"><p>O nome de usuário não pode conter espaços concomitantes.</p></div>'
+            return render(request, 'signup.html', {'invalid_username': html,
+													 'username': username,
+													 'email': email,
+													 'redirect': r,
+													 'username_error': ' is-invalid'})
 
         ''' Validação das credenciais: '''
         if not is_a_valid_user(username, email, password):
@@ -649,8 +656,14 @@ def edit_profile(request, username):
 
                 html = '<div class="alert alert-danger"><p>O nome de usuário deve conter apenas caracteres alfanuméricos, hífens, underscores e espaços.</p></div>'
                 return render(request, 'edit-profile.html', {'invalid_username_text': html,
-                                                                                                         'username': username,
-                                                                                                         'invalid_username': ' is-invalid'})
+                                                             'username': username,
+                                                             'invalid_username': ' is-invalid'})
+
+            if '  ' in username:
+                html = '<div class="alert alert-danger"><p>O nome de usuário não pode conter espaços concomitantes.</p></div>'
+                return render(request, 'edit-profile.html', {'invalid_username_text': html,
+                                                             'username': username,
+                                                             'invalid_username': ' is-invalid'})
 
             if len(username) > 30:
                 return HttpResponse('Erro.')
