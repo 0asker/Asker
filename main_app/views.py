@@ -1064,7 +1064,7 @@ def rewards(request):
         context['valor_da_recompensa'] = 50
         context['POPUNDER'] = True
     else:
-        context['valor_da_recompensa'] = 40
+        context['valor_da_recompensa'] = 35
         context['POPUNDER'] = True
 
     if 'POPUNDER' in context.keys():
@@ -1100,7 +1100,7 @@ def increase_balance(request):
     elif user_profile.balance >= 1500 and user_profile.balance <= 2000:
         USER_P_RECOMPENSA = 50
     else:
-        USER_P_RECOMPENSA = 40
+        USER_P_RECOMPENSA = 35
 
     if user_profile.last_click_on_ad == None:
         if user_profile.ref != None:
