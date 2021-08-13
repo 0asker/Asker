@@ -162,7 +162,7 @@ def index(request):
     try:
         context['popular_questions'] = cache.get('p_questions')
         if not context['popular_questions']:
-            context['popular_questions'] = calculate_popular_questions()[:15]
+            context['popular_questions'] = calculate_popular_questions()[:15]a
             cache.set('p_questions', context['popular_questions'], 600)
     except:
         pass
