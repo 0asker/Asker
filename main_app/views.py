@@ -77,7 +77,7 @@ def get_client_ip(request):
 
 def calculate_popular_questions():
     last_id = Question.objects.all().last().id
-    popular_questions = Question.objects.filter(id__range=(last_id - 100, last_id)).order_by('-total_views')[:15]
+    popular_questions = Question.objects.filter(id__range=(last_id - 100, last_id)).order_by('-total_views')[:40]
     first_part = list(popular_questions[:10])
     second_part = list(popular_questions[:5])
     random.shuffle(first_part)
@@ -157,15 +157,13 @@ def index(request):
     else:
         context['POPULAR'] = True
 
-    context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
+    context['questoes_recentes'] = Question.objects.order_by('-id')
 
     try:
         context['popular_questions'] = cache.get('p_questions')
         if not context['popular_questions']:
-            context['popular_questions'] = calculate_popular_questions()
+            context['popular_questions'] = calculate_popular_questions()[:15]
             cache.set('p_questions', context['popular_questions'], 600)
-
-        context['popular_questions'] = context['popular_questions'][:15]
     except:
         pass
 
