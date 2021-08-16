@@ -191,3 +191,6 @@ function load_more(button, icon) {
 			},
 	});
 }
+
+/* Linkify */
+$('.description').linkify();
