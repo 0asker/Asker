@@ -157,7 +157,7 @@ def index(request):
     else:
         context['POPULAR'] = True
 
-    context['questoes_recentes'] = Question.objects.order_by('-id')
+    context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
 
     '''
     try:
