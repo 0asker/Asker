@@ -158,15 +158,14 @@ def index(request):
         context['POPULAR'] = True
 
     context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
-
-    '''
+    
     try:
         context['popular_questions'] = cache.get('p_questions')
         if not context['popular_questions']:
             context['popular_questions'] = calculate_popular_questions()[:15]
             cache.set('p_questions', context['popular_questions'], 600)
     except:
-        pass'''
+        pass
 
     if request.user.is_authenticated:
         context['user_p'] = UserProfile.objects.get(user=request.user)
