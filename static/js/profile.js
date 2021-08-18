@@ -106,3 +106,6 @@ function show_more_responses(button, uid) {
 		}
 	});
 }
+
+/* Linkify */
+$('#bio').linkify();

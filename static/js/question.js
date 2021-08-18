@@ -257,3 +257,6 @@ formulario_de_resposta.onsubmit = function() {
 	
 	return false;
 };
+
+/* Linkify */
+$('.description').linkify();
