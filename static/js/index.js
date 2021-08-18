@@ -25,36 +25,6 @@ function enviar_resposta_pergunta(form) {
 }
 
 
-
-var selected_user = null;
-
-function select_user(username) {
-    selected_user = username;
-}
-
-function silence_user() {
-  if (!selected_user) {
-    return 0;
-  }
-  if (confirm("Você silenciou o usuário: " + selected_user)) {
-        $.ajax({
-            type: 'get',
-            url: '/user/' + selected_user + '/silence',
-            complete: function(data) {
-                if (data.responseText == 'Added') {
-                    location.reload();
-                    return false;
-                }
-            }
-        });
-  } else {
-    alert("Você cancelou a operação.");
-  }
-  $('#question-modal').modal('hide');
-  selected_user = null;
-}
-
-
 /*
  * Renderiza as questões recentes. */
 
@@ -71,7 +41,6 @@ function renderizar_questoes(questions) {
 																						questions[index].text +
 																					'</a>' +
 																				'</h2>' +
-																				(user_status != "anonymous" ? '<a class="clickable" href="javascript:void(0);" data-toggle="modal" data-target="#question-modal" onclick=\'select_user("'+questions[index].creator+'");\'><i class="fas fa-ellipsis-h"></i></a>' : '') +
 																			'</div>' +
 																			(questions[index].description != '' ? '<p class="description">'+questions[index].description+'</p>' : '') +
 																			'<small class="text-muted">' +
@@ -124,7 +93,6 @@ try { questoes_populares.innerHTML += '<li class="list-group-item bg-main questa
 																				popular_questions[index].text +
 																			'</a>' +
 																		'</h2>' +
-																		(user_status != "anonymous" ? '<a class="clickable" href="javascript:void(0);" data-toggle="modal" data-target="#question-modal" onclick=\'select_user("'+popular_questions[index].creator+'");\'><i class="fas fa-ellipsis-h"></i></a>' : '') +
 																	'</div>' +
 																	(popular_questions[index].description != '' ? '<p class="description">'+popular_questions[index].description+'</p>' : '') +
 																	'<small class="text-muted">' +
