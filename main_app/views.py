@@ -128,8 +128,7 @@ def save_answer(request):
 
         file_name = 'rpic-{}{}'.format(now.date(), now.time())
 
-        #success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
-        success = save_img_file(f, os.path.join(os.getcwd(), 'media/responses' + file_name), (850, 850))
+        success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
         if success: # TODO: mensagem caso não dê certo
             response.image = 'responses/' + file_name
 
