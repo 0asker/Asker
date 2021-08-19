@@ -13,6 +13,7 @@ import django_project.general_rules as general_rules
 import random
 import json
 import time
+import os
 
 
 import io
@@ -127,7 +128,8 @@ def save_answer(request):
 
         file_name = 'rpic-{}{}'.format(now.date(), now.time())
 
-        success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
+        #success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
+        success = save_img_file(f, os.path.join(os.getcwd(), 'media/responses' + file_name), (850, 850))
         if success: # TODO: mensagem caso não dê certo
             response.image = 'responses/' + file_name
 
@@ -278,7 +280,6 @@ def delete_response(request):
 
     try:
         ''' Deleta também a imagem do sistema de arquivos para liberar espaço. '''
-        import os
         os.system('rm ' + r.image.path)
     except:
         pass
@@ -591,7 +592,6 @@ def delete_question(request):
         '''
 
         if question.image:
-            import os
             os.system('rm ' + question.image.path)
 
         question.delete()
@@ -621,7 +621,6 @@ def edit_profile(request, username):
                 Já que vai trocar de avatar, apaga o avatar antigo se tiver.
                 '''
                 if u.avatar and u.avatar.name != 'avatars/default-avatar.png':
-                    import os
                     os.system('rm ' + u.avatar.path)
 
                 f = request.FILES['file']
