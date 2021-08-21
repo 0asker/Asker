@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from django.core.cache import cache
-from main_app.models import *
+from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote
 from main_app.templatetags.main_app_extras import fix_naturaltime
 from main_app.forms import UploadFileForm
 import django_project.general_rules as general_rules
