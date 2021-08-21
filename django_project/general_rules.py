@@ -8,5 +8,6 @@
  no main_app_extras.py para que essa variável possa ser usada em templates.
 '''
 
-MINIMUM_POINTS_FOR_POSTING_IMAGES = 100 # mínimo de pontos para postar imagens, seja em perguntas ou respostas.
+MINIMUM_POINTS_FOR_POSTING_IMAGES = 100
 MAXIMUM_POLL_CHOICES = 12
+SECONDS_TO_CHOOSE_BEST_ANSWER = 3600

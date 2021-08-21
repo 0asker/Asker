@@ -1,3 +1,9 @@
+'''
+    Modelos que representam os objetos do site, como:
+        perguntas, respostas, comentários, etc.
+'''
+
+from django_project.general_rules import SECONDS_TO_CHOOSE_BEST_ANSWER
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -18,7 +24,12 @@ def make_embedded_content(text):
         url_index += len(urls[type])
         video_id = text[url_index:url_index + 11]
         if video_id:
-            return """<div class="vid-container"><iframe src="https://www.youtube.com/embed/{}?rel=0" class="yt-vid" frameborder="0" allowfullscreen="allowfullscreen"></iframe></div>""".format(
+            return """
+                <div class="vid-container">
+                    <iframe src="https://www.youtube.com/embed/{}?rel=0" class="yt-vid" frameborder="0" allowfullscreen="allowfullscreen">
+                    </iframe>
+                </div>
+            """.format(
                     video_id)
     elif urls[2] in text or urls[3] in text:
         type = 2
@@ -32,12 +43,23 @@ def make_embedded_content(text):
         url_end_index = text.find(' ', url_index)
         url_index += len(urls[type])
         if url_end_index > -1:
-            audio_id = text[url_index:url_end_index].replace('"', '') # replace('"') p/ caso o link seja um src attr de uma tag <a> - necessário pois ha tags html guardadas formatadas no db
+            
+            ''' replace('"') p/ caso o link seja um src attr de uma
+                tag <a> - necessário pois ha tags html guardadas formatadas no db '''
+            audio_id = text[url_index:url_end_index].replace('"', '')
         else:
-            audio_id = text[url_index:].replace('"', '') # replace('"') p/ caso o link seja um src attr de uma tag <a> - necessário pois ha tags html guardadas formatadas no db
+            
+            ''' replace('"') p/ caso o link seja um src attr de uma
+                tag <a> - necessário pois ha tags html guardadas formatadas no db '''
+            audio_id = text[url_index:].replace('"', '')
         if audio_id:
-            return """<div class="voc-container"><iframe width="300" height="60" src="https://vocaroo.com/embed/{}?autoplay=0" frameborder="0" allow="autoplay"></iframe><br></div>""".format(
-                    audio_id)
+            return """
+                    <div class="voc-container">
+                        <iframe width="300" height="60" src="https://vocaroo.com/embed/{}?autoplay=0" frameborder="0" allow="autoplay">
+                        </iframe>
+                        <br>
+                    </div>
+                    """.format(audio_id)
 
 
 class UserProfile(models.Model):
@@ -46,11 +68,13 @@ class UserProfile(models.Model):
     avatar = models.ImageField(default='avatars/default-avatar.png', blank=True)
     bio = models.TextField(max_length=400, blank=True)
     total_points = models.IntegerField(null=True, default=0, blank=True)
-    total_views = models.IntegerField(default=0, blank=True) # total de visualizações desde o dia: 16/04/2021
+    
+    ''' total de visualizações desde o dia: 16/04/2021 '''
+    total_views = models.IntegerField(default=0, blank=True)
 
     rank = models.IntegerField(default=-1, null=True, blank=True)
 
-    blocked_users = models.ManyToManyField(User, related_name='blocked_by', blank=True) # usuários bloqueados pelo UserProfile.user atual.
+    blocked_users = models.ManyToManyField(User, related_name='blocked_by', blank=True)
 
     active = models.BooleanField(default=True) # conta está ativa ou não.
     verification_code = models.TextField(null=True) # código de verificação da conta.
@@ -59,18 +83,10 @@ class UserProfile(models.Model):
 
     ban = models.BooleanField(default=False) # usuário está em shadow ban ou não
 
-    silenced_users = models.ManyToManyField(User, through="SilencedUsers", related_name='silenced_by', blank=True)
-    '''
-    O campo abaixo vai ser usado para saber se
-    o usuário já pegou ou não a recompensa por adicionar o site
-    aos favoritos.
-    '''
-    message = models.TextField(null=True) # TODO: remover?
-
-    balance = models.FloatField(default=0) # saldo do programa de recompensas
-    balance_by_ref = models.FloatField(default=0) # saldo do programa de recompensas ganho por referências
-    last_click_on_ad = models.DateTimeField(null=True) # data do último clique do usuário no anúncio
-    ref = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None, related_name='ref')
+    silenced_users = models.ManyToManyField(User,
+                                            through="SilencedUsers",
+                                            related_name='silenced_by',
+                                            blank=True)
 
     # informações diversas:
     infos = models.TextField(default='{}') # <- JSON aqui.
@@ -110,17 +126,9 @@ class Question(models.Model):
     def get_embedded_content(self):
         return make_embedded_content(self.description)
 
-    def cut_description(self):
-        d = self.description[:300]
-
-        if len(d) == 300 and len(self.description) > 300:
-            d += '<span style="color: #007bff; cursor: pointer;" onclick="show_more(this)">...Mostrar mais</span><span style="display: none;">{}</span> <span style="color: #007bff; cursor: pointer; display: none;" onclick="show_less(this)">Mostrar menos</span>'.format(self.description[300:])
-
-        return d
-
     def may_choose_answer(self):
         if self.best_answer is None:
-            if (timezone.now() - self.pub_date).total_seconds() > 3600: # TODO: fazer general rule pra quando é possivel escolher mr?
+            if (timezone.now() - self.pub_date).total_seconds() > SECONDS_TO_CHOOSE_BEST_ANSWER:
                 return True
         return False
 
@@ -162,28 +170,63 @@ class Comment(models.Model):
 
 class Notification(models.Model):
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
-    type = models.TextField() # tipos: question-answered, like-in-response, comment-in-response, got-best-answer
+    
+    '''tipos: question-answered, like-in-response, comment-in-response, got-best-answer'''
+    type = models.TextField()
     text = models.TextField(null=True)
     creation_date = models.DateTimeField(default=timezone.now)
 
-    # os campos abaixo são usados caso a notificação seja do tipo like-in-response.
-    liker = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='l') # quem deu o like
-    response = models.ForeignKey(Response, on_delete=models.CASCADE, null=True, related_name='r') # qual é a resposta
+    '''os campos abaixo são usados caso a notificação seja do tipo like-in-response.'''
+    
+    # quem deu o like
+    liker = models.ForeignKey(User,
+                              on_delete=models.CASCADE,
+                              null=True,
+                              related_name='l')
+    
+    # qual é a resposta
+    response = models.ForeignKey(Response,
+                                 on_delete=models.CASCADE,
+                                 null=True,
+                                 related_name='r')
 
-    read = models.BooleanField(default=False) # notificação foi vista ou não pelo receiver (receiver clicou ou não na notificação, na verdade).
+    read = models.BooleanField(default=False) # this.receiver clicou ou não na notificação.
 
     def set_text(self, answer_id, comment_id=None):
         if self.type == 'like-in-response':
-            self.text = '<p>Você recebeu um ❤️ na sua resposta <a href="/question/{}?n={}">"{}"</a></p>'.format(Response.objects.get(id=answer_id).question.id, self.id, Response.objects.get(id=answer_id).text)
+            self.text = '''
+                            <p>Você recebeu um ❤️ na sua resposta <a href="/question/{}?n={}">"{}"</a>
+                            </p>'''.format(Response.objects.get(id=answer_id).question.id,
+                                           self.id,
+                                           Response.objects.get(id=answer_id).text)
         elif self.type == 'question-answered':
             response = Response.objects.get(id=answer_id)
-            self.text = '<p><a href="/user/{}">{}</a> respondeu sua pergunta <a href="/question/{}?n={}">"{}"</a></p>'.format(response.creator.user.username, response.creator.user.username, response.question.id, self.id, response.question.text)
+            self.text = '''
+                            <p><a href="/user/{}">{}</a> respondeu sua pergunta <a href="/question/{}?n={}">"{}"</a>
+                            </p>'''.format(response.creator.user.username,
+                                           response.creator.user.username,
+                                           response.question.id,
+                                           self.id,
+                                           response.question.text)
+
         elif self.type == 'comment-in-response':
-            comment = Comment.objects.get(response=Response.objects.get(id=answer_id), id=comment_id)
-            self.text = '<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}?n={}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, self.id, comment.response.question.text)
+            response = Response.objects.get(id=answer_id)
+            comment = Comment.objects.get(response=response, id=comment_id)
+            self.text = '''
+                            <p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}?n={}">"{}"</a></p>
+                        '''.format(comment.creator.username,
+                                   comment.creator.username,
+                                   comment.response.question.id,
+                                   self.id,
+                                   comment.response.question.text)
+
         elif self.type == 'got-best-answer':
             response = Response.objects.get(id=answer_id)
-            self.text = '<p>Sua resposta foi escolhida a melhor resposta da pergunta: <a href="/question/{}?n={}">"{}"</a></p>'.format(response.question.id, self.id, response.question.text)
+            self.text = '''
+                            <p>Sua resposta foi escolhida a melhor resposta da pergunta: <a href="/question/{}?n={}">"{}"</a></p>
+                        '''.format(response.question.id,
+                                   self.id,
+                                   response.question.text)
 
 
 class Ban(models.Model): # todos os IP's banidos:

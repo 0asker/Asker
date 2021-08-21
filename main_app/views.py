@@ -9,7 +9,7 @@ from django.core.cache import cache
 from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote
 from main_app.templatetags.main_app_extras import fix_naturaltime
 from main_app.forms import UploadFileForm
-import django_project.general_rules as general_rules
+from django_project import general_rules
 import random
 import json
 import time
@@ -151,9 +151,6 @@ def save_answer(request):
 
 
 def index(request):
-
-    if not request.GET.get('r', None) is None:
-        return redirect('/rewards?r={}'.format(request.GET.get('r', None)))
 
     context = {}
 
@@ -386,13 +383,6 @@ def signup(request):
         new_user_profile = UserProfile.objects.create(user=u)
         new_user_profile.ip = get_client_ip(request)
         new_user_profile.active = True
-
-        ref = request.GET.get('r', None)
-        if ref is not None:
-            new_user_profile.ref = User.objects.get(id=ref)
-        if request.GET.get('redirect') == '/rewards':
-            new_user_profile.message = 'reward'
-
         new_user_profile.save()
 
         return redirect(r)
@@ -1040,103 +1030,6 @@ def bot(request):
         return HttpResponse(response, content_type='text/plain')
 
     return render(request, 'bot.html')
-
-
-'''
-programa de recompensas.
-'''
-'''
-balance menos de 1500:
-  80 coins por clique em anúncio preparado.
-balance maior ou igual 1500 e menor ou igual 2000:
-  70 coins por clique em anúncio preparado e popunder.
-balance mais de 2000:
-  60 coins por clique em anúncio preparado e popunder.
-'''
-def rewards(request):
-
-    if request.user.is_anonymous:
-
-        context = {}
-
-        if not request.GET.get('r', None) is None:
-            context['ref'] = request.GET.get('r')
-
-        return render(request, 'rewards.html', context)
-
-    user_profile = UserProfile.objects.get(user=request.user)
-
-    context = {}
-
-    context['user_p'] = user_profile
-    context['user_balance'] = round(user_profile.balance, 3)
-    context['user_balance_ref'] = round(user_profile.balance_by_ref, 3)
-
-    if user_profile.balance < 1500:
-        context['valor_da_recompensa'] = 60
-    elif user_profile.balance >= 1500 and user_profile.balance <= 2000:
-        context['valor_da_recompensa'] = 50
-        context['POPUNDER'] = True
-    else:
-        context['valor_da_recompensa'] = 35
-        context['POPUNDER'] = True
-
-    if 'POPUNDER' in context.keys():
-        context['POPUNDER'] = random.choice(('''<script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://iclickcdn.com/tag.min.js',4437641,document.body||document.documentElement)</script>''', '''<script type='text/javascript' src='//pl16413934.highperformancecpm.com/d6/7a/10/d67a10c6aac13f8da9beabf04bd46d6b.js'></script>'''))
-
-    if user_profile.last_click_on_ad == None:
-        context['CAN_SHOW_AD'] = True
-
-        if random.choice((1, 2)) == 1:
-            context['ADS_TERRA_NATIVE_BANNER'] = True
-        else:
-            if random.choice((1, 2)) == 1:
-                context['ADS_TERRA_DIRECT_LINK'] = True
-    elif (timezone.now() - user_profile.last_click_on_ad).seconds > 3600:
-        context['CAN_SHOW_AD'] = True
-
-        if random.choice((1, 2)) == 1:
-            context['ADS_TERRA_NATIVE_BANNER'] = True
-        else:
-            if random.choice((1, 2)) == 1:
-                context['ADS_TERRA_DIRECT_LINK'] = True
-    else:
-        context['sec'] = (timezone.now() - user_profile.last_click_on_ad).seconds
-
-    return render(request, 'rewards.html', context)
-
-
-def increase_balance(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-
-    if user_profile.balance < 1500:
-        USER_P_RECOMPENSA = 60
-    elif user_profile.balance >= 1500 and user_profile.balance <= 2000:
-        USER_P_RECOMPENSA = 50
-    else:
-        USER_P_RECOMPENSA = 35
-
-    if user_profile.last_click_on_ad == None:
-        if user_profile.ref != None:
-            ref = UserProfile.objects.get(user=user_profile.ref)
-            ref.balance += USER_P_RECOMPENSA * (30 / 100)
-            ref.balance_by_ref += USER_P_RECOMPENSA * (30 / 100)
-            ref.save()
-
-        user_profile.balance += USER_P_RECOMPENSA
-        user_profile.last_click_on_ad = timezone.now()
-    elif (timezone.now() - user_profile.last_click_on_ad).seconds > 3600:
-        if user_profile.ref != None:
-            ref = UserProfile.objects.get(user=user_profile.ref)
-            ref.balance += USER_P_RECOMPENSA * (30 / 100)
-            ref.balance_by_ref += USER_P_RECOMPENSA * (30 / 100)
-            ref.save()
-
-        user_profile.balance += USER_P_RECOMPENSA
-        user_profile.last_click_on_ad = timezone.now()
-
-    user_profile.save()
-    return HttpResponse('OK')
 
 
 '''
