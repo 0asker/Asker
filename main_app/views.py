@@ -28,10 +28,10 @@ def compress_animated(bio, max_size, max_frames):
     for frame in ImageSequence.Iterator(im):
         if frame_count > max_frames:
             break
-        
+
         ''' PIL não salvará o canal A! Workaround: salvar em P-mode '''
         compressed_f = frame.convert('RGBA')
-        
+
         alpha_mask = compressed_f.getchannel('A') # Máscara de transparência
         compressed_f = compressed_f.convert('RGB').convert('P', colors=255) # Converte para P
         mask = Image.eval(alpha_mask, lambda a: 255 if a <= 128 else 0) # Eleva pixels transparentes
@@ -81,7 +81,8 @@ def get_client_ip(request):
 
 def calculate_popular_questions():
     last_id = Question.objects.all().last().id
-    popular_questions = Question.objects.filter(id__range=(last_id - 100, last_id)).order_by('-total_views')[:40]
+    id_range = (last_id - 100, last_id)
+    popular_questions = Question.objects.filter(id__range=id_range).order_by('-total_views')[:40]
     first_part = list(popular_questions[:10])
     second_part = list(popular_questions[:5])
     random.shuffle(first_part)
@@ -162,7 +163,7 @@ def index(request):
         context['POPULAR'] = True
 
     context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
-    
+
     try:
         context['popular_questions'] = cache.get('p_questions')
         if not context['popular_questions']:
@@ -202,11 +203,10 @@ def question(request, question_id):
         user_p = UserProfile.objects.get(user=request.user)
         context['user_p'] = user_p
         context['answered'] = False
-        
+
         # verifica se já é possível mostrar o anúncio de notificação.
         infos = json.loads(user_p.infos)
-        
-        
+
         if 'ultima_visualizacao_de_anuncio_notificacao' in infos.keys():
             if time.time() - infos['ultima_visualizacao_de_anuncio_notificacao'] > 345600: # só mostra o anúncio em forma de notificação de 4 em 4 dias.
                 context['PODE_MOSTRAR_ANUNCIO_NOTIFICACAO'] = True
@@ -216,12 +216,12 @@ def question(request, question_id):
             context['PODE_MOSTRAR_ANUNCIO_NOTIFICACAO'] = True
             infos['ultima_visualizacao_de_anuncio_notificacao'] = time.time()
             infos['ultima_visualizacao_de_anuncio_notificacao_contagem'] = 1
-        
+
         # salva as informações (UserProfile.infos) atualizadas do usuário.
         user_p.infos = json.dumps(infos)
         user_p.save()
-        
-        
+
+
         for response in responses:
             if response.id == request.user.id:
                 context['answered'] = True
