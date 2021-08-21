@@ -28,7 +28,10 @@ def compress_animated(bio, max_size, max_frames):
     for frame in ImageSequence.Iterator(im):
         if frame_count > max_frames:
             break
-        compressed_f = frame.convert('RGBA') # PIL não salvará o canal A! Workaround: salvar em P-mode
+        
+        ''' PIL não salvará o canal A! Workaround: salvar em P-mode '''
+        compressed_f = frame.convert('RGBA')
+        
         alpha_mask = compressed_f.getchannel('A') # Máscara de transparência
         compressed_f = compressed_f.convert('RGB').convert('P', colors=255) # Converte para P
         mask = Image.eval(alpha_mask, lambda a: 255 if a <= 128 else 0) # Eleva pixels transparentes
@@ -129,7 +132,7 @@ def save_answer(request):
         file_name = 'rpic-{}{}'.format(now.date(), now.time())
 
         success = save_img_file(f, 'django_project/media/responses/' + file_name, (850, 850))
-        if success: # TODO: mensagem caso não dê certo
+        if success:
             response.image = 'responses/' + file_name
 
         response.save()
@@ -171,7 +174,7 @@ def index(request):
     if request.user.is_authenticated:
         context['user_p'] = UserProfile.objects.get(user=request.user)
 
-    if random.randint(1, 10) == 40:
+    if random.randint(1, 80) == 80:
         context['SOCIAL_AD'] = True
 
     return render(request, 'index.html', context)
@@ -401,43 +404,42 @@ def signup(request):
     return render(request, 'signup.html', context)
 
 
-def profile(request, username):
-    try:
-        u = UserProfile.objects.get(user=User.objects.get(username=username))
-    except:
-        return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
-        context = {'error': 'Usuário não encontrado', 'err_msg': 'Este usuário não existe ou alterou seu nome.',
-                           'redirect': return_to}
-        return render(request, 'error.html', context)
+def user_does_not_exists(request):
+    return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
+    context = {'error': 'Usuário não encontrado', 'err_msg': 'Este usuário não existe ou alterou seu nome.',
+                       'redirect': return_to}
+    return render(request, 'error.html', context)
 
-    if request.user.is_authenticated:
+
+def profile(request, username):
+
+    user = User.objects.filter(username=username)
+
+    if user.exists():
+        up = UserProfile.objects.filter(user=user.first()) # user profile
+        if not up.exists():
+            return user_does_not_exists(request)
+        up = up.first()
+    else:
+        return user_does_not_exists(request)
+
+    if request.user.username == username:
         user_p = UserProfile.objects.get(user=request.user)
         user_p.ip = get_client_ip(request)
         user_p.save()
 
-    if request.user.username != username and request.user.username != 'Erick':
-        u.total_views += 1
-        u.save()
+    if request.user.username != username:
+        up.total_views += 1
+        up.save()
 
-    context = {'user_p': u, 'change_profile_picture_form': UploadFileForm()}
+    context = {'user_p': up, 'change_profile_picture_form': UploadFileForm()}
 
-    if request.user.username == username or not u.hide_activity:
+    if request.user.username == username or not up.hide_activity:
         q_page = request.GET.get('q-page', 1)
         r_page = request.GET.get('r-page', 1)
 
-        context['questions'] = Paginator(Question.objects.filter(creator=u).order_by('-pub_date'), 10).page(q_page).object_list
-        context['responses'] = Paginator(Response.objects.filter(creator=u).order_by('-pub_date'), 10).page(r_page).object_list
-
-    if request.method == 'POST':
-        # TODO: acho que isso não é mais necessário, já que agora existe outra url pra editar o perfil?
-
-        new_bio = request.POST.get('bio', None)
-
-        if new_bio != None:
-            u = UserProfile.objects.get(user=request.user)
-            u.bio = new_bio
-            u.save()
-            return redirect('/user/' + username)
+        context['questions'] = Paginator(Question.objects.filter(creator=up).order_by('-pub_date'), 10).page(q_page).object_list
+        context['responses'] = Paginator(Response.objects.filter(creator=up).order_by('-pub_date'), 10).page(r_page).object_list
 
     return render(request, 'profile.html', context)
 
@@ -480,7 +482,7 @@ def ask(request):
             file_name = 'qpic-{}{}'.format(timezone.now().date(), timezone.now().time())
 
             success = save_img_file(f, 'django_project/media/questions/' + file_name, (850, 850))
-            if success: # TODO: mensagem caso não dê certo
+            if success:
                 q.image = 'questions/' + file_name
 
             q.save()
@@ -630,7 +632,7 @@ def edit_profile(request, username):
 
                 success = save_img_file(f, 'django_project/media/avatars/' + file_name, (192, 192))
                 if not success:
-                    return redirect('/user/' + request.user.username + '/edit')  # TODO: Mostrar um erro de arquivo invalido!
+                    return redirect('/user/' + request.user.username + '/edit')
 
                 u.avatar = 'avatars/' + file_name
                 u.save()
