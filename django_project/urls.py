@@ -56,10 +56,6 @@ urlpatterns = [
   path('more_questions', views.more_questions, name='more_questions'),
   path('more_popular_questions', views.more_popular_questions, name='more_popular_questions'),
   
-  
-  path('rewards', views.rewards, name='rewards'),
-  path('increase_balance', views.increase_balance, name='increase_balance'),
-  
   path('sw.js', views.swjs, name='swjs'), # propeller ads
   
   
