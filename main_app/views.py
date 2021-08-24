@@ -172,7 +172,7 @@ def index(request):
     if request.user.is_authenticated:
         context['user_p'] = UserProfile.objects.get(user=request.user)
 
-    if random.randint(1, 250) == 250:
+    if random.randint(1, 500) == 500:
         context['SOCIAL_AD'] = True
 
     return render(request, 'index.html', context)
