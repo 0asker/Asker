@@ -24,8 +24,8 @@ document.head.appendChild(link);
 <script>var csrf_token = "{{ csrf_token }}";{% if user.is_anonymous %}var user_status = "anonymous";{% else %}var user_status = "logged";{% endif %}</script>
 <style>body{display:none}.navegacao{margin-top:10px;margin-bottom:10px}.navegacao button{border-radius:0;font-size:.8em}</style>
 <script>
-recent_questions=[{% for question in questoes_recentes %}{% if not question.creator.user in user_p.silenced_users.all %}{"id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|linebreaksbr }}","total_answers":{{ question|get_total_answers }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
-popular_questions=[{% for question in popular_questions %}{% if not question.creator.user in user_p.silenced_users.all %}{"id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|linebreaksbr }}","total_answers":{{ question|get_total_answers }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
+recent_questions=[{% for question in questoes_recentes %}{% if not question.creator.user in user_p.silenced_users.all %}{"id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}","total_answers":{{ question|get_total_answers }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
+popular_questions=[{% for question in popular_questions %}{% if not question.creator.user in user_p.silenced_users.all %}{"id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}","total_answers":{{ question|get_total_answers }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
 </script>
 <!-- Propeller ads -->
 <meta name="propeller" content="08161356dc022ea83aa0c1c2b5097e09">
@@ -73,6 +73,6 @@ popular_questions=[{% for question in popular_questions %}{% if not question.cre
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
-<script src="/static/js/index.js?v=4"></script>
+<script src="/static/js/index.js?v=4.1"></script>
 </body>
 </html>

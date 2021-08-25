@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from django.core.cache import cache
 from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote
-from main_app.templatetags.main_app_extras import fix_naturaltime
+from main_app.templatetags.main_app_extras import fix_naturaltime, formatar_descricao
 from main_app.forms import UploadFileForm
 from django_project import general_rules
 import random
@@ -172,7 +172,7 @@ def index(request):
     if request.user.is_authenticated:
         context['user_p'] = UserProfile.objects.get(user=request.user)
 
-    if random.randint(1, 500) == 500:
+    if random.randint(1, 1000) == 1000:
         context['SOCIAL_AD'] = True
 
     return render(request, 'index.html', context)
@@ -887,7 +887,7 @@ def more_questions(request):
                     {
                             "id": q.id,
                             "text": q.text,
-                            "description": q.description,
+                            "description": formatar_descricao(q.description),
                             "total_answers": q.total_responses,
                             "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
                             "creator": q.creator.user.username,
@@ -903,7 +903,7 @@ def more_questions(request):
                     {
                             "id": q.id,
                             "text": q.text,
-                            "description": q.description,
+                            "description": formatar_descricao(q.description),
                             "total_answers": q.total_responses,
                             "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
                             "creator": q.creator.user.username,

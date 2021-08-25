@@ -7,6 +7,20 @@ import zlib
 register = template.Library()
 
 
+@register.filter(name='formatar_descricao')
+def formatar_descricao(desc):
+    '''Retorna a descrição formatada com as opções "Mostrar mais" e "Mostrar menos".
+    Essa função retorna uma string com código HTML. Não pode ser usado aspas (") dentro da string.
+    '''
+    if len(desc) > 140:
+        parte1 = "<span>{}</span>".format(desc[0:130])
+        parte2 = "<span style='display: none;'>{}</span>".format(desc[130:])
+        nova_desc = parte1 + "<span style='color: #007bff; cursor: pointer;' onclick='$(this).toggle(); $(this.nextElementSibling).toggle(); $(this.nextElementSibling.nextElementSibling).toggle();'>... Mostrar mais</span>" + parte2 + "<span style='display: none; color: #007bff; cursor: pointer;' onclick='$(this).toggle(); $(this.previousElementSibling).toggle(); $(this.previousElementSibling.previousElementSibling).toggle();'> Mostrar menos</span>"
+        return nova_desc
+    else:
+        return desc
+
+
 @register.filter(name='get_total_answers')
 def get_total_answers(question):
     '''Retorna um inteiro representando o total de respostas obtidas pela pergunta.'''
