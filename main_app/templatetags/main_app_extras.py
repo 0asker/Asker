@@ -9,6 +9,7 @@ register = template.Library()
 
 @register.filter(name='get_total_answers')
 def get_total_answers(question):
+    '''Retorna um inteiro representando o total de respostas obtidas pela pergunta.'''
     return Response.objects.filter(question=question).count()
 
 

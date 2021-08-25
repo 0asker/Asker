@@ -74,5 +74,32 @@ popular_questions=[{% for question in popular_questions %}{% if not question.cre
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
 <script src="/static/js/index.js?v=3.01"></script>
+
+<script>
+    var descriptions = document.getElementsByClassName('description');
+    var desc = '';
+    var parte1 = '';
+    var parte2 = '';
+    var nova_desc = '';
+    
+    for (var index in descriptions) {
+        try {
+            
+            desc = descriptions[index].innerText;
+            
+            if (desc.length > 130) {
+                parte1 = '<span>' + desc.slice(0, 130) + '</span>';
+                parte2 = '<span style="display: none;">' + desc.slice(130) + '</span>';
+                
+                nova_desc = parte1 + '<span style="color: #007bff; cursor: pointer;" onclick="$(this).toggle(); $(this.nextElementSibling).toggle(); $(this.nextElementSibling.nextElementSibling).toggle();">... Mostrar mais</span>' + parte2 + '<span style="display: none; color: #007bff; cursor: pointer;" onclick="$(this).toggle(); $(this.previousElementSibling).toggle(); $(this.previousElementSibling.previousElementSibling).toggle();"> Mostrar menos</span>';
+                
+                descriptions[index].innerHTML = nova_desc;
+            }
+            
+        } catch (e) {
+            console.log(e);
+        }
+    }
+</script>
 </body>
 </html>
