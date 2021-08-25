@@ -26,6 +26,36 @@ function enviar_resposta_pergunta(form) {
 
 
 /*
+ * Adiciona "... Mostrar mais" e "Mostrar menos" em todas as descrições. */
+function encolher_descricoes() {
+    var descriptions = document.getElementsByClassName('description');
+    var desc = '';
+    var parte1 = '';
+    var parte2 = '';
+    var nova_desc = '';
+    var index;
+    
+    for (index = 0; index < descriptions.length; index++) {
+        
+        try {
+            desc = descriptions[index].innerText;
+            
+            if (desc.length > 150) {
+                parte1 = '<span>' + desc.slice(0, 130) + '</span>';
+                parte2 = '<span style="display: none;">' + desc.slice(130) + '</span>';
+                
+                nova_desc = parte1 + '<span style="color: #007bff; cursor: pointer;" onclick="$(this).toggle(); $(this.nextElementSibling).toggle(); $(this.nextElementSibling.nextElementSibling).toggle();">... Mostrar mais</span>' + parte2 + '<span style="display: none; color: #007bff; cursor: pointer;" onclick="$(this).toggle(); $(this.previousElementSibling).toggle(); $(this.previousElementSibling.previousElementSibling).toggle();"> Mostrar menos</span>';
+                
+                descriptions[index].innerHTML = nova_desc;
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+}
+
+
+/*
  * Renderiza as questões recentes. */
 
 var questoes_recentes = document.getElementById("lista_de_questoes_recentes");
@@ -77,6 +107,9 @@ function renderizar_questoes(questions) {
 																	'</li>'; } catch (e) {
 																	}
 	}
+    
+    encolher_descricoes();
+    $('.description').linkify();
 }
 
 renderizar_questoes(recent_questions);
