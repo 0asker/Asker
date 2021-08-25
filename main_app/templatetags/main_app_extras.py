@@ -7,6 +7,11 @@ import zlib
 register = template.Library()
 
 
+@register.filter(name='get_total_answers')
+def get_total_answers(question):
+    return Response.objects.filter(question=question).count()
+
+
 @register.simple_tag
 def fix_naturaltime(naturaltime_str):
 	# Enquanto a tradução do humanize estiver sem espaços - o que provavelmente será pra sempre
