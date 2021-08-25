@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from django.core.cache import cache
 from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote
-from main_app.templatetags.main_app_extras import fix_naturaltime, formatar_descricao
+from main_app.templatetags.main_app_extras import fix_naturaltime, formatar_descricao, get_total_answers
 from main_app.forms import UploadFileForm
 from django_project import general_rules
 import random
