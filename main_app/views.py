@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from django.core.cache import cache
-from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote
+from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote, Ban
 from main_app.templatetags.main_app_extras import fix_naturaltime, formatar_descricao, get_total_answers
 from main_app.forms import UploadFileForm
 from django_project import general_rules
@@ -96,6 +96,10 @@ envia uma resposta para uma pergunta, a resposta passa por aqui
 para ser salva (no banco de dados).
 '''
 def save_answer(request):
+
+    client_ip = get_client_ip(request)
+    if Ban.objects.filter(ip=client_ip).exists():
+        return HttpResponse('Você não pode responder perguntas.')
 
     question = Question.objects.get(id=request.POST.get('question_id'))
 
@@ -439,6 +443,10 @@ def ask(request):
     if request.user.is_anonymous:
         return redirect('/question/%d' % Question.objects.all().last().id)
 
+    client_ip = get_client_ip(request)
+    if Ban.objects.filter(ip=client_ip).exists():
+        return redirect('/question/%d' % Question.objects.all().last().id)
+
     '''
     Controle de spam
     '''
@@ -522,6 +530,10 @@ def notification(request):
 
 
 def comment(request):
+
+    client_ip = get_client_ip(request)
+    if Ban.objects.filter(ip=client_ip).exists():
+        return HttpResponse('Você não pode comentar.')
 
     comment = Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
                                                                                              creator=request.user,
