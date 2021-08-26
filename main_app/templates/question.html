@@ -171,6 +171,15 @@
 			<section class="card bg-main" id="responses">
   				<div class="card-header">
     				{{ question.id|total_responses }}
+                    <style>
+                        #responder {
+                            float: right;
+                            cursor: pointer;
+                        }
+                    </style>
+                    <div id="responder" onclick="location.href = '#sua-resposta'">
+                        <i class="fas fa-pen"></i>
+                    </div>
   				</div>
 				<ul class="list-group list-group-flush responses">
 				{% for response in responses|pull_best_answer %}
@@ -189,7 +198,7 @@
 							<form id="formulario_de_resposta">
 								{% csrf_token %}
 								<input type="hidden" name="question_id" value="{{ question.id }}">
-								<textarea maxlength="5000" class="form-control large-compact" placeholder="Sua resposta" name="text" required="required" onclick="$(this).css('height', '140px')"></textarea>
+								<textarea id="sua-resposta" maxlength="5000" class="form-control large-compact" placeholder="Sua resposta" name="text" required="required" onclick="$(this).css('height', '140px')"></textarea>
 								
 								<button class="btn btn-outline-primary" type="submit" id="botao_enviar_resposta">
 									<i class="far fa-paper-plane"></i>
