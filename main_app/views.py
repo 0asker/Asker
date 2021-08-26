@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
@@ -84,10 +84,6 @@ def calculate_popular_questions():
     last_id = Question.objects.all().last().id
     id_range = (last_id - 100, last_id)
     popular_questions = Question.objects.filter(id__range=id_range).order_by('-total_views')[:40]
-    first_part = list(popular_questions[:10])
-    second_part = list(popular_questions[:5])
-    random.shuffle(first_part)
-    popular_questions = first_part + second_part
     return popular_questions
 
 
@@ -169,8 +165,9 @@ def index(request):
     try:
         context['popular_questions'] = cache.get('p_questions')
         if not context['popular_questions']:
-            context['popular_questions'] = calculate_popular_questions()[:15]
+            context['popular_questions'] = calculate_popular_questions()
             cache.set('p_questions', context['popular_questions'], 600)
+        context['popular_questions'] = context['popular_questions'][:15]
     except:
         pass
 
@@ -850,7 +847,10 @@ def more_popular_questions(request):
 
     paginator = Paginator(questions, 15)
 
-    questions = paginator.page(page)
+    try:
+        questions = paginator.page(page)
+    except EmptyPage:
+        return JsonResponse({'empty': 'true'})
 
     para_retornar = []
 

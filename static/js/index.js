@@ -85,51 +85,57 @@ renderizar_questoes(recent_questions);
 /* Renderiza as questões populares. */
 var questoes_populares = document.getElementById("lista_de_questoes_populares");
 
-for (var index = 0; index < 20; ++index) {
-try { questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+popular_questions[index].id+'">' +
-																'<div class="card-body">' +
-																	'<div class="flexbox">' +
-																		'<h2 class="question-title fg-1">' +
-																			'<a class="q-title" href="/question/'+popular_questions[index].id+'">' +
-																				popular_questions[index].text +
-																			'</a>' +
-																		'</h2>' +
-																	'</div>' +
-																	(popular_questions[index].description != '' ? '<p class="description">'+popular_questions[index].description+'</p>' : '') +
-																	'<small class="text-muted">' +
-																		'<span>respostas: <span id="response-counter-'+popular_questions[index].id+'">'+popular_questions[index].total_answers+'</span></span>' +
-																		'<span>&nbsp;&middot;&nbsp;</span>' +
-																		'<span>perguntado '+popular_questions[index].pub_date+' por </span>' +
-																		'<a href="/user/'+popular_questions[index].creator+'">'+popular_questions[index].creator+'</a>' +
-																	'</small>' +
-																	'<hr>' +
-																	(user_status == "anonymous" ? '<p>Faça <a href="/signin?redirect=/question/'+popular_questions[index].id+'">login</a> ou <a href="/signup?redirect=/question/'+popular_questions[index].id+'">crie uma conta</a> para responder essa pergunta.</p>' : '') +
-																	(popular_questions[index].user_answer != 'False' ? '<div class="user-response" data-iddapergunta="'+popular_questions[index].id+'"><p><b>Sua resposta:</b><br>'+popular_questions[index].user_answer+'</p></div>' : '<div class="user-response" data-iddapergunta="'+popular_questions[index].id+'">'+
-																	'<div>' +
-																	
-																	(user_status != "anonymous" ?
-																	
-																		'<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">' +
-																			'<i class="fas fa-share"></i>' +
-																			' responder' : '') +
-																		'</button>' +
-																	'</div></div>' +
-																	'<div style="display: none">' +
-																		'<form onsubmit="return enviar_resposta_pergunta(this);">' +
-																			'<input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'">' +
-																			'<input type="hidden" name="from" value="index">' +
-																			'<input name="question_id" type="hidden" value="'+popular_questions[index].id+'">' +
-																			'<textarea onclick=\'$(this).css("height", "120px");\' name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>' +
-																			'<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">' +
-																			'<i class="far fa-paper-plane"></i>' +
-																			' Enviar' +
-																			'</button>' +
-																		'</form>' +
-																		'</div>') +
-																'</div>' +
-															'</li>'; } catch (e) {
-															}
+function renderizar_questoes_populares(popular_questions) {
+    for (var index = 0; index < 20; ++index) {
+    try { questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+popular_questions[index].id+'">' +
+                                                                    '<div class="card-body">' +
+                                                                        '<div class="flexbox">' +
+                                                                            '<h2 class="question-title fg-1">' +
+                                                                                '<a class="q-title" href="/question/'+popular_questions[index].id+'">' +
+                                                                                    popular_questions[index].text +
+                                                                                '</a>' +
+                                                                            '</h2>' +
+                                                                        '</div>' +
+                                                                        (popular_questions[index].description != '' ? '<p class="description">'+popular_questions[index].description+'</p>' : '') +
+                                                                        '<small class="text-muted">' +
+                                                                            '<span>respostas: <span id="response-counter-'+popular_questions[index].id+'">'+popular_questions[index].total_answers+'</span></span>' +
+                                                                            '<span>&nbsp;&middot;&nbsp;</span>' +
+                                                                            '<span>perguntado '+popular_questions[index].pub_date+' por </span>' +
+                                                                            '<a href="/user/'+popular_questions[index].creator+'">'+popular_questions[index].creator+'</a>' +
+                                                                        '</small>' +
+                                                                        '<hr>' +
+                                                                        (user_status == "anonymous" ? '<p>Faça <a href="/signin?redirect=/question/'+popular_questions[index].id+'">login</a> ou <a href="/signup?redirect=/question/'+popular_questions[index].id+'">crie uma conta</a> para responder essa pergunta.</p>' : '') +
+                                                                        (popular_questions[index].user_answer != 'False' ? '<div class="user-response" data-iddapergunta="'+popular_questions[index].id+'"><p><b>Sua resposta:</b><br>'+popular_questions[index].user_answer+'</p></div>' : '<div class="user-response" data-iddapergunta="'+popular_questions[index].id+'">'+
+                                                                        '<div>' +
+                                                                        
+                                                                        (user_status != "anonymous" ?
+                                                                        
+                                                                            '<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">' +
+                                                                                '<i class="fas fa-share"></i>' +
+                                                                                ' responder' : '') +
+                                                                            '</button>' +
+                                                                        '</div></div>' +
+                                                                        '<div style="display: none">' +
+                                                                            '<form onsubmit="return enviar_resposta_pergunta(this);">' +
+                                                                                '<input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'">' +
+                                                                                '<input type="hidden" name="from" value="index">' +
+                                                                                '<input name="question_id" type="hidden" value="'+popular_questions[index].id+'">' +
+                                                                                '<textarea onclick=\'$(this).css("height", "120px");\' name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua resposta" required></textarea>' +
+                                                                                '<button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm">' +
+                                                                                '<i class="far fa-paper-plane"></i>' +
+                                                                                ' Enviar' +
+                                                                                '</button>' +
+                                                                            '</form>' +
+                                                                            '</div>') +
+                                                                    '</div>' +
+                                                                '</li>'; } catch (e) {
+                                                                }
+    }
 }
+
+renderizar_questoes_populares(popular_questions_);
+
+
 
 if (mostrar_primeiro == 'popular') {
 	document.getElementById('novas_questoes').style.display = 'none';
@@ -157,6 +163,39 @@ function load_more(button, icon) {
 				icon.style.display = 'none';
 				button.style.display = 'block';
 				renderizar_questoes(data.responseJSON);
+			},
+	});
+}
+
+
+function load_more_popular(button, icon, page) {
+    
+	button.style.display = 'none';
+	icon.style.display = 'block';
+	$.ajax({
+			url: "/more_popular_questions",
+			type: "get",
+			dataType: "json",
+			data: {
+					page: page,
+			},
+			complete: function(data) {
+                
+                try {
+                    if (data.responseJSON.empty == 'true') {
+                        icon.style.display = 'none';
+                        button.style.display = 'none';
+                        document.getElementById('questoes_populares').innerHTML += `
+<div class="end"><p>Fim! <i class="far fa-sad-cry" aria-hidden="true"></i> Veja as <a href="/news">perguntas recentes.</a></p></div>
+`
+                    } else {
+                        icon.style.display = 'none';
+                        button.style.display = 'block';
+                        renderizar_questoes_populares(data.responseJSON);
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
 			},
 	});
 }
