@@ -92,7 +92,7 @@
 						<input type="hidden" name="response_id" value="{{ response.id }}">
 						<input type="hidden" name="question_id" value="{{ question.id }}">
                         <textarea onclick="$(this).css('height', '110px');" class="form-control" maxlength="300" autocomplete="off" name="text" placeholder="Escreva seu comentário" required></textarea>
-						<input class="btn btn-primary" type="submit" value="Comentar">
+						<input onclick="$(this.previousElementSibling).css('height', '60px');" class="btn btn-primary" type="submit" value="Comentar">
 					</form>
 				</div>
 				
