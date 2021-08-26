@@ -185,9 +185,7 @@ function load_more_popular(button, icon, page) {
                     if (data.responseJSON.empty == 'true') {
                         icon.style.display = 'none';
                         button.style.display = 'none';
-                        document.getElementById('questoes_populares').innerHTML += `
-<div class="end"><p>Fim! <i class="far fa-sad-cry" aria-hidden="true"></i> Veja as <a href="/news">perguntas recentes.</a></p></div>
-`
+                        document.getElementById('questoes_populares').innerHTML += '<div class="end"><p>Fim! <i class="far fa-sad-cry" aria-hidden="true"></i> Veja as <a href="/news">perguntas recentes.</a></p></div>'
                     } else {
                         icon.style.display = 'none';
                         button.style.display = 'block';
