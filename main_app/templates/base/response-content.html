@@ -91,7 +91,7 @@
 						{% csrf_token %}
 						<input type="hidden" name="response_id" value="{{ response.id }}">
 						<input type="hidden" name="question_id" value="{{ question.id }}">
-						<input type="text" maxlength="300" autocomplete="off" class="form-control comment-form bg-innermost-when-dark" name="text" placeholder="Escreva seu comentário" required>
+                        <textarea onclick="$(this).css('height', '110px');" class="form-control" maxlength="300" autocomplete="off" name="text" placeholder="Escreva seu comentário" required></textarea>
 						<input class="btn btn-primary" type="submit" value="Comentar">
 					</form>
 				</div>

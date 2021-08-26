@@ -14,6 +14,7 @@ import random
 import json
 import time
 import os
+import html
 
 
 import io
@@ -465,6 +466,7 @@ def ask(request):
     if request.method == 'POST':
         description = request.POST.get('description')
         description = description.replace('\r', '')
+        description = html.escape(description)
 
         text = request.POST.get('question')
 
@@ -537,7 +539,7 @@ def comment(request):
 
     comment = Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
                                                                                              creator=request.user,
-                                                                                             text=request.POST.get('text'),
+                                                                                             text=html.escape(request.POST.get('text')),
                                                                                              pub_date=timezone.now())
 
     Notification.objects.create(receiver=comment.response.creator.user,
@@ -563,7 +565,7 @@ def comment(request):
                                             <p>{}</p>
                             </div>
             </li>
-            '''.format(comment.creator.username, UserProfile.objects.get(user=request.user).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.id, comment.text)
+            '''.format(comment.creator.username, UserProfile.objects.get(user=request.user).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.id, comment.text.replace('\n', '<br>'))
 
     return HttpResponse(comment_creator_template)
 
