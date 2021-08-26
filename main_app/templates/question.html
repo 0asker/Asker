@@ -229,5 +229,9 @@
 		{% if user.is_anonymous and not NO_SHOW_ADS %}
 			<script type='text/javascript' src='//pl16501151.highperformancecpm.com/40/16/25/401625261f29ca1666968a67f459e500.js'></script>
 		{% endif %}
+        <script>
+            var description = document.getElementsByClassName('description')[0];
+            description.innerText = description.innerText.replaceAll('&quot;', '"').replaceAll('&lt;', '<').replaceAll('&gt;', '>');
+        </script>
 	</body>
 </html>
