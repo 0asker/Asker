@@ -177,9 +177,12 @@
                             cursor: pointer;
                         }
                     </style>
-                    <div id="responder" onclick="location.href = '#sua-resposta'">
-                        <i class="fas fa-pen"></i>
-                    </div>
+                    {% answered user question.id as USER_ANSWER %}
+                    {% if user.is_authenticated and not USER_ANSWER %}
+                        <div id="responder" onclick="location.href = '#sua-resposta'">
+                            <i class="fas fa-pen"></i>
+                        </div>
+                    {% endif %}
   				</div>
 				<ul class="list-group list-group-flush responses">
 				{% for response in responses|pull_best_answer %}
@@ -220,6 +223,14 @@
 					{% endif %}
 				{% endif %}
 			{% endif %}
+            
+            {% if user.is_anonymous %}
+            <div class="text-center bg-light">
+                <hr>
+                <p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
+                <hr>
+            </div>
+            {% endif %}
 	</main>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
